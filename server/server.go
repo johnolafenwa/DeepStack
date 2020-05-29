@@ -277,40 +277,6 @@ func faceregister(c *gin.Context) {
 		}
 	}
 
-	TB_EMBEDDINGS := "TB_EMBEDDINGS"
-	face2 := os.Getenv("VISION-FACE2")
-
-	if face2 == "True" {
-
-		TB_EMBEDDINGS = "TB_EMBEDDINGS2"
-
-	}
-
-	rows, _ := db.Query(fmt.Sprintf("select userid from %s", TB_EMBEDDINGS))
-
-	count := 0
-	for rows.Next() {
-
-		count = count + 1
-
-	}
-
-	if sub_data.Plan == 0 && count > 4 {
-
-		response := response.ErrorResponse{Success: false, Error: "Number of faces exceeded on free plan"}
-
-		c.JSON(200, response)
-		return
-
-	} else if sub_data.Plan == 2 && count > 99 {
-
-		response := response.ErrorResponse{Success: false, Error: "Number of faces exceeded on plan"}
-
-		c.JSON(200, response)
-		return
-
-	}
-
 	req_id := uuid.NewV4().String()
 
 	request_body := requests.FaceRegisterRequest{Userid: userid, Images: user_images, Reqid: req_id, Reqtype: "register"}
