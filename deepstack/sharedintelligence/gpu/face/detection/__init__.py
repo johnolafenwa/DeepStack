@@ -1,0 +1,1 @@
+from ..detection.process import FaceModel
