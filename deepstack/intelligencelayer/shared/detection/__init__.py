@@ -1,0 +1,2 @@
+from .process import ObjectDetector
+

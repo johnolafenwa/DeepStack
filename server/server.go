@@ -101,7 +101,7 @@ func detection(c *gin.Context) {
 
 	if nms == "" {
 
-		nms = "0.40"
+		nms = "0.90"
 
 	}
 
@@ -761,7 +761,7 @@ func main() {
 
 	rediscmd := exec.CommandContext(ctx, "bash", "-c", "redis-server --daemonize yes")
 
-	intelcmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligence.py")
+	intelcmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/runner.py")
 	intelcmd.Dir = APPDIR
 
 	rediscmd.Run()
