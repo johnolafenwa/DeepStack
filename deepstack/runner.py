@@ -25,21 +25,15 @@ warnings.filterwarnings("ignore")
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
-if "CUDA_MODE" in os.environ:
-    CUDA_MODE = os.environ["CUDA_MODE"]
-else:
-    CUDA_MODE = "False"
+CUDA_MODE = os.getenv("CUDA_MODE","False")
 
-if "APPDIR" in os.environ:
-    APPDIR = os.environ["APPDIR"]
-else:
-    APPDIR = ".."
+APPDIR = os.getenv("APPDIR","..")
 
 TEMP_PATH = "/deeptemp/"
 SLEEP_TIME = 0.01
-SHARED_APP_DIR = APPDIR+"/sharedfiles/"
-GPU_APP_DIR = APPDIR+"/gpufiles/"
-CPU_APP_DIR = APPDIR+"/cpufiles/"
+SHARED_APP_DIR = os.path.join(APPDIR,"sharedfiles")
+GPU_APP_DIR = os.path.join(APPDIR,"gpufiles")
+CPU_APP_DIR = os.path.join(APPDIR,"cpufiles")
 DATA_DIR = "/datastore"
 
 
@@ -92,7 +86,7 @@ def objectdetection(thread_name,delay):
 
         reso = 360
 
-    detector = ObjectDetector(SHARED_APP_DIR+"detr.pth",reso,cuda=CUDA_MODE)
+    detector = ObjectDetector(os.path.join(SHARED_APP_DIR,"detr.pth"),reso,cuda=CUDA_MODE)
     while True:
         queue = db.lrange(IMAGE_QUEUE,0,0)
 
@@ -112,7 +106,7 @@ def objectdetection(thread_name,delay):
                
                 try:
 
-                    img = TEMP_PATH + img_id  
+                    img = os.path.join(TEMP_PATH,img_id)
             
                     prob,boxes = detector.predict(img,threshold)
                       
@@ -131,14 +125,14 @@ def objectdetection(thread_name,delay):
                     response = {"success":True,"predictions":outputs}
 
                     db.set(req_id,json.dumps(response)) 
-                    os.remove( TEMP_PATH + img_id)
+                    os.remove(img)
                     
                 except Exception as e:
  
                     output = {"success":False, "error":"invalid image","code":400}
                     db.set(req_id,json.dumps(output))
                     if os.path.exists(TEMP_PATH + img_id):
-                        os.remove(TEMP_PATH + img_id)
+                        os.remove(img)
                     continue
 
                     
