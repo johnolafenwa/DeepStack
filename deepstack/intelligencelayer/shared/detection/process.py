@@ -6,7 +6,8 @@ from .detr import DETR
 torch.set_grad_enabled(False)
 
 class ObjectDetector(object):
-    def __init__(self,model_path,reso=600,cuda=False):
+    def __init__(self, model_path: str, reso: int = 600, cuda: bool = False):
+
         self.reso = reso
         self.cuda = cuda
         self.model = DETR(num_classes=91)
@@ -22,10 +23,10 @@ class ObjectDetector(object):
             T.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
 
-    def preprocess(self,img):
+    def preprocess(self, img: Image.Image):
         return self.transforms(img).unsqueeze(0)
 
-    def postprocess(self,out_bbox,size):
+    def postprocess(self, out_bbox: torch.Tensor , size: torch.Tensor):
 
         img_w, img_h = size
         
@@ -40,7 +41,7 @@ class ObjectDetector(object):
 
         return b
 
-    def predict(self,img_path,confidence=0.75):
+    def predict(self, img_path: str, confidence: float=0.75):
 
         im = Image.open(img_path).convert("RGB")
 
