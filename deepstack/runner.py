@@ -52,7 +52,7 @@ if "MODE" in os.environ:
 db = StrictRedis(host="localhost",db=0,decode_responses=True)
 
 
-def objectdetection(thread_name,delay):
+def objectdetection(thread_name: str, delay: float):
 
     CLASSES = [
     'N/A', 'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus',

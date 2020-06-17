@@ -5,7 +5,7 @@ from torchvision.models import resnet50
 
 class DETR(nn.Module):
 
-    def __init__(self, num_classes, hidden_dim=256,nheads=8,num_encoder_layers=6,num_decoder_layers=6):
+    def __init__(self, num_classes: int, hidden_dim: int = 256, nheads: int = 8, num_encoder_layers: int = 6, num_decoder_layers: int = 6):
 
         super().__init__()
 
@@ -29,7 +29,7 @@ class DETR(nn.Module):
         self.row_embed = nn.Parameter(torch.rand(50, hidden_dim // 2))
         self.col_embed = nn.Parameter(torch.rand(50, hidden_dim // 2))
 
-    def forward(self, inputs):
+    def forward(self, inputs: torch.Tensor):
         x = self.backbone.conv1(inputs)
         x = self.backbone.bn1(x)
         x = self.backbone.relu(x)
