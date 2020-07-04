@@ -16,6 +16,7 @@ import warnings
 import tensorflow as tf
 import sys
 from intelligencelayer.shared.detection import ObjectDetector
+from intelligencelayer.shared.face.detection import FaceModel
 """
 sys.stdout = open(os.devnull, 'w')
 """
@@ -138,10 +139,113 @@ def objectdetection(thread_name: str, delay: float):
                     
         time.sleep(delay)
 
+def face(thread_name,delay):
+
+    
+    facedetector = FaceModel(os.path.join(SHARED_APP_DIR,"facedetector-high.model"),CUDA_MODE)
+   
+    IMAGE_QUEUE = "face_queue"
+
+    while True:
+
+        queue = db.lrange(IMAGE_QUEUE,0,0)
+
+        db.ltrim(IMAGE_QUEUE,len(queue), -1)
+
+        img_size = 400
+        detect_size = 1600
+        skip = 0
+        
+        if MODE == "High":
+            img_size = 400
+            skip = 0
+            
+        elif MODE == "Low":
+            img_size = 260
+            skip = 1
+            
+        else:
+            img_size = 360
+            skip = 1
+
+        if len(queue) > 0:
+
+            for req_data in queue:
+
+                req_data = json.JSONDecoder().decode(req_data)
+
+                task_type = req_data["reqtype"]
+                req_id = req_data["reqid"]
+
+                if task_type == "detect":
+
+                    try:
+                        img_id = req_data["imgid"]
+                        threshold = float(req_data["minconfidence"])
+
+                        img = TEMP_PATH+img_id
+                        
+                        image = cv2.imread(img)
+
+                        os.remove(img)
+                    
+                        bboxs = facedetector.predict(image, img_size=img_size, threshold=threshold)
+
+                        pad_x = max(image.shape[0] - image.shape[1], 0) * (img_size / max(image.shape))
+                        pad_y = max(image.shape[1] - image.shape[0], 0) * (img_size / max(image.shape))
+                        unpad_h = img_size - pad_y
+                        unpad_w = img_size - pad_x 
+
+                        outputs = []
+                        for face in bboxs:
+
+                            x_min = int(face[0])
+                            
+                            y_min = int(face[1])
+                            
+                            x_max = int(face[2])
+                            
+                            y_max = int(face[3])
+
+                            box_h = ((y_max - y_min) / unpad_h) * image.shape[0]
+                            box_w = ((x_max - x_min) / unpad_w) * image.shape[1]
+                            y_min = int(((y_min - pad_y // 2) / unpad_h) * image.shape[0])
+                            x_min = int(((x_min - pad_x // 2) / unpad_w) * image.shape[1])
+
+                            y_max = int(y_min + box_h)
+                            x_max = int(x_min + box_w)
+
+                            detection = {"confidence":float(face[4]), "x_min":x_min, "y_min":y_min,"x_max":x_max, "y_max":y_max}
+                
+                            outputs.append(detection)  
+
+                        output = {"success": True, "predictions": outputs}
+                        
+                        db.set(req_id,json.dumps(output))
+
+                    except Exception as e:
+                      
+                        output = {"success":False, "error":"invalid image","code":400}
+                        db.set(req_id,json.dumps(output))
+                        if os.path.exists(img):
+                            os.remove(img)
+
+
+        time.sleep(delay)
+
+
 if "VISION-DETECTION" in os.environ:
 
     activate = os.environ["VISION-DETECTION"]
 
     if activate == "True":
         p = Process(target=objectdetection,args=("",SLEEP_TIME))
+        p.start()
+
+if "VISION-FACE" in os.environ:
+
+    activate = os.environ["VISION-FACE"]
+
+    if activate == "True":
+        p = Process(target=face,args=("",SLEEP_TIME))
         p.start()
