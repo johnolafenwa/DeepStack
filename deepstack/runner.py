@@ -379,12 +379,157 @@ def face(thread_name,delay):
 
                     except Exception as e:
                    
-                        output = {"success":False, "error":e,"code":400}
+                        output = {"success":False, "error":"invalid image","code":400}
                         db.set(req_id,json.dumps(output))
 
                         for img_id in user_images:
                             if os.path.exists(TEMP_PATH+img_id):
                                 os.remove(TEMP_PATH+img_id)
+
+                elif task_type == "recognize":
+
+                    try:
+
+                        master_face_map = db.get("facemap")
+                        master_face_map = ast.literal_eval(master_face_map)
+           
+                        facemap = master_face_map["map"]
+                     
+                        face_array = master_face_map["tensors"]
+
+                        if len(face_array) > 0:
+
+                            face_array_tensors = [torch.tensor(emb).unsqueeze(0) for emb in face_array]
+                            face_tensors = torch.cat(face_array_tensors)
+
+                        if CUDA_MODE and len(face_array) > 0:
+                            face_tensors = face_tensors.cuda()
+
+                        img_id = req_data["imgid"]
+                        threshold = float(req_data["minconfidence"])
+               
+                        img = cv2.imread(TEMP_PATH+img_id)
+
+                        pad_x,pad_y,unpad_w,unpad_h = pad_image(img,img_size)
+
+                        pil_image = Image.fromarray(img).convert("RGB")
+
+                        os.remove(TEMP_PATH+img_id)
+                    
+                        bboxs = facedetector.predict(img,img_size)
+                    
+                        faces = [[]]
+                        detections = []
+
+                        found_face = False
+                        
+                        for face in bboxs:
+                            found_face = True
+                            x_min, y_min, x_max, y_max = convert_boxes(img,face[0],face[1],face[2],face[3],unpad_w,unpad_h,pad_x,pad_y)
+                   
+                            new_img = pil_image.crop((x_min,y_min,x_max,y_max))
+
+                            img_tensor = trans(new_img).unsqueeze(0)
+                            
+                            if len(faces[-1]) % 10 == 0 and len(faces[-1]) > 0:
+                                faces.append([img_tensor])
+                               
+                            else:
+                                faces[-1].append(img_tensor)
+                                
+                       
+                            detections.append((x_min,y_min,x_max,y_max))
+
+                        if found_face == False:
+
+                            output = {"success":True, "predictions":[]}
+                            db.set(req_id,json.dumps(output))
+                    
+                        elif len(facemap) == 0:
+
+                            predictions = []
+
+                            for face in detections:
+
+                                x_min = int(face[0])
+                                if x_min < 0:
+                                    x_min = 0
+                                _min = int(face[1])
+                                if y_min < 0:
+                                    y_min = 0
+                                x_max = int(face[2])
+                                if x_max < 0:
+                                    x_max = 0
+                                y_max = int(face[3])
+                                if y_max < 0:
+                                    y_max = 0
+
+                                user_data = {"confidence":0,"userid":"unknown", "x_min":x_min, "y_min":y_min,"x_max":x_max, "y_max":y_max}
+
+                                predictions.append(user_data)
+
+                            output = {"success":True, "predictions":predictions}
+                            db.set(req_id,json.dumps(output))
+
+                        else:
+                            
+                            embeddings = []
+                            for face_list in faces:
+                               
+                                embedding = faceclassifier.predict(torch.cat(face_list))
+                                embeddings.append(embedding)
+                                
+                            embeddings = torch.cat(embeddings)
+                       
+                            predictions = []
+                        
+                            for embedding,face in zip(embeddings,detections):
+                            
+                                embedding = embedding.unsqueeze(0)
+                            
+                                embedding_proj = torch.cat([embedding for i in range(face_tensors.size(0))])
+
+                                similarity = F.cosine_similarity(embedding_proj,face_tensors)
+
+                                user_index = similarity.argmax().item()
+                                max_similarity = (similarity.max().item() + 1)/2
+
+                                if max_similarity < threshold:
+                                    confidence = 0
+                                    user_id = "unknown"
+                                else:
+                                    confidence = max_similarity
+                                    user_id = facemap[user_index]
+
+
+                                x_min = int(face[0])
+                                if x_min < 0:
+                                    x_min = 0
+                                y_min = int(face[1])
+                                if y_min < 0:
+                                    y_min = 0
+                                x_max = int(face[2])
+                                if x_max < 0:
+                                    x_max = 0
+                                y_max = int(face[3])
+                                if y_max < 0:
+                                    y_max = 0
+                            
+                                user_data = {"confidence":confidence,"userid":user_id, "x_min":x_min, "y_min":y_min,"x_max":x_max, "y_max":y_max}
+
+                                predictions.append(user_data)
+                       
+                            output = {"success":True, "predictions":predictions}
+                            db.set(req_id,json.dumps(output))
+
+                    except Exception as e:
+
+
+                        output = {"success":False, "error":"invalid image","code":400}
+                        db.set(req_id,json.dumps(output))
+
+                        if os.path.exists(TEMP_PATH+img_id):
+                            os.remove(TEMP_PATH+img_id)
 
 
         time.sleep(delay)
