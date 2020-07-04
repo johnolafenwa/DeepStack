@@ -1,7 +1,7 @@
 import torch 
-from ..recognition.networks import MobileFaceNet,Backbone
-from ....shared.commons import load_model
-import sharedintelligence.shared.commons.transforms as transforms
+from .networks import MobileFaceNet,Backbone
+from ...commons.utils import load_model
+import torchvision.transforms as transforms
 from PIL import Image
 import time
 
