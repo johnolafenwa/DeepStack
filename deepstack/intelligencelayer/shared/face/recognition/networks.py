@@ -1,4 +1,4 @@
-from ....shared.commons import GlobalAvgPool2d,Flatten, l2_norm
+from ...commons.utils import GlobalAvgPool2d,Flatten, l2_norm
 import math
 
 from torch.nn import Linear, Conv2d, BatchNorm1d, BatchNorm2d, PReLU, ReLU, Sigmoid, Dropout2d, Dropout, AvgPool2d, MaxPool2d, AdaptiveAvgPool2d, Sequential, Module, Parameter
