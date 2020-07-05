@@ -13,7 +13,6 @@ import ast
 import sqlite3
 import numpy as np
 import warnings
-import tensorflow as tf
 import sys
 from intelligencelayer.shared.detection import ObjectDetector
 from intelligencelayer.shared.face.detection import FaceModel
@@ -22,7 +21,6 @@ import torchvision.transforms as transforms
 """
 sys.stdout = open(os.devnull, 'w')
 """
-tf.logging.set_verbosity(tf.logging.ERROR)
 
 warnings.filterwarnings("ignore")
 
@@ -530,6 +528,60 @@ def face(thread_name,delay):
 
                         if os.path.exists(TEMP_PATH+img_id):
                             os.remove(TEMP_PATH+img_id)
+
+                elif task_type == "match":
+
+                    try:
+
+                        user_images = req_data["images"]
+
+                        img1 = user_images[0]
+                        img2 = user_images[1]
+
+                        cv_img1 = cv2.imread(TEMP_PATH+img1)
+                        image1 = Image.fromarray(cv_img1).convert("RGB")
+                        cv_img2 = cv2.imread(TEMP_PATH+img2)
+                        image2 = Image.fromarray(cv_img2).convert("RGB")
+
+                        img1_pad_x,img1_pad_y,img1_unpad_w,img1_unpad_h = pad_image(cv_img1,img_size)
+                        img2_pad_x,img2_pad_y,img2_unpad_w,img2_unpad_h = pad_image(cv_img2 ,img_size)
+
+
+                        os.remove(TEMP_PATH+img1)
+                        os.remove(TEMP_PATH+img2)
+                    
+                        bboxs1 = facedetector.predict(cv_img1,img_size)
+                        bboxs2 = facedetector.predict(cv_img2,img_size)
+
+                        if len(bboxs1) == 0 or len(bboxs2) == 0:
+
+                            output = {"success":False, "error":"no face found"}
+                            db.set(req_id,json.dumps(output)) 
+                            continue
+
+                        face1 = bboxs1[0]
+                        face2 = bboxs2[0]
+                        img1_x_min, img1_y_min, img1_x_max, img1_y_max = convert_boxes(cv_img1,face1[0],face1[1],face1[2],face1[3],img1_unpad_w,img1_unpad_h,img1_pad_x,img1_pad_y)
+                        img2_x_min, img2_y_min, img2_x_max, img2_y_max = convert_boxes(cv_img2,face2[0],face2[1],face2[2],face2[3],img2_unpad_w,img2_unpad_h,img2_pad_x,img2_pad_y)
+                        face1 = trans(image1.crop((img1_x_min,img1_y_min,img1_x_max,img1_y_max))).unsqueeze(0)
+                        face2 = trans(image2.crop((img2_x_min,img2_y_min,img2_x_max,img2_y_max))).unsqueeze(0)
+
+                        faces = torch.cat([face1,face2],dim=0)
+
+                        embeddings = faceclassifier.predict(faces)
+
+                        embed1 = embeddings[0,:].unsqueeze(0)
+                        embed2 = embeddings[1,:].unsqueeze(0)
+                   
+                        similarity = (F.cosine_similarity(embed1,embed2).item() + 1)/2
+
+                        output = {"success":True, "similarity":similarity}
+                        db.set(req_id,json.dumps(output))           
+
+                    except Exception as e:
+                        
+                        output = {"success":False, "error":"invalid image","code":400}
+                        db.set(req_id,json.dumps(output))
 
 
         time.sleep(delay)
