@@ -534,6 +534,16 @@ def face(thread_name,delay):
 
         time.sleep(delay)
 
+def update_faces(thread_name,delay):
+
+    while True:
+
+        load_faces()
+
+        time.sleep(delay)
+
+p1 = Process(target=update_faces,args=("",1))
+p1.start()
 
 if "VISION-DETECTION" in os.environ:
 
