@@ -17,6 +17,7 @@ import sys
 from intelligencelayer.shared.detection import ObjectDetector
 from intelligencelayer.shared.face.detection import FaceModel
 from intelligencelayer.shared.face.recognition import FaceRecognitionModel
+from intelligencelayer.shared.scene import SceneModel
 import torchvision.transforms as transforms
 """
 sys.stdout = open(os.devnull, 'w')
@@ -203,11 +204,6 @@ def face(thread_name,delay):
         transforms.Resize((112,112)),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5, 0.5, 0.5],std=[0.5, 0.5, 0.5])
-    ])
-
-    face_transforms = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.5, 0.5, 0.5],std=[0.5, 0.5, 0.5])
     ])
    
     IMAGE_QUEUE = "face_queue"
@@ -586,6 +582,69 @@ def face(thread_name,delay):
 
         time.sleep(delay)
 
+
+def scenerecognition(thread_name,delay):
+
+    classes = list()
+    with open(os.path.join(SHARED_APP_DIR,"categories_places365.txt")) as class_file:
+        for line in class_file:
+            classes.append(line.strip().split(' ')[0][3:])
+    
+    placesnames = tuple(classes)
+
+    IMAGE_QUEUE = "scene_queue"
+    classifier = SceneModel(os.path.join(SHARED_APP_DIR,"scene.model"),CUDA_MODE)
+
+    while True:
+        queue = db.lrange(IMAGE_QUEUE,0,0)
+        
+        if len(queue) > 0:
+
+            db.ltrim(IMAGE_QUEUE,len(queue), -1)
+
+            for req_data in queue:
+                req_data = json.JSONDecoder().decode(req_data)
+                img_id = req_data["imgid"]
+                req_id = req_data["reqid"]
+                req_type = req_data["reqtype"]
+                try:
+                    
+                   
+                    img = Image.open(TEMP_PATH+img_id).convert("RGB")
+
+                    trans = transforms.Compose([
+                        transforms.Resize((256,256)),
+                        transforms.CenterCrop(224),
+                        transforms.ToTensor(),
+                        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+                    ])
+                    img = trans(img)
+                    img = img.numpy()
+                    img = np.expand_dims(img,0).astype(np.float32)
+                  
+                    os.remove( TEMP_PATH + img_id)
+
+                    cl , conf = classifier.predict(img)
+
+                    cl = placesnames[cl]
+
+                    conf = float(conf)
+
+                    output = {"success":True, "label":cl, "confidence":conf}
+
+                    db.set(req_id,json.dumps(output))
+
+                except Exception as e:
+                   
+                    output = {"success":False, "error":"invalid image","code":400}
+                    db.set(req_id,json.dumps(output))
+                    if os.path.exists(TEMP_PATH + img_id):
+                        os.remove( TEMP_PATH + img_id)
+
+        time.sleep(delay)
+
+
+
 def update_faces(thread_name,delay):
 
     while True:
@@ -611,4 +670,12 @@ if "VISION-FACE" in os.environ:
 
     if activate == "True":
         p = Process(target=face,args=("",SLEEP_TIME))
+        p.start()
+
+if "VISION-SCENE" in os.environ:
+
+    activate = os.environ["VISION-SCENE"]
+
+    if activate == "True":
+        p = Process(target=scenerecognition,args=("",SLEEP_TIME))
         p.start()
