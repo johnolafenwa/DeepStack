@@ -101,7 +101,7 @@ func detection(c *gin.Context) {
 
 	if nms == "" {
 
-		nms = "0.90"
+		nms = "0.40"
 
 	}
 
@@ -649,8 +649,6 @@ func restore(c *gin.Context) {
 
 func printlogs() {
 
-	
-
 	face1 := os.Getenv("VISION-FACE")
 	face2 := os.Getenv("VISION-FACE2")
 	detection := os.Getenv("VISION-DETECTION")
@@ -716,15 +714,11 @@ func printlogs() {
 	fmt.Println("---------------------------------------")
 	fmt.Println("v1/restore")
 
-
-
 }
 
 func home(c *gin.Context) {
-	
-	
-		c.HTML(200, "index.html", gin.H{})
 
+	c.HTML(200, "index.html", gin.H{})
 
 }
 
@@ -747,6 +741,8 @@ func launchservices() {
 }
 
 func main() {
+
+	os.Setenv("VISION-SCENE", "True")
 
 	APPDIR := os.Getenv("APPDIR")
 
@@ -798,7 +794,7 @@ func main() {
 
 	}
 
-	if (admin_key != "" || api_key != ""){
+	if admin_key != "" || api_key != "" {
 
 		if admin_key != "" {
 

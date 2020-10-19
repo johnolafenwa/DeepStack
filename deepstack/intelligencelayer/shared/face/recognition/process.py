@@ -1,9 +1,22 @@
 import torch 
 from .networks import MobileFaceNet,Backbone
-from ...commons.utils import load_model
 import torchvision.transforms as transforms
 from PIL import Image
 import time
+
+
+def load_model(model,path):
+    checkpoint = torch.load(path, map_location=lambda storage, loc: storage)
+
+    try:
+        model.load_state_dict(checkpoint)
+        
+    except:
+        copy = dict()
+        for x, y in zip(model.state_dict(), checkpoint):
+            new_name = y[y.index(x):]
+            copy[new_name] = checkpoint[y]
+
 
 class FaceRecognitionModel(object):
     def __init__(self,model_path,emb_size=512,cuda=False):

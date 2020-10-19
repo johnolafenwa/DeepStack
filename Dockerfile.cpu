@@ -1,13 +1,16 @@
-FROM deepquestai/deepstack-base:gpu as gpu
+FROM deepquestai/deepstack-base:cpu as cpu
 
 ENV SLEEP_TIME 0.01
-ENV CUDA_MODE True
+ENV CUDA_MODE False
 ENV APPDIR /app
 
 RUN mkdir /deeptemp
 RUN mkdir /datastore
 
 WORKDIR /app
+RUN pip install torch==1.6.0+cpu torchvision==0.7.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+
+RUN pip3 install redis
 
 RUN mkdir /app/sharedfiles
 COPY ./sharedfiles /app/sharedfiles
@@ -18,11 +21,10 @@ COPY ./server /app/server
 RUN mkdir /app/intelligencelayer
 COPY ./deepstack/intelligencelayer /app/intelligencelayer
 
-COPY ./deepstack/runner.py /app
 COPY ./deepstack/init.py /app 
 
 EXPOSE 5000
 
 WORKDIR /app/server
 
-CMD ["/app/server/server"] 
+CMD ["/app/server/server"]

@@ -1,9 +1,58 @@
-from ...commons.utils import GlobalAvgPool2d,Flatten, l2_norm
+import torch
 import math
-
+import torch.nn as nn
 from torch.nn import Linear, Conv2d, BatchNorm1d, BatchNorm2d, PReLU, ReLU, Sigmoid, Dropout2d, Dropout, AvgPool2d, MaxPool2d, AdaptiveAvgPool2d, Sequential, Module, Parameter
 import torch.nn.functional as F
 from collections import namedtuple
+
+def l2_norm(input,axis=1):
+    norm = torch.norm(input,2,axis,True)
+    output = torch.div(input, norm)
+    return output
+
+
+class _GlobalPoolNd(nn.Module):
+    def __init__(self,flatten=True):
+        """
+
+        :param flatten:
+        """
+        super(_GlobalPoolNd,self).__init__()
+        self.flatten = flatten
+
+    def pool(self,input):
+        """
+
+        :param input:
+        :return:
+        """
+        raise NotImplementedError()
+
+    def forward(self,input):
+        """
+
+        :param input:
+        :return:
+        """
+        input = self.pool(input)
+        size_0 = input.size(1)
+        return input.view(-1,size_0) if self.flatten else input
+
+class GlobalAvgPool2d(_GlobalPoolNd):
+    def __init__(self, flatten=True):
+        """
+
+        :param flatten:
+        """
+        super(GlobalAvgPool2d,self).__init__(flatten)
+
+    def pool(self, input):
+        return F.adaptive_avg_pool2d(input,1)
+
+   
+class Flatten(nn.Module):
+    def forward(self, input):
+        return input.view(input.size(0), -1)
 
 
 ##################################  Original Arcface Model #############################################################

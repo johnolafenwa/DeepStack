@@ -4,9 +4,7 @@ RUN pip3 install opencv-python
 RUN apt-get update && apt install -y libsm6 libxext6
 RUN apt-get install -y libxrender-dev
 
-RUN pip install torch==1.5.0+cu101 torchvision==0.6.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html
-RUN pip3 install tensorflow-gpu=="1.14.0"
-RUN pip3 install onnxruntime-gpu=="1.2.0"
+RUN pip3 install torch==1.6.0+cu101 torchvision==0.7.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html
 
 RUN pip3 install redis
 RUN apt-get install libglib2.0-0 -y
