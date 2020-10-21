@@ -11,8 +11,8 @@ class SharedOptions:
 
     TEMP_PATH = "/deeptemp/"
     SLEEP_TIME = 0.01
-    #SHARED_APP_DIR = os.path.join(APPDIR,"sharedfiles")
-    SHARED_APP_DIR="/home/johnolafenwa/Documents/Source/DeepStack/deepstack/sharedfiles"
+    SHARED_APP_DIR = os.path.join(APPDIR,"sharedfiles")
+    #SHARED_APP_DIR="/home/johnolafenwa/Documents/Source/DeepStack/deepstack/sharedfiles"
     GPU_APP_DIR = os.path.join(APPDIR,"gpufiles")
     CPU_APP_DIR = os.path.join(APPDIR,"cpufiles")
     DATA_DIR = "/datastore"

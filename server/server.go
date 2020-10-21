@@ -742,8 +742,6 @@ func launchservices() {
 
 func main() {
 
-	os.Setenv("VISION-SCENE", "True")
-
 	APPDIR := os.Getenv("APPDIR")
 
 	if APPDIR == "" {
@@ -757,12 +755,31 @@ func main() {
 
 	rediscmd := exec.CommandContext(ctx, "bash", "-c", "redis-server --daemonize yes")
 
+	rediscmd.Run()
+	initcmd.Run()
+
+	if os.Getenv("VISION-DETECTION") == "True" {
+		detectioncmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/detection2/runner.py")
+		detectioncmd.Dir = "/app/intelligencelayer/shared/detection2"
+		detectioncmd.Start()
+
+	}
+
+	if os.Getenv("VISION-FACE") == "True" {
+		facecmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/face/runner.py")
+		facecmd.Dir = "/app/intelligencelayer/shared/face"
+		facecmd.Start()
+
+	}
+	if os.Getenv("VISION-SCENE") == "True" {
+		scenecmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/scene/runner.py")
+		scenecmd.Dir = "/app/intelligencelayer/shared/scene"
+		scenecmd.Start()
+
+	}
+
 	intelcmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/runner.py")
 	intelcmd.Dir = APPDIR
-
-	rediscmd.Run()
-	initcmd.Start()
-	intelcmd.Start()
 
 	redis_client = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",

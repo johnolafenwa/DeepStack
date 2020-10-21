@@ -4,7 +4,7 @@ from PIL import Image
 image_data = open("family.jpg","rb").read()
 image = Image.open("family.jpg").convert("RGB")
 
-response = requests.post("http://localhost:5000/v1/vision/face",files={"image":image_data}).json()
+response = requests.post("http://localhost:80/v1/vision/face",files={"image":image_data}).json()
 i = 0
 for face in response["predictions"]:
 
