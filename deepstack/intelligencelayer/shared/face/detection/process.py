@@ -1,9 +1,20 @@
 import cv2
-from ..detection.networks import s3fd, detect
-from ...commons.utils import load_model
+from detection.networks import s3fd, detect
 from .bbox import nms
 import torch
 import time
+
+def load_model(model,path):
+    checkpoint = torch.load(path, map_location=lambda storage, loc: storage)
+
+    try:
+        model.load_state_dict(checkpoint)
+        
+    except:
+        copy = dict()
+        for x, y in zip(model.state_dict(), checkpoint):
+            new_name = y[y.index(x):]
+            copy[new_name] = checkpoint[y]
 
 class FaceModel(object):
     def __init__(self,model_path,cuda=False):

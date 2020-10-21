@@ -9,9 +9,6 @@ RUN mkdir /datastore
 
 WORKDIR /app
 
-RUN pip3 uninstall torchvision -y
-RUN pip3 install torchvision==0.2.0
-
 RUN mkdir /app/sharedfiles
 COPY ./sharedfiles /app/sharedfiles
 
@@ -28,4 +25,4 @@ EXPOSE 5000
 
 WORKDIR /app/server
 
-CMD ["/app/server/server"]
+CMD ["/app/server/server"] 

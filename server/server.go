@@ -101,7 +101,7 @@ func detection(c *gin.Context) {
 
 	if nms == "" {
 
-		nms = "0.90"
+		nms = "0.40"
 
 	}
 
@@ -649,8 +649,6 @@ func restore(c *gin.Context) {
 
 func printlogs() {
 
-	
-
 	face1 := os.Getenv("VISION-FACE")
 	face2 := os.Getenv("VISION-FACE2")
 	detection := os.Getenv("VISION-DETECTION")
@@ -716,15 +714,11 @@ func printlogs() {
 	fmt.Println("---------------------------------------")
 	fmt.Println("v1/restore")
 
-
-
 }
 
 func home(c *gin.Context) {
-	
-	
-		c.HTML(200, "index.html", gin.H{})
 
+	c.HTML(200, "index.html", gin.H{})
 
 }
 
@@ -761,12 +755,31 @@ func main() {
 
 	rediscmd := exec.CommandContext(ctx, "bash", "-c", "redis-server --daemonize yes")
 
+	rediscmd.Run()
+	initcmd.Run()
+
+	if os.Getenv("VISION-DETECTION") == "True" {
+		detectioncmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/detection2/runner.py")
+		detectioncmd.Dir = "/app/intelligencelayer/shared/detection2"
+		detectioncmd.Start()
+
+	}
+
+	if os.Getenv("VISION-FACE") == "True" {
+		facecmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/face/runner.py")
+		facecmd.Dir = "/app/intelligencelayer/shared/face"
+		facecmd.Start()
+
+	}
+	if os.Getenv("VISION-SCENE") == "True" {
+		scenecmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/scene/runner.py")
+		scenecmd.Dir = "/app/intelligencelayer/shared/scene"
+		scenecmd.Start()
+
+	}
+
 	intelcmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/runner.py")
 	intelcmd.Dir = APPDIR
-
-	rediscmd.Run()
-	initcmd.Start()
-	intelcmd.Start()
 
 	redis_client = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
@@ -798,7 +811,7 @@ func main() {
 
 	}
 
-	if (admin_key != "" || api_key != ""){
+	if admin_key != "" || api_key != "" {
 
 		if admin_key != "" {
 

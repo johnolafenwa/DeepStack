@@ -4,7 +4,7 @@ from PIL import Image,ImageDraw
 image_data = open("road.jpg","rb").read()
 image = Image.open("road.jpg").convert("RGB")
 
-response = requests.post("http://localhost:80/v1/vision/detection",files={"image":image_data},data={"min_confidence":0.90}).json()
+response = requests.post("http://localhost:80/v1/vision/detection",files={"image":image_data}).json()
 print(response)
 draw = ImageDraw.Draw(image)
 for object in response["predictions"]:
