@@ -14,34 +14,13 @@ import sqlite3
 import numpy as np
 import warnings
 import sys
-from detection import FaceModel
+from process import YOLODetector
 from recognition import FaceRecognitionModel
 import torchvision.transforms as transforms
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../"))
 
 from shared import SharedOptions
-
-def pad_image(img,img_size):
-
-     pad_x = max(img.shape[0] - img.shape[1], 0) * (img_size / max(img.shape))
-     pad_y = max(img.shape[1] - img.shape[0], 0) * (img_size / max(img.shape))
-     unpad_h = img_size - pad_y
-     unpad_w = img_size - pad_x 
-
-     return pad_x,pad_y,unpad_w,unpad_h
-
-def convert_boxes(img,x_min, y_min, x_max,y_max,unpad_w,unpad_h,pad_x,pad_y):
-
-    box_h = ((y_max - y_min) / unpad_h) * img.shape[0]
-    box_w = ((x_max - x_min) / unpad_w) * img.shape[1]
-    y_min = int(((y_min - pad_y // 2) / unpad_h) * img.shape[0])
-    x_min = int(((x_min - pad_x // 2) / unpad_w) * img.shape[1])
-
-    y_max = int(y_min + box_h)
-    x_max = int(x_min + box_w)
-
-    return x_min, y_min, x_max, y_max
 
 def load_faces():
 
@@ -71,9 +50,23 @@ def load_faces():
 
 def face(thread_name,delay):
 
+    reso = 416
+    
+    if SharedOptions.MODE == "High":
+      
+        reso = 640
+        
+    elif SharedOptions.MODE == "Low":
+      
+        reso = 320
+        
+    else:
+       
+        reso = 416
+
     faceclassifier = FaceRecognitionModel(os.path.join(SharedOptions.SHARED_APP_DIR,"facerec-high.model"),cuda=SharedOptions.CUDA_MODE)
    
-    facedetector = FaceModel(os.path.join(SharedOptions.SHARED_APP_DIR,"facedetector-high.model"),SharedOptions.CUDA_MODE)
+    detector = YOLODetector(os.path.join(SharedOptions.SHARED_APP_DIR,"face.pt"),reso,cuda=SharedOptions.CUDA_MODE)
 
     load_faces()
 
@@ -95,21 +88,7 @@ def face(thread_name,delay):
 
         SharedOptions.db.ltrim(IMAGE_QUEUE,len(queue), -1)
 
-        img_size = 400
-        detect_size = 1600
-        skip = 0
         
-        if SharedOptions.MODE == "High":
-            img_size = 400
-            skip = 0
-            
-        elif SharedOptions.MODE == "Low":
-            img_size = 260
-            skip = 1
-            
-        else:
-            img_size = 360
-            skip = 1
 
         if len(queue) > 0:
 
@@ -128,50 +107,33 @@ def face(thread_name,delay):
 
                         img = SharedOptions.TEMP_PATH+img_id
                         
-                        image = cv2.imread(img)
-
+                        det = detector.predict(img,threshold)
                         os.remove(img)
-                    
-                        bboxs = facedetector.predict(image, img_size=img_size, threshold=threshold)
-
-                        pad_x = max(image.shape[0] - image.shape[1], 0) * (img_size / max(image.shape))
-                        pad_y = max(image.shape[1] - image.shape[0], 0) * (img_size / max(image.shape))
-                        unpad_h = img_size - pad_y
-                        unpad_w = img_size - pad_x 
-
+                            
                         outputs = []
-                        for face in bboxs:
 
-                            x_min = int(face[0])
-                            
-                            y_min = int(face[1])
-                            
-                            x_max = int(face[2])
-                            
-                            y_max = int(face[3])
+                        for *xyxy, conf, cls in reversed(det):
+                            x_min = xyxy[0]
+                            y_min = xyxy[1]
+                            x_max = xyxy[2]
+                            y_max = xyxy[3]
+                            score = conf.item()
 
-                            box_h = ((y_max - y_min) / unpad_h) * image.shape[0]
-                            box_w = ((x_max - x_min) / unpad_w) * image.shape[1]
-                            y_min = int(((y_min - pad_y // 2) / unpad_h) * image.shape[0])
-                            x_min = int(((x_min - pad_x // 2) / unpad_w) * image.shape[1])
-
-                            y_max = int(y_min + box_h)
-                            x_max = int(x_min + box_w)
-
-                            detection = {"confidence":float(face[4]), "x_min":x_min, "y_min":y_min,"x_max":x_max, "y_max":y_max}
-                
-                            outputs.append(detection)  
-
+                            detection = {"confidence":score, "x_min":int(x_min), "y_min":int(y_min),"x_max":int(x_max), "y_max":int(y_max)}
+                                    
+                            outputs.append(detection)
+                    
                         output = {"success": True, "predictions": outputs}
                         
                         SharedOptions.db.set(req_id,json.dumps(output))
-
+                        
                     except Exception as e:
                       
                         output = {"success":False, "error":"invalid image","code":400}
                         SharedOptions.db.set(req_id,json.dumps(output))
                         if os.path.exists(img):
                             os.remove(img)
+                    
 
                 elif task_type == "register":
 
@@ -186,25 +148,26 @@ def face(thread_name,delay):
                         batch = None
 
                         for img_id in user_images:
+
+                            img = SharedOptions.TEMP_PATH+img_id
+                            pil_image = Image.open(img).convert("RGB")
                         
-                            img = cv2.imread(SharedOptions.TEMP_PATH+img_id)
-
-                            pad_x,pad_y,unpad_w,unpad_h = pad_image(img,img_size)
-
-                            pil_image = Image.fromarray(img).convert("RGB")
-              
+                            det = detector.predict(img,0.8)
                             os.remove(SharedOptions.TEMP_PATH+img_id)
-                         
-                            bboxs = facedetector.predict(img,img_size)
-                        
+                            
+                            outputs = []
                             new_img = None
 
-                            if len(bboxs) > 0:
-                                face = bboxs[0]
-                                x_min, y_min, x_max, y_max = convert_boxes(img,face[0],face[1],face[2],face[3],unpad_w,unpad_h,pad_x,pad_y)
-                   
-                                new_img = pil_image.crop((x_min,y_min,x_max,y_max))
-                        
+                            for *xyxy, conf, cls in reversed(det):
+                                x_min = xyxy[0]
+                                y_min = xyxy[1]
+                                x_max = xyxy[2]
+                                y_max = xyxy[3]
+                                
+                                new_img = pil_image.crop((int(x_min),int(y_min),int(x_max),int(y_max)))
+                                break
+
+
                             if new_img is not None:
                 
                                 img = trans(new_img).unsqueeze(0)
@@ -251,7 +214,7 @@ def face(thread_name,delay):
                         SharedOptions.db.set(req_id,json.dumps(output))
                 
                         conn.close()
-
+                        
                     except Exception as e:
                    
                         output = {"success":False, "error":"invalid image","code":400}
@@ -260,16 +223,16 @@ def face(thread_name,delay):
                         for img_id in user_images:
                             if os.path.exists(SharedOptions.TEMP_PATH+img_id):
                                 os.remove(SharedOptions.TEMP_PATH+img_id)
-
+                    
                 elif task_type == "recognize":
 
                     try:
 
                         master_face_map = SharedOptions.db.get("facemap")
                         master_face_map = ast.literal_eval(master_face_map)
-           
+            
                         facemap = master_face_map["map"]
-                     
+                        
                         face_array = master_face_map["tensors"]
 
                         if len(face_array) > 0:
@@ -282,39 +245,42 @@ def face(thread_name,delay):
 
                         img_id = req_data["imgid"]
                         threshold = float(req_data["minconfidence"])
-               
-                        img = cv2.imread(SharedOptions.TEMP_PATH+img_id)
 
-                        pad_x,pad_y,unpad_w,unpad_h = pad_image(img,img_size)
+                        img = SharedOptions.TEMP_PATH+img_id
+                        
+                        pil_image = Image.open(img).convert("RGB")
 
-                        pil_image = Image.fromarray(img).convert("RGB")
+                        
+                        det = detector.predict(img,0.8)
 
-                        os.remove(SharedOptions.TEMP_PATH+img_id)
-                    
-                        bboxs = facedetector.predict(img,img_size)
+                        os.remove(img)
                     
                         faces = [[]]
                         detections = []
 
                         found_face = False
-                        
-                        for face in bboxs:
-                            found_face = True
-                            x_min, y_min, x_max, y_max = convert_boxes(img,face[0],face[1],face[2],face[3],unpad_w,unpad_h,pad_x,pad_y)
-                   
-                            new_img = pil_image.crop((x_min,y_min,x_max,y_max))
 
-                            img_tensor = trans(new_img).unsqueeze(0)
+
+                        for *xyxy, conf, cls in reversed(det):
+                            found_face = True
+                            x_min = int(xyxy[0])
+                            y_min = int(xyxy[1])
+                            x_max = int(xyxy[2])
+                            y_max = int(xyxy[3])
                             
+                            new_img = pil_image.crop((x_min,y_min,x_max,y_max))
+                            img_tensor = trans(new_img).unsqueeze(0)
+
                             if len(faces[-1]) % 10 == 0 and len(faces[-1]) > 0:
                                 faces.append([img_tensor])
-                               
+                                
                             else:
                                 faces[-1].append(img_tensor)
                                 
-                       
+                        
                             detections.append((x_min,y_min,x_max,y_max))
 
+                            
                         if found_face == False:
 
                             output = {"success":True, "predictions":[]}
@@ -350,12 +316,12 @@ def face(thread_name,delay):
                             
                             embeddings = []
                             for face_list in faces:
-                               
+                                
                                 embedding = faceclassifier.predict(torch.cat(face_list))
                                 embeddings.append(embedding)
                                 
                             embeddings = torch.cat(embeddings)
-                       
+                        
                             predictions = []
                         
                             for embedding,face in zip(embeddings,detections):
@@ -393,10 +359,10 @@ def face(thread_name,delay):
                                 user_data = {"confidence":confidence,"userid":user_id, "x_min":x_min, "y_min":y_min,"x_max":x_max, "y_max":y_max}
 
                                 predictions.append(user_data)
-                       
+                        
                             output = {"success":True, "predictions":predictions}
                             SharedOptions.db.set(req_id,json.dumps(output))
-
+                        
                     except Exception as e:
 
 
@@ -405,6 +371,7 @@ def face(thread_name,delay):
 
                         if os.path.exists(SharedOptions.TEMP_PATH+img_id):
                             os.remove(SharedOptions.TEMP_PATH+img_id)
+                     
 
                 elif task_type == "match":
 
@@ -412,53 +379,60 @@ def face(thread_name,delay):
 
                         user_images = req_data["images"]
 
-                        img1 = user_images[0]
-                        img2 = user_images[1]
+                        img1 = SharedOptions.TEMP_PATH+user_images[0]
+                        img2 = SharedOptions.TEMP_PATH+user_images[1]
 
-                        cv_img1 = cv2.imread(SharedOptions.TEMP_PATH+img1)
-                        image1 = Image.fromarray(cv_img1).convert("RGB")
-                        cv_img2 = cv2.imread(SharedOptions.TEMP_PATH+img2)
-                        image2 = Image.fromarray(cv_img2).convert("RGB")
+                        image1 = Image.open(img1).convert("RGB")
+                        image2 = Image.open(img2).convert("RGB")
 
-                        img1_pad_x,img1_pad_y,img1_unpad_w,img1_unpad_h = pad_image(cv_img1,img_size)
-                        img2_pad_x,img2_pad_y,img2_unpad_w,img2_unpad_h = pad_image(cv_img2 ,img_size)
+                        det1 = detector.predict(img1,0.8)
+                        det2 = detector.predict(img2,0.8)
 
-
-                        os.remove(SharedOptions.TEMP_PATH+img1)
-                        os.remove(SharedOptions.TEMP_PATH+img2)
+                        os.remove(img1)
+                        os.remove(img2)
                     
-                        bboxs1 = facedetector.predict(cv_img1,img_size)
-                        bboxs2 = facedetector.predict(cv_img2,img_size)
-
-                        if len(bboxs1) == 0 or len(bboxs2) == 0:
+                        if len(det1) == 0 or len(det2) == 0:
 
                             output = {"success":False, "error":"no face found"}
                             SharedOptions.db.set(req_id,json.dumps(output)) 
                             continue
 
-                        face1 = bboxs1[0]
-                        face2 = bboxs2[0]
-                        img1_x_min, img1_y_min, img1_x_max, img1_y_max = convert_boxes(cv_img1,face1[0],face1[1],face1[2],face1[3],img1_unpad_w,img1_unpad_h,img1_pad_x,img1_pad_y)
-                        img2_x_min, img2_y_min, img2_x_max, img2_y_max = convert_boxes(cv_img2,face2[0],face2[1],face2[2],face2[3],img2_unpad_w,img2_unpad_h,img2_pad_x,img2_pad_y)
-                        face1 = trans(image1.crop((img1_x_min,img1_y_min,img1_x_max,img1_y_max))).unsqueeze(0)
-                        face2 = trans(image2.crop((img2_x_min,img2_y_min,img2_x_max,img2_y_max))).unsqueeze(0)
+                        for *xyxy, conf, cls in reversed(det1):
+                            x_min = xyxy[0]
+                            y_min = xyxy[1]
+                            x_max = xyxy[2]
+                            y_max = xyxy[3]
+                            face1 = trans(image1.crop((int(x_min),int(y_min),int(x_max),int(y_max)))).unsqueeze(0)
 
+                            break
+
+                        for *xyxy, conf, cls in reversed(det2):
+                            x_min = xyxy[0]
+                            y_min = xyxy[1]
+                            x_max = xyxy[2]
+                            y_max = xyxy[3]
+                            face2 = trans(image2.crop((int(x_min),int(y_min),int(x_max),int(y_max)))).unsqueeze(0)
+
+                            break
+
+                        
                         faces = torch.cat([face1,face2],dim=0)
 
                         embeddings = faceclassifier.predict(faces)
 
                         embed1 = embeddings[0,:].unsqueeze(0)
                         embed2 = embeddings[1,:].unsqueeze(0)
-                   
+                    
                         similarity = (F.cosine_similarity(embed1,embed2).item() + 1)/2
 
                         output = {"success":True, "similarity":similarity}
                         SharedOptions.db.set(req_id,json.dumps(output))           
-
+                    
                     except Exception as e:
                         
                         output = {"success":False, "error":"invalid image","code":400}
                         SharedOptions.db.set(req_id,json.dumps(output))
+                    
 
 
         time.sleep(delay)

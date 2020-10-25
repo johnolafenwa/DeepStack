@@ -16,7 +16,7 @@ import sys
 import os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../"))
 
-from process import ObjectDetector2
+from process import YOLODetector
 from shared import SharedOptions
 
 import torchvision.transforms as transforms
@@ -49,7 +49,7 @@ def objectdetection(thread_name: str, delay: float):
         reso = 416
         model_name  = "yolov5s.pt"
 
-    detector = ObjectDetector2(os.path.join(SHARED_APP_DIR,model_name),reso,cuda=CUDA_MODE)
+    detector = YOLODetector(os.path.join(SHARED_APP_DIR,model_name),reso,cuda=CUDA_MODE)
     while True:
         queue = db.lrange(IMAGE_QUEUE,0,0)
 
