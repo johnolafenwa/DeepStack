@@ -5,10 +5,13 @@ import (
 	"context"
 	"encoding/json"
 	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
+
 	"path"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
@@ -17,7 +20,6 @@ import (
 	"database/sql"
 	"fmt"
 	"path/filepath"
-	"time"
 
 	"deepstack.io/server/middlewares"
 	"deepstack.io/server/requests"
@@ -160,7 +162,7 @@ func facedetection(c *gin.Context) {
 
 	if nms == "" {
 
-		nms = "0.45"
+		nms = "0.55"
 
 	}
 
@@ -647,6 +649,23 @@ func restore(c *gin.Context) {
 
 }
 
+func printfromprocess(cmd *exec.Cmd) {
+
+	for true {
+
+		out, err := cmd.StdoutPipe()
+		if err == nil {
+
+			outData, _ := ioutil.ReadAll(out)
+			fmt.Println(string(outData))
+			time.Sleep(1 * time.Second)
+
+		}
+
+	}
+
+}
+
 func printlogs() {
 
 	face1 := os.Getenv("VISION-FACE")
@@ -744,6 +763,16 @@ func main() {
 
 	APPDIR := os.Getenv("APPDIR")
 
+	os.Mkdir("/logs", 0755)
+
+	stdout, _ := os.Create("/logs/stdout.txt")
+
+	defer stdout.Close()
+
+	stderr, _ := os.Create("/logs/stderr.txt")
+
+	defer stderr.Close()
+
 	if APPDIR == "" {
 		APPDIR = "../"
 	}
@@ -752,34 +781,42 @@ func main() {
 
 	initcmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/init.py")
 	initcmd.Dir = APPDIR
+	initcmd.Stdout = stdout
+	initcmd.Stderr = stderr
 
 	rediscmd := exec.CommandContext(ctx, "bash", "-c", "redis-server --daemonize yes")
+
+	rediscmd.Stdout = stdout
+	rediscmd.Stderr = stderr
 
 	rediscmd.Run()
 	initcmd.Run()
 
 	if os.Getenv("VISION-DETECTION") == "True" {
-		detectioncmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/detection2/runner.py")
-		detectioncmd.Dir = "/app/intelligencelayer/shared/detection2"
+		detectioncmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/detection.py")
+		detectioncmd.Dir = "/app/intelligencelayer/shared"
+		detectioncmd.Stdout = stdout
+		detectioncmd.Stderr = stderr
 		detectioncmd.Start()
 
 	}
 
 	if os.Getenv("VISION-FACE") == "True" {
-		facecmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/face/runner.py")
-		facecmd.Dir = "/app/intelligencelayer/shared/face"
+		facecmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/face.py")
+		facecmd.Dir = "/app/intelligencelayer/shared"
+		facecmd.Stdout = stdout
+		facecmd.Stderr = stderr
 		facecmd.Start()
 
 	}
 	if os.Getenv("VISION-SCENE") == "True" {
-		scenecmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/scene/runner.py")
-		scenecmd.Dir = "/app/intelligencelayer/shared/scene"
+		scenecmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/scene.py")
+		scenecmd.Dir = "/app/intelligencelayer/shared"
+		scenecmd.Stdout = stdout
+		scenecmd.Stderr = stderr
 		scenecmd.Start()
 
 	}
-
-	intelcmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/runner.py")
-	intelcmd.Dir = APPDIR
 
 	redis_client = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",

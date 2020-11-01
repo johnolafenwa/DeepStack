@@ -8,6 +8,18 @@ RUN mkdir /deeptemp
 RUN mkdir /datastore
 
 WORKDIR /app
+RUN pip install torch==1.6.0+cu101 torchvision==0.7.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html
+RUN pip install onnxruntime==0.5.0
+
+RUN pip3 install redis
+RUN pip3 install opencv-python
+RUN pip3 install Cython
+RUN pip3 install pillow
+RUN pip3 install scipy
+RUN pip3 install tqdm
+RUN pip3 install tensorboard
+RUN pip3 install PyYAML
+RUN pip3 install Matplotlib
 
 RUN mkdir /app/sharedfiles
 COPY ./sharedfiles /app/sharedfiles
@@ -18,11 +30,10 @@ COPY ./server /app/server
 RUN mkdir /app/intelligencelayer
 COPY ./deepstack/intelligencelayer /app/intelligencelayer
 
-COPY ./deepstack/runner.py /app
 COPY ./deepstack/init.py /app 
 
 EXPOSE 5000
 
 WORKDIR /app/server
 
-CMD ["/app/server/server"] 
+CMD ["/app/server/server"]

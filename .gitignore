@@ -25,7 +25,6 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-sharedfiles/
 server/server
 
 # PyInstaller
@@ -138,4 +137,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-*.pt

@@ -1,10 +1,4 @@
 FROM deepquestai/deepstack-base:cuda
 
-RUN pip3 install opencv-python
-RUN apt-get update && apt install -y libsm6 libxext6
-RUN apt-get install -y libxrender-dev
+RUN apt-get install libsm6 libxext6 libxrender1 libglib2.0-0 ffmpeg -y
 
-RUN pip3 install torch==1.6.0+cu101 torchvision==0.7.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html
-
-RUN pip3 install redis
-RUN apt-get install libglib2.0-0 -y

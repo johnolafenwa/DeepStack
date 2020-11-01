@@ -19,7 +19,7 @@ from utils.general import (
 from utils.torch_utils import select_device, load_classifier, time_synchronized
 from utils.datasets import letterbox
 
-class ObjectDetector2(object):
+class YOLODetector(object):
     def __init__(self, model_path: str, reso: int = 640, cuda: bool = False):
 
         self.device = torch.device('cuda:0' if cuda else 'cpu')
@@ -48,7 +48,10 @@ class ObjectDetector2(object):
         pred = self.model(img, augment=False)[0]
         pred = non_max_suppression(pred, confidence, 0.5, classes=None, agnostic=False)[0]
 
-        # Rescale boxes from img_size to im0 size
-        pred[:, :4] = scale_coords(img.shape[2:], pred[:, :4], img0.shape).round()
+        if pred is None:
+            pred = []
+        else: 
+            # Rescale boxes from img_size to im0 size
+            pred[:, :4] = scale_coords(img.shape[2:], pred[:, :4], img0.shape).round()
 
         return pred
