@@ -6,7 +6,6 @@ import io
 import _thread as thread
 from multiprocessing import Process
 from PIL import Image
-import cv2
 import torch.nn.functional as F
 import ast
 import sqlite3

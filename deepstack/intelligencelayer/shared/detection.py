@@ -6,7 +6,6 @@ import io
 import _thread as thread
 from multiprocessing import Process
 from PIL import Image
-import cv2
 import torch.nn.functional as F
 import ast
 import sqlite3
@@ -38,15 +37,15 @@ def objectdetection(thread_name: str, delay: float):
     if MODE == "High":
 
         reso = 416
-        model_name  = "yolov5l.pt" 
+        model_name  = "yolov5s.pt" 
 
     elif MODE == "Medium":
         
-        reso = 416
-        model_name  = "yolov5m.pt" 
+        reso = 256
+        model_name  = "yolov5s.pt" 
     elif MODE == "Low":
 
-        reso = 416
+        reso = 192
         model_name  = "yolov5s.pt"
 
     detector = YOLODetector(os.path.join(SHARED_APP_DIR,model_name),reso,cuda=CUDA_MODE)
@@ -95,7 +94,7 @@ def objectdetection(thread_name: str, delay: float):
                         
                 except Exception as e:
  
-                    output = {"success":False, "error":"invalid image","code":400}
+                    output = {"success":False, "error":str(e),"code":400}
                     db.set(req_id,json.dumps(output))
                     if os.path.exists(TEMP_PATH + img_id):
                         os.remove(img)

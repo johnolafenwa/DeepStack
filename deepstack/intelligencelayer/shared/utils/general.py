@@ -11,9 +11,7 @@ from contextlib import contextmanager
 from copy import copy
 from pathlib import Path
 
-import cv2
-import matplotlib
-import matplotlib.pyplot as plt
+#import cv2
 import numpy as np
 import torch
 import torch.nn as nn
@@ -29,10 +27,10 @@ from .torch_utils import is_parallel
 # Set printoptions
 torch.set_printoptions(linewidth=320, precision=5, profile='long')
 np.set_printoptions(linewidth=320, formatter={'float_kind': '{:11.5g}'.format})  # format short g, %precision=5
-matplotlib.rc('font', **{'size': 11})
+#matplotlib.rc('font', **{'size': 11})
 
 # Prevent OpenCV from multithreading (to use PyTorch DataLoader)
-cv2.setNumThreads(0)
+#cv2.setNumThreads(0)
 
 
 @contextmanager
