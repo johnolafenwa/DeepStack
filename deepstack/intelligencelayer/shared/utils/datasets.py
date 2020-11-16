@@ -1,5 +1,4 @@
 import glob
-import math
 import os
 import random
 import shutil
@@ -8,9 +7,10 @@ from pathlib import Path
 from threading import Thread
 
 import cv2
+import math
 import numpy as np
 import torch
-from PIL import Image, ExifTags
+from PIL import Image, ExifTags, ImageOps
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
@@ -164,19 +164,20 @@ class LoadImages:  # for inference
         else:
             # Read image
             self.count += 1
-            img0 = cv2.imread(path)  # BGR
+            #img0 = cv2.imread(path)  # BGR
+            img0 = Image.open(path).convert("RGB")
             assert img0 is not None, 'Image Not Found ' + path
             print('image %g/%g %s: ' % (self.count, self.nf, path), end='')
 
         # Padded resize
-        img = letterbox(img0, new_shape=self.img_size)[0]
-
+        img = np.array(letterbox(img0, new_shape=self.img_size)[0])
+        
         # Convert
         img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR to RGB, to 3x416x416
         img = np.ascontiguousarray(img)
 
         # cv2.imwrite(path + '.letterbox.jpg', 255 * img.transpose((1, 2, 0))[:, :, ::-1])  # save letterbox image
-        return path, img, img0, self.cap
+        return path, img, np.asarray(img0), self.cap
 
     def new_video(self, path):
         self.frame = 0
@@ -717,7 +718,9 @@ def replicate(img, labels):
 
 def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleFill=False, scaleup=True):
     # Resize image to a 32-pixel-multiple rectangle https://github.com/ultralytics/yolov3/issues/232
-    shape = img.shape[:2]  # current shape [height, width]
+    #shape = img.shape[:2]  # current shape [height, width]
+    shape = (img.size[1],img.size[0])
+
     if isinstance(new_shape, int):
         new_shape = (new_shape, new_shape)
 
@@ -731,7 +734,7 @@ def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scale
     new_unpad = int(round(shape[1] * r)), int(round(shape[0] * r))
     dw, dh = new_shape[1] - new_unpad[0], new_shape[0] - new_unpad[1]  # wh padding
     if auto:  # minimum rectangle
-        dw, dh = np.mod(dw, 64), np.mod(dh, 64)  # wh padding
+        dw, dh = np.mod(dw, 32), np.mod(dh, 32)  # wh padding
     elif scaleFill:  # stretch
         dw, dh = 0.0, 0.0
         new_unpad = (new_shape[1], new_shape[0])
@@ -741,10 +744,14 @@ def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scale
     dh /= 2
 
     if shape[::-1] != new_unpad:  # resize
-        img = cv2.resize(img, new_unpad, interpolation=cv2.INTER_LINEAR)
+        #img = cv2.resize(img, new_unpad, interpolation=cv2.INTER_LINEAR)
+        img = img.resize(new_unpad,resample=Image.BILINEAR)
+
     top, bottom = int(round(dh - 0.1)), int(round(dh + 0.1))
     left, right = int(round(dw - 0.1)), int(round(dw + 0.1))
-    img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color)  # add border
+    #img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT, value=color)  # add border
+    img = ImageOps.expand(img,(left,top,right,bottom))
+   
     return img, ratio, (dw, dh)
 
 
