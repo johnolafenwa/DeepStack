@@ -13,8 +13,6 @@ from pathlib import Path
 
 #import cv2
 import math
-import matplotlib
-import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.nn as nn
@@ -29,10 +27,6 @@ from utils.torch_utils import is_parallel, init_torch_seeds
 # Set printoptions
 torch.set_printoptions(linewidth=320, precision=5, profile='long')
 np.set_printoptions(linewidth=320, formatter={'float_kind': '{:11.5g}'.format})  # format short g, %precision=5
-matplotlib.rc('font', **{'size': 11})
-
-# Prevent OpenCV from multithreading (to use PyTorch DataLoader)
-cv2.setNumThreads(0)
 
 
 @contextmanager
