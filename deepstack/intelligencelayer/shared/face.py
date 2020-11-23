@@ -50,19 +50,19 @@ def load_faces():
 
 def face(thread_name,delay):
 
-    reso = 320
+    reso = 256
     
     if SharedOptions.MODE == "High":
       
-        reso = 416
+        reso = 320
         
     elif SharedOptions.MODE == "Low":
       
-        reso = 240
+        reso = 192
         
     else:
        
-        reso = 320
+        reso = 256
 
     faceclassifier = FaceRecognitionModel(os.path.join(SharedOptions.SHARED_APP_DIR,"facerec-high.model"),cuda=SharedOptions.CUDA_MODE)
    

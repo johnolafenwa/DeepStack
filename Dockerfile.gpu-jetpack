@@ -1,0 +1,37 @@
+FROM deepquestai/deepstack-base:gpu-jetpack as jetpack
+
+ENV SLEEP_TIME 0.01
+ENV CUDA_MODE True
+ENV APPDIR /app
+
+RUN mkdir /deeptemp
+RUN mkdir /datastore
+
+WORKDIR /app
+
+RUN pip3 install redis
+RUN pip3 install Cython
+RUN pip3 install pillow
+RUN pip3 install scipy
+RUN pip3 install tqdm
+RUN pip3 install PyYAML
+
+RUN wget https://nvidia.box.com/shared/static/6lxbakd8zaf2p5nkgcn7ih116iqm1wzm.whl -O onnxruntime_gpu-1.5.2-cp36-cp36m-linux_aarch64.whl
+RUN pip3 install onnxruntime_gpu-1.5.2-cp36-cp36m-linux_aarch64.whl
+
+RUN mkdir /app/sharedfiles
+COPY ./sharedfiles /app/sharedfiles
+
+RUN mkdir /app/server
+COPY ./server /app/server
+
+RUN mkdir /app/intelligencelayer
+COPY ./deepstack/intelligencelayer /app/intelligencelayer
+
+COPY ./deepstack/init.py /app 
+
+EXPOSE 5000
+
+WORKDIR /app/server
+
+CMD ["/app/server/server"]
