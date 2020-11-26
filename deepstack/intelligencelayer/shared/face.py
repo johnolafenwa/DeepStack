@@ -54,7 +54,7 @@ def face(thread_name,delay):
     
     if SharedOptions.MODE == "High":
       
-        reso = 320
+        reso = 384
         
     elif SharedOptions.MODE == "Low":
       
@@ -66,7 +66,7 @@ def face(thread_name,delay):
 
     faceclassifier = FaceRecognitionModel(os.path.join(SharedOptions.SHARED_APP_DIR,"facerec-high.model"),cuda=SharedOptions.CUDA_MODE)
    
-    detector = YOLODetector(os.path.join(SharedOptions.SHARED_APP_DIR,"face.pt"),reso,cuda=SharedOptions.CUDA_MODE)
+    detector = YOLODetector(os.path.join(SharedOptions.SHARED_APP_DIR,"face_lite.pt"),reso,cuda=SharedOptions.CUDA_MODE)
 
     load_faces()
 
@@ -152,7 +152,7 @@ def face(thread_name,delay):
                             img = SharedOptions.TEMP_PATH+img_id
                             pil_image = Image.open(img).convert("RGB")
                         
-                            det = detector.predict(img,0.8)
+                            det = detector.predict(img,0.55)
                             os.remove(SharedOptions.TEMP_PATH+img_id)
                             
                             outputs = []
@@ -251,7 +251,7 @@ def face(thread_name,delay):
                         pil_image = Image.open(img).convert("RGB")
 
                         
-                        det = detector.predict(img,0.8)
+                        det = detector.predict(img,0.55)
 
                         os.remove(img)
                     
