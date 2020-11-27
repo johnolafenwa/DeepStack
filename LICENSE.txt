@@ -6,31 +6,58 @@ This license governs the use of and contribution to DeepStack.
 
 For the rest of this license, the following terminalogies shall apply as below:
 
-The term "software" shall refer to DeepStack, it source code, Docker builds and other binaries generated from the source code.
+The term "software" shall refer to DeepStack, it source code, Docker builds and 
+other binaries generated from the source code.
 
-The term "we", "us", "our", "creators" shall refer to company AI Commons Global Limited, its founders John Olafenwa and Moses Olafenwa and the DeepQuest AI brand also maintained by AI Commons Global Limited.
+The term "we", "us", "our", "creators" shall refer to company AI Commons Global Limited, 
+its founders John Olafenwa and Moses Olafenwa and the DeepQuest AI brand also maintained by AI Commons Global Limited.
 
-The term "official" shall refer to projects, source code, binaries, libraries, documentation and sites from the creators of this software.
+The term "official" shall refer to projects, source code, binaries, libraries, documentation 
+and sites from the creators of this software.
 
-The term "contributors" shall refer to any other individual, group or organization apart from the creators of the software that contributes to the source code, binaries, official supporting libraries and projects.
+The term "contributors" shall refer to any other individual, group or organization apart 
+from the creators of the software that contributes to the source code, binaries, 
+official supporting libraries and projects.
 
 
 2. GRANT OF RIGHTS
 
-(a) Copyright: Subject to the terms of this license, including the license CONDITIONS AND LIMITATIONS in section 3, each contributor grants creators of this software non-exclusive, worldwide, royalty-free copyright license to reproduce its contribution, prepare derivative works of its contribution, and distribute its contribution or any derivative works created.
+(a) Copyright: Subject to the terms of this license, including the license CONDITIONS 
+AND LIMITATIONS in section 3, each contributor grants creators of this software non-exclusive,
+ worldwide, royalty-free copyright license to reproduce its contribution, prepare 
+ derivative works of its contribution, and distribute its contribution or any derivative works created.
 
-(b) Patent Grant: Subject to the terms of this license, ncluding the license CONDITIONS AND LIMITATIONS in section 3, each contributor grants you a non-exclusive, worldwide, royalty-free license under its licensed patents to make, have made, use, sell, offer for sale, import, and/or otherwise dispose of its contribution in the software or derivative works of the contribution in the software.
+(b) Patent Grant: Subject to the terms of this license, ncluding the license CONDITIONS 
+AND LIMITATIONS in section 3, each contributor grants you a non-exclusive, worldwide, 
+royalty-free license under its licensed patents to make, have made, use, sell, offer 
+for sale, import, and/or otherwise dispose of its contribution in the software or 
+derivative works of the contribution in the software.
 
 3. CONDITIONS AND LIMITATIONS
 
-The right to use this software, its binaries and other related official projects is as detailed below under the listed applications:
+The right to use this software, its binaries and other related official projects is as 
+detailed below under the listed applications:
 
-(A) Non-commercial: This license grants you the right to use, redistribute, modify and extend this software, its source code, binaries and other prepared derivatives provided that this license is included in the software.
+(A) Non-commercial: This license grants you the right to use, redistribute, modify and 
+extend this software, its source code, binaries and other prepared derivatives provided 
+that this license is included in the software.
 
-(B) Commercial: This license grants you the right to use, redistribute, modify and extend this software, its source code, binaries and other prepared derivatives provided that this license is included in the software provided that the commercial product or service which uses parts, whole or derivatives of this software's code, binaries and other related official projects are libraries is not a general public product or service and only provided exclusively to one or a maximum of 1000 clients. If you plan to use this software beyond the rights provided in this license, contact the creators.
+(B) Commercial: This license grants you the right to use, redistribute, modify and extend 
+this software, its source code, binaries and other prepared derivatives provided that this 
+license is included in the software provided that the commercial product or service which 
+uses parts, whole or derivatives of this software's code, binaries and other related official 
+projects are libraries is not a general public product or service and only provided exclusively 
+to one or a maximum of 1000 clients. If you plan to use this software beyond the rights provided 
+in this license, contact the creators.
 
-(A) Research: This license grants you the right to use, redistribute, modify and extend this software, its source code, binaries and other prepared derivatives provided that this license is included in the software.
+(A) Research: This license grants you the right to use, redistribute, modify and extend this 
+software, its source code, binaries and other prepared derivatives provided that this license 
+is included in the software.
 
 
 4 LIABILITY
-The software is licensed "as-is." You bear the risk of using it. The creators and contributors give no express warranties, guarantees or conditions. You may have additional consumer rights under your local laws which this license cannot change. To the extent permitted under your local laws, the contributors exclude the implied warranties of merchantability, fitness for a particular purpose and non-infringement.
+The software is licensed "as-is." You bear the risk of using it. The creators and contributors 
+give no express warranties, guarantees or conditions. You may have additional consumer rights 
+under your local laws which this license cannot change. To the extent permitted under your local 
+laws, the contributors exclude the implied warranties of merchantability, fitness for a particular 
+purpose and non-infringement.
