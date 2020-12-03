@@ -50,23 +50,21 @@ def load_faces():
 
 def face(thread_name,delay):
 
-    reso = 256
-    
     if SharedOptions.MODE == "High":
       
-        reso = 384
+        reso = SharedOptions.SETTINGS.FACE_HIGH
         
     elif SharedOptions.MODE == "Low":
       
-        reso = 192
+        reso = SharedOptions.SETTINGS.FACE_LOW
         
     else:
        
-        reso = 256
+        reso = SharedOptions.SETTINGS.FACE_MEDIUM
 
     faceclassifier = FaceRecognitionModel(os.path.join(SharedOptions.SHARED_APP_DIR,"facerec-high.model"),cuda=SharedOptions.CUDA_MODE)
    
-    detector = YOLODetector(os.path.join(SharedOptions.SHARED_APP_DIR,"face_lite.pt"),reso,cuda=SharedOptions.CUDA_MODE)
+    detector = YOLODetector(os.path.join(SharedOptions.SHARED_APP_DIR,SharedOptions.SETTINGS.FACE_MODEL),reso,cuda=SharedOptions.CUDA_MODE)
 
     load_faces()
 

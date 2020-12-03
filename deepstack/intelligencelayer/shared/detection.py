@@ -31,20 +31,19 @@ def objectdetection(thread_name: str, delay: float):
 
     IMAGE_QUEUE = "detection_queue"
     
-    reso = 416
-    model_name  = "yolov5s.pt"
+    model_name  = SharedOptions.SETTINGS.DETECTION_MODEL
    
     if MODE == "High":
 
-        reso = 416
+        reso = SharedOptions.SETTINGS.DETECTION_HIGH
         
     elif MODE == "Medium":
         
-        reso = 320
+        reso = SharedOptions.SETTINGS.DETECTION_MEDIUM
         
     elif MODE == "Low":
 
-        reso = 256
+        reso = SharedOptions.SETTINGS.DETECTION_LOW
 
     detector = YOLODetector(os.path.join(SHARED_APP_DIR,model_name),reso,cuda=CUDA_MODE)
     while True:
