@@ -7,6 +7,10 @@ ENV APPDIR /app
 RUN mkdir /deeptemp
 RUN mkdir /datastore
 
+ENV DATA_DIR /datastore
+ENV TEMP_PATH /deeptemp
+ENV PROFILE desktop_gpu
+
 WORKDIR /app
 RUN pip install torch==1.6.0+cu101 torchvision==0.7.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html
 RUN pip install onnxruntime==0.5.0
@@ -22,7 +26,11 @@ RUN pip3 install PyYAML
 RUN pip3 install Matplotlib
 
 RUN mkdir /app/sharedfiles
-COPY ./sharedfiles /app/sharedfiles
+COPY ./sharedfiles/yolov5m.pt /app/sharedfiles/yolov5m.pt
+COPY ./sharedfiles/face.pt /app/sharedfiles/face.pt
+COPY ./sharedfiles/facerec-high.model /app/sharedfiles/facerec-high.model
+COPY ./sharedfiles/scene.model /app/sharedfiles/scene.model
+COPY ./sharedfiles/categories_places365.txt /app/sharedfiles/categories_places365.txt
 
 RUN mkdir /app/server
 COPY ./server /app/server

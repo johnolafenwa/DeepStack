@@ -7,6 +7,10 @@ ENV APPDIR /app
 RUN mkdir /deeptemp
 RUN mkdir /datastore
 
+ENV DATA_DIR /datastore
+ENV TEMP_PATH /deeptemp
+ENV PROFILE jetson
+
 WORKDIR /app
 
 RUN pip3 install redis
