@@ -21,7 +21,13 @@ from shared import SharedOptions
 import torchvision.transforms as transforms
 import traceback
 from PIL import UnidentifiedImageError
+import argparse
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--model",type=str,default=None)
+parser.add_argument("--name",type=str,default=None)
+
+opt = parser.parse_args()
 
 def objectdetection(thread_name: str, delay: float):
 
@@ -31,9 +37,15 @@ def objectdetection(thread_name: str, delay: float):
     db = SharedOptions.db
     TEMP_PATH = SharedOptions.TEMP_PATH
 
-    IMAGE_QUEUE = "detection_queue"
+    if opt.name == None:
+        IMAGE_QUEUE = "detection_queue"
+    else:
+        IMAGE_QUEUE = opt.name+"_queue"
     
-    model_name  = SharedOptions.SETTINGS.DETECTION_MODEL
+    if opt.model == None:
+        model_path  = os.path.join(SHARED_APP_DIR,SharedOptions.SETTINGS.DETECTION_MODEL)
+    else:
+        model_path = opt.model
    
     if MODE == "High":
 
@@ -47,7 +59,7 @@ def objectdetection(thread_name: str, delay: float):
 
         reso = SharedOptions.SETTINGS.DETECTION_LOW
 
-    detector = YOLODetector(os.path.join(SHARED_APP_DIR,model_name),reso,cuda=CUDA_MODE)
+    detector = YOLODetector(model_path,reso,cuda=CUDA_MODE)
     while True:
         queue = db.lrange(IMAGE_QUEUE,0,0)
 
@@ -86,8 +98,8 @@ def objectdetection(thread_name: str, delay: float):
 
                         outputs.append(detection)
 
-                    response = {"success":True,"predictions":outputs}
-                    
+                    output = {"success":True,"predictions":outputs}
+
                 except UnidentifiedImageError:
                     err_trace = traceback.format_exc()
                     print(err_trace,file=sys.stderr,flush=True)
