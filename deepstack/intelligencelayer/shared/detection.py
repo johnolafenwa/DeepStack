@@ -19,6 +19,8 @@ from process import YOLODetector
 from shared import SharedOptions
 
 import torchvision.transforms as transforms
+import traceback
+from PIL import UnidentifiedImageError
 
 
 def objectdetection(thread_name: str, delay: float):
@@ -85,17 +87,24 @@ def objectdetection(thread_name: str, delay: float):
                         outputs.append(detection)
 
                     response = {"success":True,"predictions":outputs}
+                    
+                except UnidentifiedImageError:
+                    err_trace = traceback.format_exc()
+                    print(err_trace,file=sys.stderr,flush=True)
 
-                    db.set(req_id,json.dumps(response)) 
-                    os.remove(img)
+                    output = {"success":False, "error":"invalid image file","code":400}
                         
-                except Exception as e:
+                except Exception:
+
+                    err_trace = traceback.format_exc()
+                    print(err_trace,file=sys.stderr,flush=True)
  
-                    output = {"success":False, "error":str(e),"code":400}
+                    output = {"success":False, "error":"error occured on the server","code":500}
+                    
+                finally:
                     db.set(req_id,json.dumps(output))
                     if os.path.exists(TEMP_PATH + img_id):
                         os.remove(img)
-                    continue
 
         time.sleep(delay)
 

@@ -808,7 +808,7 @@ func main() {
 
 	if os.Getenv("VISION-DETECTION") == "True" {
 		detectioncmd := exec.CommandContext(ctx, "bash", "-c", "python3 "+detectionScript)
-		detectioncmd.Dir = "/app/intelligencelayer/shared"
+		detectioncmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		detectioncmd.Stdout = stdout
 		detectioncmd.Stderr = stderr
 		detectioncmd.Start()
@@ -817,7 +817,7 @@ func main() {
 
 	if os.Getenv("VISION-FACE") == "True" {
 		facecmd := exec.CommandContext(ctx, "bash", "-c", "python3 "+faceScript)
-		facecmd.Dir = "/app/intelligencelayer/shared"
+		facecmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		facecmd.Stdout = stdout
 		facecmd.Stderr = stderr
 		facecmd.Start()
@@ -825,7 +825,7 @@ func main() {
 	}
 	if os.Getenv("VISION-SCENE") == "True" {
 		scenecmd := exec.CommandContext(ctx, "bash", "-c", "python3 "+sceneScript)
-		scenecmd.Dir = "/app/intelligencelayer/shared"
+		scenecmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		scenecmd.Stdout = stdout
 		scenecmd.Stderr = stderr
 		scenecmd.Start()

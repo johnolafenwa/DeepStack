@@ -16,7 +16,7 @@ import os
 import onnxruntime as rt
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../"))
 from shared import SharedOptions
-
+import traceback
 
 import torchvision.transforms as transforms
 
@@ -88,14 +88,24 @@ def scenerecognition(thread_name,delay):
 
                     output = {"success":True, "label":cl, "confidence":conf}
 
-                    SharedOptions.db.set(req_id,json.dumps(output))
+                except UnidentifiedImageError:
+                    err_trace = traceback.format_exc()
+                    print(err_trace,file=sys.stderr,flush=True)
 
-                except Exception as e:
+                    output = {"success":False, "error":"error occured on the server","code":400}
+
+                except Exception:
+
+                    err_trace = traceback.format_exc()
+                    print(err_trace,file=sys.stderr,flush=True)
                    
-                    output = {"success":False, "error":"invalid image","code":400}
+                    output = {"success":False, "error":"invalid image","code":500}
+                    
+                finally:
                     SharedOptions.db.set(req_id,json.dumps(output))
                     if os.path.exists(SharedOptions.TEMP_PATH + img_id):
                         os.remove( SharedOptions.TEMP_PATH + img_id)
+
 
         time.sleep(delay)
 
