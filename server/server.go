@@ -57,7 +57,7 @@ func scene(c *gin.Context) {
 
 	file, _ := c.FormFile("image")
 
-	c.SaveUploadedFile(file, temp_path+img_id)
+	c.SaveUploadedFile(file, filepath.Join(temp_path, img_id))
 
 	req_data := requests.RecognitionRequest{Imgid: img_id, Reqid: req_id, Reqtype: "scene"}
 	req_string, _ := json.Marshal(req_data)
@@ -117,7 +117,7 @@ func detection(c *gin.Context) {
 
 	file, _ := c.FormFile("image")
 
-	c.SaveUploadedFile(file, temp_path+img_id)
+	c.SaveUploadedFile(file, filepath.Join(temp_path, img_id))
 
 	redis_client.RPush("detection_queue", face_req_string)
 
@@ -173,7 +173,7 @@ func facedetection(c *gin.Context) {
 
 	face_req_string, _ := json.Marshal(face_req)
 
-	c.SaveUploadedFile(file, temp_path+img_id)
+	c.SaveUploadedFile(file, filepath.Join(temp_path, img_id))
 
 	redis_client.RPush("face_queue", face_req_string)
 
@@ -223,7 +223,7 @@ func facerecognition(c *gin.Context) {
 	img_id := uuid.NewV4().String()
 	req_id := uuid.NewV4().String()
 
-	c.SaveUploadedFile(file, temp_path+img_id)
+	c.SaveUploadedFile(file, filepath.Join(temp_path, img_id))
 
 	face_req := requests.FaceRecognitionRequest{Imgid: img_id, Reqtype: "recognize", Reqid: req_id, Minconfidence: threshold}
 
@@ -274,7 +274,8 @@ func faceregister(c *gin.Context) {
 		for filename, _ := range form.File {
 			file, _ := c.FormFile(filename)
 			img_id := uuid.NewV4().String()
-			c.SaveUploadedFile(file, temp_path+img_id)
+			c.SaveUploadedFile(file, filepath.Join(temp_path, img_id))
+
 			user_images = append(user_images, img_id)
 		}
 	}
@@ -327,7 +328,8 @@ func facematch(c *gin.Context) {
 		for filename, _ := range form.File {
 			file, _ := c.FormFile(filename)
 			img_id := uuid.NewV4().String()
-			c.SaveUploadedFile(file, temp_path+img_id)
+			c.SaveUploadedFile(file, filepath.Join(temp_path, img_id))
+
 			user_images = append(user_images, img_id)
 		}
 	}
@@ -510,7 +512,7 @@ func single_request_loop(c *gin.Context, queue_name string) {
 
 	file, _ := c.FormFile("image")
 
-	c.SaveUploadedFile(file, temp_path+img_id)
+	c.SaveUploadedFile(file, filepath.Join(temp_path, img_id))
 
 	req_data := requests.RecognitionRequest{Imgid: img_id, Reqid: req_id, Reqtype: "custom"}
 	req_string, _ := json.Marshal(req_data)
@@ -762,24 +764,36 @@ func launchservices() {
 func main() {
 
 	APPDIR := os.Getenv("APPDIR")
+	DATA_DIR = os.Getenv("DATA_DIR")
+	if DATA_DIR == "" {
+		DATA_DIR = "/datastore"
+	}
 
-	os.Mkdir("/logs", 0755)
+	temp_path = os.Getenv("TEMP_PATH")
+	if temp_path == "" {
+		temp_path = "/deeptemp/"
+	}
 
-	stdout, _ := os.Create("/logs/stdout.txt")
+	os.Mkdir(filepath.Join(APPDIR, "logs"), 0755)
+	os.Mkdir(DATA_DIR, 0755)
+	os.Mkdir(temp_path, 0755)
+
+	stdout, _ := os.Create(filepath.Join(APPDIR, "logs/stdout.txt"))
 
 	defer stdout.Close()
 
-	stderr, _ := os.Create("/logs/stderr.txt")
+	stderr, _ := os.Create(filepath.Join(APPDIR, "logs/stderr.txt"))
 
 	defer stderr.Close()
 
-	if APPDIR == "" {
-		APPDIR = "../"
-	}
-
 	ctx := context.TODO()
 
-	initcmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/init.py")
+	initScript := filepath.Join(APPDIR, "init.py")
+	detectionScript := filepath.Join(APPDIR, "intelligencelayer/shared/detection.py")
+	faceScript := filepath.Join(APPDIR, "intelligencelayer/shared/face.py")
+	sceneScript := filepath.Join(APPDIR, "intelligencelayer/shared/scene.py")
+
+	initcmd := exec.CommandContext(ctx, "bash", "-c", "python3 "+initScript)
 	initcmd.Dir = APPDIR
 	initcmd.Stdout = stdout
 	initcmd.Stderr = stderr
@@ -793,8 +807,8 @@ func main() {
 	initcmd.Run()
 
 	if os.Getenv("VISION-DETECTION") == "True" {
-		detectioncmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/detection.py")
-		detectioncmd.Dir = "/app/intelligencelayer/shared"
+		detectioncmd := exec.CommandContext(ctx, "bash", "-c", "python3 "+detectionScript)
+		detectioncmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		detectioncmd.Stdout = stdout
 		detectioncmd.Stderr = stderr
 		detectioncmd.Start()
@@ -802,16 +816,16 @@ func main() {
 	}
 
 	if os.Getenv("VISION-FACE") == "True" {
-		facecmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/face.py")
-		facecmd.Dir = "/app/intelligencelayer/shared"
+		facecmd := exec.CommandContext(ctx, "bash", "-c", "python3 "+faceScript)
+		facecmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		facecmd.Stdout = stdout
 		facecmd.Stderr = stderr
 		facecmd.Start()
 
 	}
 	if os.Getenv("VISION-SCENE") == "True" {
-		scenecmd := exec.CommandContext(ctx, "bash", "-c", "python3 /app/intelligencelayer/shared/scene.py")
-		scenecmd.Dir = "/app/intelligencelayer/shared"
+		scenecmd := exec.CommandContext(ctx, "bash", "-c", "python3 "+sceneScript)
+		scenecmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		scenecmd.Stdout = stdout
 		scenecmd.Stderr = stderr
 		scenecmd.Start()
@@ -824,7 +838,7 @@ func main() {
 		DB:       0,
 	})
 
-	db, _ = sql.Open("sqlite3", DATA_DIR+"/faceembedding.db")
+	db, _ = sql.Open("sqlite3", filepath.Join(DATA_DIR, "faceembedding.db"))
 
 	gin.SetMode(gin.ReleaseMode)
 
