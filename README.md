@@ -19,7 +19,6 @@ DeepStack is an artificial intelligence API engine that serves pre-built models 
 - **Mac OS** via Docker
 - **Windows 10** (as a Native Application)
 - **NVIDIA Jetson Nano** via Docker.
-- **Raspberry Pi** + **Intel Movidious stick**
 
 DeepStack runs completely offline and independent of the cloud when installed on a edge device. You can also install and run DeepStack on any cloud VM with docker installed to serve as your private, state-of-the-art and real-time Artficial intelligence server with `unlimited API calls`.
 
