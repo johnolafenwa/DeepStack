@@ -20,10 +20,10 @@ DeepStack is an artificial intelligence API engine that serves pre-built models 
 - **Windows 10** (as a Native Application)
 - **NVIDIA Jetson Nano** via Docker.
 
-DeepStack runs completely offline and independent of the cloud when installed on a edge device. You can also install and run DeepStack on any cloud VM with docker installed to serve as your private, state-of-the-art and real-time Artficial intelligence server with `unlimited API calls`.
+DeepStack runs completely offline and independent of the cloud when installed on an edge device. You can also install and run DeepStack on any cloud VM with docker installed to serve as your private, state-of-the-art and real-time Artficial intelligence server with `unlimited API calls`.
 
 # Installation and Usage
-Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/getting-started/) for installation instructions and sample codes. The documentation provides example codes for the following programming languages with more to be added soon.
+Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/getting-started/) for installation instructions and example codes. The documentation provides example codes for the following programming languages with more to be added soon.
 
 - **Python**
 - **C#**
@@ -37,9 +37,9 @@ The DeepStack ecosystem includes a number of popular integrations and libraries 
 
 - [Hass-DeepStack-Object](https://github.com/robmarkcole/HASS-Deepstack-object)
 - [Hass-DeepStack-Face](https://github.com/robmarkcole/HASS-Deepstack-face)
-- [DeepStack with Blu Iris - YouTube video](https://www.youtube.com/watch?v=fwoonl5JKgo)
+- [DeepStack with Blue Iris - YouTube video](https://www.youtube.com/watch?v=fwoonl5JKgo)
 - [DeepStack with Blue Iris - Forum Discussion](https://ipcamtalk.com/threads/tool-tutorial-free-ai-person-detection-for-blue-iris.37330/)
-- [DeepStack on HomeAssistant](https://community.home-assistant.io/t/face-and-person-detection-with-deepstack-local-and-free/92041)
+- [DeepStack on Home Assistant](https://community.home-assistant.io/t/face-and-person-detection-with-deepstack-local-and-free/92041)
 - [DeepStack-UI](https://github.com/robmarkcole/deepstack-ui)
 - [DeepStack-Python Helper](https://github.com/robmarkcole/deepstack-python)
 - [DeepStack-Analytics](https://github.com/robmarkcole/deepstack-analytics)
