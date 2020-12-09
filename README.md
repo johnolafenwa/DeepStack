@@ -35,8 +35,9 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
 # Integrations and Community
 The DeepStack ecosystem includes a number of popular integrations and libraries built to expand the functionalities of the AI engine to serve IoT, industrial, monitoring and research applications. A number of them are listed below
 
-- [Hass-DeepStack-Object](https://github.com/robmarkcole/HASS-Deepstack-object)
-- [Hass-DeepStack-Face](https://github.com/robmarkcole/HASS-Deepstack-face)
+- [HASS-DeepStack-Object](https://github.com/robmarkcole/HASS-Deepstack-object)
+- [HASS-DeepStack-Face](https://github.com/robmarkcole/HASS-Deepstack-face)
+- [HASS-DeepStack-Scene](https://github.com/robmarkcole/HASS-Deepstack-scene)
 - [DeepStack with Blue Iris - YouTube video](https://www.youtube.com/watch?v=fwoonl5JKgo)
 - [DeepStack with Blue Iris - Forum Discussion](https://ipcamtalk.com/threads/tool-tutorial-free-ai-person-detection-for-blue-iris.37330/)
 - [DeepStack on Home Assistant](https://community.home-assistant.io/t/face-and-person-detection-with-deepstack-local-and-free/92041)
