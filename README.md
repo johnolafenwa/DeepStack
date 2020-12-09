@@ -1,29 +1,29 @@
 # DeepStack
 The World's Leading Cross Platform AI Engine for Edge Devices, with over `3.2 million` installs on **Docker Hub**.
 
-**Official Website**: [https://deepstack.cc](https://deepstack.cc)
+**Website**: [https://deepstack.cc](https://deepstack.cc)
 
-**Official Documentation**: [https://docs.deepstack.cc](https://docs.deepstack.cc)
+**Documentation**: [https://docs.deepstack.cc](https://docs.deepstack.cc)
 
-**Official Forum**: [https://forum.deepstack.cc](https://forum.deepstack.cc)
+**Forum**: [https://forum.deepstack.cc](https://forum.deepstack.cc)
 
-**Official Dev Center**: [https://dev.deepstack.cc](https://dev.deepstack.cc/)
+**Dev Center**: [https://dev.deepstack.cc](https://dev.deepstack.cc/)
 
 **DeepStack** is owned and maintained by [DeepQuest AI](https://www.deepquestai.com/).
 
 
 # Introduction
-DeepStack is an artificial intelligence API engine that serves pre-built models and custom models on multiple edge devices locally or on your private cloud. Supported platforms are:
+DeepStack is an AI API engine that serves pre-built models and custom models on multiple edge devices locally or on your private cloud. Supported platforms are:
 
 - **Linux OS** via Docker ( CPU and NVIDIA GPU support )
 - **Mac OS** via Docker
-- **Windows 10** (as a Native Application)
-- **NVIDIA Jetson Nano** via Docker.
+- **Windows 10** ( native application )
+- **NVIDIA Jetson** via Docker.
 
-DeepStack runs completely offline and independent of the cloud when installed on an edge device. You can also install and run DeepStack on any cloud VM with docker installed to serve as your private, state-of-the-art and real-time Artficial intelligence server with `unlimited API calls`.
+DeepStack runs completely offline and independent of the cloud. You can also install and run DeepStack on any cloud VM with docker installed to serve as your private, state-of-the-art and real-time AI server.
 
 # Installation and Usage
-Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/getting-started/) for installation instructions and example codes. The documentation provides example codes for the following programming languages with more to be added soon.
+Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/getting-started/) for installation instructions. The documentation provides example codes for the following programming languages with more to be added soon.
 
 - **Python**
 - **C#**
