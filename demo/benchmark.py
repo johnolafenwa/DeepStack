@@ -19,14 +19,18 @@ DEFAULT_IMAGES_FOLDER = "."
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Perform benchmarking of Deepstack"
+    parser = argparse.ArgumentParser(description="Perform benchmarking of Deepstack")
+    parser.add_argument(
+        "--ip",
+        default=DEFAULT_IP_ADDRESS,
+        type=str,
+        help="Deepstack IP",
     )
     parser.add_argument(
-        "--ip", default=DEFAULT_IP_ADDRESS, type=str, help="Deepstack IP",
-    )
-    parser.add_argument(
-        "--port", default=DEFAULT_PORT, type=int, help="Deepstack port",
+        "--port",
+        default=DEFAULT_PORT,
+        type=int,
+        help="Deepstack port",
     )
     parser.add_argument(
         "--api_key", default=DEFAULT_API_KEY, type=str, help="Deepstack API key"

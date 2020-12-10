@@ -5,34 +5,44 @@ import shutil
 import time
 from pathlib import Path
 
+import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
-from numpy import random
-import numpy as np
-from PIL import Image
-
 from models.experimental import attempt_load
-from utils.datasets import LoadStreams, LoadImages
+from numpy import random
+from PIL import Image
+from utils.datasets import LoadImages, LoadStreams, letterbox
 from utils.general import (
-    check_img_size, non_max_suppression, apply_classifier, scale_coords,
-    xyxy2xywh, plot_one_box, strip_optimizer, set_logging)
-from utils.torch_utils import select_device, load_classifier, time_synchronized
-from utils.datasets import letterbox
+    apply_classifier,
+    check_img_size,
+    non_max_suppression,
+    plot_one_box,
+    scale_coords,
+    set_logging,
+    strip_optimizer,
+    xyxy2xywh,
+)
+from utils.torch_utils import load_classifier, select_device, time_synchronized
+
 
 class YOLODetector(object):
     def __init__(self, model_path: str, reso: int = 640, cuda: bool = False):
 
-        self.device = torch.device('cuda:0' if cuda else 'cpu')
-        self.half = self.device.type != 'cpu'
+        self.device = torch.device("cuda:0" if cuda else "cpu")
+        self.half = self.device.type != "cpu"
 
-        self.reso = (reso,reso)
+        self.reso = (reso, reso)
         self.cuda = cuda
         self.model = attempt_load(model_path, map_location=self.device)
-        self.names = self.model.module.names if hasattr(self.model, 'module') else self.model.names
+        self.names = (
+            self.model.module.names
+            if hasattr(self.model, "module")
+            else self.model.names
+        )
         if self.half:
             self.model.half()
 
-    def predict(self, img_path: str, confidence: float=0.4):
+    def predict(self, img_path: str, confidence: float = 0.4):
 
         img0 = Image.open(img_path).convert("RGB")
         img = np.asarray(letterbox(img0, new_shape=self.reso)[0])
@@ -47,11 +57,13 @@ class YOLODetector(object):
             img = img.unsqueeze(0)
 
         pred = self.model(img, augment=False)[0]
-        pred = non_max_suppression(pred, confidence, 0.45, classes=None, agnostic=False)[0]
+        pred = non_max_suppression(
+            pred, confidence, 0.45, classes=None, agnostic=False
+        )[0]
 
         if pred is None:
             pred = []
-        else: 
+        else:
             # Rescale boxes from img_size to im0 size
             pred[:, :4] = scale_coords(img.shape[2:], pred[:, :4], img0.shape).round()
 
