@@ -916,7 +916,7 @@ func main() {
 		custom.Use(middlewares.CheckImage())
 		{
 
-			models, err := filepath.Glob("/modelstore/detection/*")
+			models, err := filepath.Glob("/modelstore/detection/*.pt")
 
 			if err == nil {
 
