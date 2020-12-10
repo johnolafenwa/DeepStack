@@ -8,7 +8,7 @@ RUN mkdir /deeptemp
 RUN mkdir /datastore
 
 ENV DATA_DIR /datastore
-ENV TEMP_PATH /deeptemp
+ENV TEMP_PATH /deeptemp/
 ENV PROFILE jetson
 
 WORKDIR /app
