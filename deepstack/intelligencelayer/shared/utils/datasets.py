@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 from threading import Thread
 
-import cv2
+#import cv2
 import math
 import numpy as np
 import torch

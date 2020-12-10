@@ -7,7 +7,7 @@ import os
 import _thread as thread
 from multiprocessing import Process
 from PIL import Image
-import cv2
+#import cv2
 import torch.nn.functional as F
 import ast
 import sqlite3
@@ -21,6 +21,7 @@ import torchvision.transforms as transforms
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../"))
 
 from shared import SharedOptions
+import traceback
 
 def load_faces():
 
@@ -50,23 +51,21 @@ def load_faces():
 
 def face(thread_name,delay):
 
-    reso = 320
-    
     if SharedOptions.MODE == "High":
       
-        reso = 416
+        reso = SharedOptions.SETTINGS.FACE_HIGH
         
     elif SharedOptions.MODE == "Low":
       
-        reso = 240
+        reso = SharedOptions.SETTINGS.FACE_LOW
         
     else:
        
-        reso = 320
+        reso = SharedOptions.SETTINGS.FACE_MEDIUM
 
     faceclassifier = FaceRecognitionModel(os.path.join(SharedOptions.SHARED_APP_DIR,"facerec-high.model"),cuda=SharedOptions.CUDA_MODE)
    
-    detector = YOLODetector(os.path.join(SharedOptions.SHARED_APP_DIR,"face.pt"),reso,cuda=SharedOptions.CUDA_MODE)
+    detector = YOLODetector(os.path.join(SharedOptions.SHARED_APP_DIR,SharedOptions.SETTINGS.FACE_MODEL),reso,cuda=SharedOptions.CUDA_MODE)
 
     load_faces()
 
@@ -124,16 +123,21 @@ def face(thread_name,delay):
                             outputs.append(detection)
                     
                         output = {"success": True, "predictions": outputs}
-                        
-                        SharedOptions.db.set(req_id,json.dumps(output))
-                        
-                    except Exception as e:
-                      
+                       
+                    except UnidentifiedImageError:
+                        err_trace = traceback.format_exc()
+                        print(err_trace,file=sys.stderr,flush=True)
                         output = {"success":False, "error":"invalid image","code":400}
+                            
+                    except Exception:
+                        err_trace = traceback.format_exc()
+                        print(err_trace,file=sys.stderr,flush=True)
+                        output = {"success":False, "error":"error occured on the server","code":500}
+                        
+                    finally:
                         SharedOptions.db.set(req_id,json.dumps(output))
                         if os.path.exists(img):
                             os.remove(img)
-                    
 
                 elif task_type == "register":
 
@@ -152,7 +156,7 @@ def face(thread_name,delay):
                             img = SharedOptions.TEMP_PATH+img_id
                             pil_image = Image.open(img).convert("RGB")
                         
-                            det = detector.predict(img,0.8)
+                            det = detector.predict(img,0.55)
                             os.remove(SharedOptions.TEMP_PATH+img_id)
                             
                             outputs = []
@@ -211,18 +215,27 @@ def face(thread_name,delay):
                         conn.commit()
 
                         output = {"success":True, "message":message}
-                        SharedOptions.db.set(req_id,json.dumps(output))
-                
-                        conn.close()
                         
-                    except Exception as e:
-                   
-                        output = {"success":False, "error":"invalid image","code":400}
-                        SharedOptions.db.set(req_id,json.dumps(output))
+                        conn.close()
 
+                    except UnidentifiedImageError:
+                        err_trace = traceback.format_exc()
+                        print(err_trace,file=sys.stderr,flush=True)
+                        output = {"success":False, "error":"invalid image","code":400}
+                        
+                    except Exception:
+                        
+                        err_trace = traceback.format_exc()
+                        print(err_trace,file=sys.stderr,flush=True)
+
+                        output = {"success":False, "error":"error occured on the server","code":500}
+
+                    finally:
+                        SharedOptions.db.set(req_id,json.dumps(output))
                         for img_id in user_images:
                             if os.path.exists(SharedOptions.TEMP_PATH+img_id):
                                 os.remove(SharedOptions.TEMP_PATH+img_id)
+
                     
                 elif task_type == "recognize":
 
@@ -251,7 +264,7 @@ def face(thread_name,delay):
                         pil_image = Image.open(img).convert("RGB")
 
                         
-                        det = detector.predict(img,0.8)
+                        det = detector.predict(img,0.55)
 
                         os.remove(img)
                     
@@ -361,17 +374,27 @@ def face(thread_name,delay):
                                 predictions.append(user_data)
                         
                             output = {"success":True, "predictions":predictions}
-                            SharedOptions.db.set(req_id,json.dumps(output))
-                        
-                    except Exception as e:
 
+                    except UnidentifiedImageError:
+                        err_trace = traceback.format_exc()
+                        print(err_trace,file=sys.stderr,flush=True)
 
                         output = {"success":False, "error":"invalid image","code":400}
+                        
+                    except Exception:
+                        
+                        err_trace = traceback.format_exc()
+                        print(err_trace,file=sys.stderr,flush=True)
+
+                        output = {"success":False, "error":"error occured on the server","code":500}
+                        
+                    finally:
                         SharedOptions.db.set(req_id,json.dumps(output))
 
                         if os.path.exists(SharedOptions.TEMP_PATH+img_id):
                             os.remove(SharedOptions.TEMP_PATH+img_id)
                      
+
 
                 elif task_type == "match":
 
@@ -426,17 +449,33 @@ def face(thread_name,delay):
                         similarity = (F.cosine_similarity(embed1,embed2).item() + 1)/2
 
                         output = {"success":True, "similarity":similarity}
-                        SharedOptions.db.set(req_id,json.dumps(output))           
+
+                    except UnidentifiedImageError:
+                        err_trace = traceback.format_exc()
+                        print(err_trace,file=sys.stderr,flush=True)  
+
+                        output = {"success":False, "error":"invalid image","code":400}      
                     
-                    except Exception as e:
+                    except Exception:
+
+                        err_trace = traceback.format_exc()
+                        print(err_trace,file=sys.stderr,flush=True)
                         
-                        output = {"success":False, "error":"invalid image","code":400}
+                        output = {"success":False, "error":"error occured on the server","code":500}
+                        
+                    finally:
+
                         SharedOptions.db.set(req_id,json.dumps(output))
+                        if os.path.exists(SharedOptions.TEMP_PATH+user_images[0]):
+                            os.remove(SharedOptions.TEMP_PATH+user_images[0])
+
+                        if os.path.exists(SharedOptions.TEMP_PATH+user_images[1]):
+                            os.remove(SharedOptions.TEMP_PATH+user_images[1])
+
+
+
                     
-
-
         time.sleep(delay)
-
 
 def update_faces(thread_name,delay):
 

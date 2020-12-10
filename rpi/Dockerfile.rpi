@@ -1,0 +1,5 @@
+FROM deepquestai/deepstack:cpu-arm64
+
+WORKDIR /app
+COPY torch-1.7.0a0-cp37-cp37m-linux_aarch64.whl /app/torch-1.7.0a0-cp37-cp37m-linux_aarch64.whl
+COPY torchvision-0.8.0a0+45f960c-cp37-cp37m-linux_aarch64.whl /app/torchvision-0.8.0a0+45f960c-cp37-cp37m-linux_aarch64.whl

@@ -5,8 +5,7 @@ import json
 import io
 import _thread as thread
 from multiprocessing import Process
-from PIL import Image
-import cv2
+from PIL import Image,UnidentifiedImageError
 import torch.nn.functional as F
 import ast
 import sqlite3
@@ -20,7 +19,15 @@ from process import YOLODetector
 from shared import SharedOptions
 
 import torchvision.transforms as transforms
+import traceback
+from PIL import UnidentifiedImageError
+import argparse
 
+parser = argparse.ArgumentParser()
+parser.add_argument("--model",type=str,default=None)
+parser.add_argument("--name",type=str,default=None)
+
+opt = parser.parse_args()
 
 def objectdetection(thread_name: str, delay: float):
 
@@ -30,26 +37,29 @@ def objectdetection(thread_name: str, delay: float):
     db = SharedOptions.db
     TEMP_PATH = SharedOptions.TEMP_PATH
 
-    IMAGE_QUEUE = "detection_queue"
+    if opt.name == None:
+        IMAGE_QUEUE = "detection_queue"
+    else:
+        IMAGE_QUEUE = opt.name+"_queue"
     
-    reso = 416
-    model_name  = "yolov5s.pt"
+    if opt.model == None:
+        model_path  = os.path.join(SHARED_APP_DIR,SharedOptions.SETTINGS.DETECTION_MODEL)
+    else:
+        model_path = opt.model
    
     if MODE == "High":
 
-        reso = 416
-        model_name  = "yolov5l.pt" 
-
+        reso = SharedOptions.SETTINGS.DETECTION_HIGH
+        
     elif MODE == "Medium":
         
-        reso = 416
-        model_name  = "yolov5m.pt" 
+        reso = SharedOptions.SETTINGS.DETECTION_MEDIUM
+        
     elif MODE == "Low":
 
-        reso = 416
-        model_name  = "yolov5s.pt"
+        reso = SharedOptions.SETTINGS.DETECTION_LOW
 
-    detector = YOLODetector(os.path.join(SHARED_APP_DIR,model_name),reso,cuda=CUDA_MODE)
+    detector = YOLODetector(model_path,reso,cuda=CUDA_MODE)
     while True:
         queue = db.lrange(IMAGE_QUEUE,0,0)
 
@@ -88,18 +98,25 @@ def objectdetection(thread_name: str, delay: float):
 
                         outputs.append(detection)
 
-                    response = {"success":True,"predictions":outputs}
+                    output = {"success":True,"predictions":outputs}
 
-                    db.set(req_id,json.dumps(response)) 
-                    os.remove(img)
+                except UnidentifiedImageError:
+                    err_trace = traceback.format_exc()
+                    print(err_trace,file=sys.stderr,flush=True)
+
+                    output = {"success":False, "error":"invalid image file","code":400}
                         
-                except Exception as e:
+                except Exception:
+
+                    err_trace = traceback.format_exc()
+                    print(err_trace,file=sys.stderr,flush=True)
  
-                    output = {"success":False, "error":"invalid image","code":400}
+                    output = {"success":False, "error":"error occured on the server","code":500}
+                    
+                finally:
                     db.set(req_id,json.dumps(output))
                     if os.path.exists(TEMP_PATH + img_id):
                         os.remove(img)
-                    continue
 
         time.sleep(delay)
 
