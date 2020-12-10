@@ -1,8 +1,8 @@
 import requests
 from PIL import Image
 
-image_data = open("/home/johnolafenwa/Documents/source/jetson/DeepStack/tests/test-image6.jpeg","rb").read()
-image = Image.open("/home/johnolafenwa/Documents/source/jetson/DeepStack/tests/test-image6.jpeg").convert("RGB")
+image_data = open("family.jpg","rb").read()
+image = Image.open("family.jpg").convert("RGB")
 
 response = requests.post("http://localhost:80/v1/vision/face/recognize",files={"image":image_data}).json()
 print(response)

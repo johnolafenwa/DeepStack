@@ -15,13 +15,7 @@ def test_detection():
 def test_register():
 
     image_data = open("adele1.jpg","rb").read()
-    requests.post("http://localhost:80/v1/vision/face/register",files={"image":image_data},data={"userid":"Adele1"}).json()
-    requests.post("http://localhost:80/v1/vision/face/register",files={"image":image_data},data={"userid":"Adele2"}).json()
-    requests.post("http://localhost:80/v1/vision/face/register",files={"image":image_data},data={"userid":"Adele3"}).json()
-    requests.post("http://localhost:80/v1/vision/face/register",files={"image":image_data},data={"userid":"Adele4"}).json()
-    requests.post("http://localhost:80/v1/vision/face/register",files={"image":image_data},data={"userid":"Adele5"}).json()
-    requests.post("http://localhost:80/v1/vision/face/register",files={"image":image_data},data={"userid":"Adele6"}).json()
-    requests.post("http://localhost:80/v1/vision/face/register",files={"image":image_data},data={"userid":"Adele7"}).json()
+    requests.post("http://localhost:80/v1/vision/face/register",files={"image":image_data},data={"userid":"Adele"}).json()
 
     response = requests.post("http://localhost:80/v1/vision/face/register",files={"image":image_data},data={"userid":"Adele"}).json()
 

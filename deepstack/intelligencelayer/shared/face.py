@@ -388,8 +388,8 @@ def face(thread_name,delay):
 
                         output = {"success":False, "error":"error occured on the server","code":500}
                         
-                     finally:
-                         SharedOptions.db.set(req_id,json.dumps(output))
+                    finally:
+                        SharedOptions.db.set(req_id,json.dumps(output))
 
                         if os.path.exists(SharedOptions.TEMP_PATH+img_id):
                             os.remove(SharedOptions.TEMP_PATH+img_id)

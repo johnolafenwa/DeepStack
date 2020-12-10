@@ -1,7 +1,7 @@
 import requests
 from PIL import Image,ImageDraw
 
-image_data = open("face.py","rb").read()
+image_data = open("detected.jpg","rb").read()
 #image = Image.open("/home/johnolafenwa/Downloads/1_zoS8E7Gooe_-3Hi43_R_Yg.jpeg").convert("RGB")
 
 response = requests.post("http://localhost:80/v1/vision/detection",files={"image":image_data}).json()

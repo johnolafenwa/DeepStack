@@ -1,4 +1,4 @@
-FROM deepquestai/deepstack-base:gpu-412248711 as gpu
+FROM deepquestai/deepstack-base:gpu-412378893 as gpu
 
 ENV SLEEP_TIME 0.01
 ENV CUDA_MODE True
@@ -8,7 +8,7 @@ RUN mkdir /deeptemp
 RUN mkdir /datastore
 
 ENV DATA_DIR /datastore
-ENV TEMP_PATH /deeptemp
+ENV TEMP_PATH /deeptemp/
 ENV PROFILE desktop_gpu
 
 WORKDIR /app
