@@ -1,0 +1,5 @@
+{"sys-version": "1.0",
+"framework":"ONNX","mean":127.5,"std":127.5,"width":224,"height":224,
+"map": {"0": "chef", "1": "doctor", "2": "engineer", "3": "farmer",
+"4": "firefighter", "5": "judge", "6": "mechanic",
+ "7": "pilot", "8": "police", "9": "waiter"}}

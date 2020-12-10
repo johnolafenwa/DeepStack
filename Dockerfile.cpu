@@ -1,4 +1,4 @@
-FROM deepquestai/deepstack-base:cpu as cpu
+FROM deepquestai/deepstack-base:cpu-412248711 as cpu
 
 ENV SLEEP_TIME 0.01
 ENV CUDA_MODE False
@@ -12,7 +12,6 @@ ENV TEMP_PATH /deeptemp
 ENV PROFILE desktop_cpu
 
 WORKDIR /app
-RUN pip install torch==1.6.0+cpu torchvision==0.7.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
 RUN pip install onnxruntime==0.4.0
 
 RUN pip3 install redis

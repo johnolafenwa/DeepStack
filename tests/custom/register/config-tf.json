@@ -1,0 +1,6 @@
+{"sys-version": "1.0",
+    "framework":"TF","mean":0,"std":255,"width":224,"height":224,
+    "input_name":"input_1:0","output_name":"output_1:0",
+    "map": {"0": "chef", "1": "doctor", "2": "engineer", "3": "farmer",
+    "4": "firefighter", "5": "judge", "6": "mechanic",
+    "7": "pilot", "8": "police", "9": "waiter"}}
