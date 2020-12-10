@@ -5,7 +5,7 @@ import json
 import io
 import _thread as thread
 from multiprocessing import Process
-from PIL import Image
+from PIL import Image,UnidentifiedImageError
 import torch.nn.functional as F
 import ast
 import sqlite3

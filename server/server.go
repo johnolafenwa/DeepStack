@@ -11,6 +11,7 @@ import (
 
 	"path"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -97,7 +98,7 @@ func scene(c *gin.Context) {
 	}
 }
 
-func detection(c *gin.Context) {
+func detection(c *gin.Context, queue_name string) {
 
 	nms := c.PostForm("min_confidence")
 
@@ -119,7 +120,7 @@ func detection(c *gin.Context) {
 
 	c.SaveUploadedFile(file, filepath.Join(temp_path, img_id))
 
-	redis_client.RPush("detection_queue", face_req_string)
+	redis_client.RPush(queue_name, face_req_string)
 
 	for true {
 
@@ -724,12 +725,6 @@ func printlogs() {
 
 	}
 
-	fmt.Println("v1/vision/addmodel")
-	fmt.Println("---------------------------------------")
-	fmt.Println("v1/vision/listmodels")
-	fmt.Println("---------------------------------------")
-	fmt.Println("v1/vision/deletemodel")
-	fmt.Println("---------------------------------------")
 	fmt.Println("---------------------------------------")
 	fmt.Println("v1/backup")
 	fmt.Println("---------------------------------------")
@@ -895,7 +890,12 @@ func main() {
 	vision.Use(middlewares.CheckApiKey(&sub_data, &settings))
 	{
 		vision.POST("/scene", middlewares.CheckScene(), middlewares.CheckImage(), scene)
-		vision.POST("/detection", middlewares.CheckDetection(), middlewares.CheckImage(), middlewares.CheckConfidence(), detection)
+		vision.POST("/detection", middlewares.CheckDetection(), middlewares.CheckImage(), middlewares.CheckConfidence(), func(c *gin.Context) {
+
+			detection(c, "detection_queue")
+
+		})
+
 		facegroup := vision.Group("/face")
 		facegroup.Use(middlewares.CheckFace())
 		{
@@ -913,10 +913,10 @@ func main() {
 		vision.POST("/listmodels", middlewares.CheckAdminKey(&sub_data, &settings), list_models)
 
 		custom := vision.Group("/custom")
-		custom.Use(middlewares.CheckCustomVision(), middlewares.CheckImage())
+		custom.Use(middlewares.CheckImage())
 		{
 
-			models, err := filepath.Glob(DATA_DIR + "/models/vision/*")
+			models, err := filepath.Glob("/modelstore/detection/*.pt")
 
 			if err == nil {
 
@@ -924,16 +924,26 @@ func main() {
 
 					model_name := filepath.Base(file)
 
+					model_name = model_name[:strings.LastIndex(model_name, ".")]
+
+					modelcmd := exec.CommandContext(ctx, "bash", "-c", "python3 "+detectionScript+" --model "+file+" --name "+model_name)
+					modelcmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
+					modelcmd.Stdout = stdout
+					modelcmd.Stderr = stderr
+					modelcmd.Start()
+
 					custom.POST(model_name, func(c *gin.Context) {
 
-						single_request_loop(c, model_name+"_queue")
+						detection(c, model_name+"_queue")
 
 					})
+
+					fmt.Println("---------------------------------------")
+					fmt.Println("v1/vision/custom/" + model_name)
 
 				}
 
 			}
-
 		}
 
 	}
