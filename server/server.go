@@ -760,6 +760,16 @@ func main() {
 
 	APPDIR := os.Getenv("APPDIR")
 	DATA_DIR = os.Getenv("DATA_DIR")
+	PROFILE := os.Getenv("PROFILE")
+
+	redis_server := "redis-server"
+	interpreter := "python3"
+
+	if PROFILE == "windows_native" {
+		interpreter = filepath.Join(APPDIR, "interpreter", "python.exe")
+		redis_server = filepath.Join(APPDIR, "redis", "redis-server.exe")
+	}
+
 	if DATA_DIR == "" {
 		DATA_DIR = "/datastore"
 	}
@@ -788,12 +798,15 @@ func main() {
 	faceScript := filepath.Join(APPDIR, "intelligencelayer/shared/face.py")
 	sceneScript := filepath.Join(APPDIR, "intelligencelayer/shared/scene.py")
 
-	initcmd := exec.CommandContext(ctx, "bash", "-c", "python3 "+initScript)
+	initcmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+initScript)
 	initcmd.Dir = APPDIR
 	initcmd.Stdout = stdout
 	initcmd.Stderr = stderr
 
-	rediscmd := exec.CommandContext(ctx, "bash", "-c", "redis-server --daemonize yes")
+	rediscmd := exec.CommandContext(ctx, "bash", "-c", redis_server+" --daemonize yes")
+	if PROFILE == "windows_native" {
+		rediscmd = exec.CommandContext(ctx, redis_server+" --daemonize yes")
+	}
 
 	rediscmd.Stdout = stdout
 	rediscmd.Stderr = stderr
@@ -802,7 +815,10 @@ func main() {
 	initcmd.Run()
 
 	if os.Getenv("VISION-DETECTION") == "True" {
-		detectioncmd := exec.CommandContext(ctx, "bash", "-c", "python3 "+detectionScript)
+		detectioncmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+detectionScript)
+		if PROFILE == "windows_native" {
+			detectioncmd = exec.CommandContext(ctx, interpreter, " "+detectionScript)
+		}
 		detectioncmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		detectioncmd.Stdout = stdout
 		detectioncmd.Stderr = stderr
@@ -811,7 +827,10 @@ func main() {
 	}
 
 	if os.Getenv("VISION-FACE") == "True" {
-		facecmd := exec.CommandContext(ctx, "bash", "-c", "python3 "+faceScript)
+		facecmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+faceScript)
+		if PROFILE == "windows_native" {
+			facecmd = exec.CommandContext(ctx, interpreter, " "+faceScript)
+		}
 		facecmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		facecmd.Stdout = stdout
 		facecmd.Stderr = stderr
@@ -819,7 +838,10 @@ func main() {
 
 	}
 	if os.Getenv("VISION-SCENE") == "True" {
-		scenecmd := exec.CommandContext(ctx, "bash", "-c", "python3 "+sceneScript)
+		scenecmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+sceneScript)
+		if PROFILE == "windows_native" {
+			scenecmd = exec.CommandContext(ctx, interpreter, " "+sceneScript)
+		}
 		scenecmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		scenecmd.Stdout = stdout
 		scenecmd.Stderr = stderr
