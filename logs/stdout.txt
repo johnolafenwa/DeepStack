@@ -1,58 +1,16 @@
-[26672] 18 Dec 13:31:43 # Warning: no config file specified, using the default config. In order to specify a config file use 'redis-server /path/to/redis.conf'
-[26672] 18 Dec 13:31:43 * Server started, Redis version 2.4.6
-[26672] 18 Dec 13:31:43 * DB loaded from disk: 0 seconds
-[26672] 18 Dec 13:31:43 * The server is now ready to accept connections on port 6379
-[26672] 18 Dec 13:31:44 - DB 0: 620 keys (0 volatile) in 1536 slots HT.
-[26672] 18 Dec 13:31:44 - 0 clients connected (0 slaves), 1404624 bytes in use
+[28584] 18 Dec 14:11:57 # Warning: no config file specified, using the default config. In order to specify a config file use 'redis-server /path/to/redis.conf'
+[28584] 18 Dec 14:11:57 * Server started, Redis version 2.4.6
+[28584] 18 Dec 14:11:57 * DB loaded from disk: 0 seconds
+[28584] 18 Dec 14:11:57 * The server is now ready to accept connections on port 6379
+[28584] 18 Dec 14:11:58 - DB 0: 620 keys (0 volatile) in 1536 slots HT.
+[28584] 18 Dec 14:11:58 - 0 clients connected (0 slaves), 1359440 bytes in use
 PROFILE:- windows_native
-[26672] 18 Dec 13:31:49 - DB 0: 620 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:31:49 - 0 clients connected (0 slaves), 1404624 bytes in use
-[26672] 18 Dec 13:31:50 - Accepted 127.0.0.1:56207
-[26672] 18 Dec 13:31:55 - DB 0: 620 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:31:55 - 1 clients connected (0 slaves), 1412872 bytes in use
-[26672] 18 Dec 13:32:00 - DB 0: 620 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:32:00 - 1 clients connected (0 slaves), 1412872 bytes in use
-[26672] 18 Dec 13:32:06 - DB 0: 620 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:32:06 - 1 clients connected (0 slaves), 1412872 bytes in use
-[26672] 18 Dec 13:32:11 - DB 0: 620 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:32:11 - 1 clients connected (0 slaves), 1412872 bytes in use
-[26672] 18 Dec 13:32:17 - DB 0: 620 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:32:17 - 1 clients connected (0 slaves), 1412872 bytes in use
-[26672] 18 Dec 13:32:22 - DB 0: 620 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:32:22 - 1 clients connected (0 slaves), 1412872 bytes in use
-[26672] 18 Dec 13:32:28 - DB 0: 620 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:32:28 - 1 clients connected (0 slaves), 1412872 bytes in use
-[26672] 18 Dec 13:32:28 - Accepted 127.0.0.1:56247
-[26672] 18 Dec 13:32:33 - DB 0: 624 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:32:33 - 2 clients connected (0 slaves), 1422360 bytes in use
-[26672] 18 Dec 13:32:39 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:32:39 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:32:44 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:32:44 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:32:50 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:32:50 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:32:55 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:32:55 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:33:01 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:33:01 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:33:06 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:33:06 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:33:12 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:33:12 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:33:18 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:33:18 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:33:23 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:33:23 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:33:29 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:33:29 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:33:34 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:33:34 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:33:40 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:33:40 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:33:45 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:33:45 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:33:51 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:33:51 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:33:56 - DB 0: 625 keys (0 volatile) in 1024 slots HT.
-[26672] 18 Dec 13:33:56 - 2 clients connected (0 slaves), 1422576 bytes in use
-[26672] 18 Dec 13:34:02 - Client closed connection
+[28584] 18 Dec 14:12:02 - Accepted 127.0.0.1:60457
+[28584] 18 Dec 14:12:04 - DB 0: 621 keys (0 volatile) in 1024 slots HT.
+[28584] 18 Dec 14:12:04 - 1 clients connected (0 slaves), 1368288 bytes in use
+[28584] 18 Dec 14:12:07 - Accepted 127.0.0.1:60460
+[28584] 18 Dec 14:12:08 - Accepted 127.0.0.1:60462
+[28584] 18 Dec 14:12:09 - DB 0: 620 keys (0 volatile) in 1024 slots HT.
+[28584] 18 Dec 14:12:09 - 3 clients connected (0 slaves), 1384448 bytes in use
+[28584] 18 Dec 14:12:14 - DB 0: 621 keys (0 volatile) in 1024 slots HT.
+[28584] 18 Dec 14:12:14 - 3 clients connected (0 slaves), 1384968 bytes in use

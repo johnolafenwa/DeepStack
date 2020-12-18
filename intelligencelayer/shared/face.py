@@ -9,10 +9,10 @@ import time
 import warnings
 from multiprocessing import Process
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../"))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
 from shared import SharedOptions
 if SharedOptions.PROFILE == "windows_native":
-    sys.path.append(os.path.join(SharedOptions.APP_DIR,"packages"))
+    sys.path.append(os.path.join(SharedOptions.APP_DIR,"windows_packages"))
 
 import numpy as np
 import torch
@@ -111,15 +111,14 @@ def face(thread_name, delay):
                 req_id = req_data["reqid"]
 
                 if task_type == "detect":
-
+                    img_id = req_data["imgid"]
+                    img_path = os.path.join(SharedOptions.TEMP_PATH, img_id)
                     try:
-                        img_id = req_data["imgid"]
+                        
                         threshold = float(req_data["minconfidence"])
 
-                        img = SharedOptions.TEMP_PATH + img_id
-
-                        det = detector.predict(img, threshold)
-                        os.remove(img)
+                        det = detector.predict(img_path, threshold)
+                        os.remove(img_path)
 
                         outputs = []
 
@@ -162,8 +161,8 @@ def face(thread_name, delay):
 
                     finally:
                         SharedOptions.db.set(req_id, json.dumps(output))
-                        if os.path.exists(img):
-                            os.remove(img)
+                        if os.path.exists(img_path):
+                            os.remove(img_path)
 
                 elif task_type == "register":
 
@@ -181,11 +180,11 @@ def face(thread_name, delay):
 
                         for img_id in user_images:
 
-                            img = SharedOptions.TEMP_PATH + img_id
-                            pil_image = Image.open(img).convert("RGB")
+                            img_path = os.path.join(SharedOptions.TEMP_PATH , img_id)
+                            pil_image = Image.open(img_path).convert("RGB")
 
                             det = detector.predict(img, 0.55)
-                            os.remove(SharedOptions.TEMP_PATH + img_id)
+                            os.remove(img_path)
 
                             outputs = []
                             new_img = None
@@ -274,8 +273,8 @@ def face(thread_name, delay):
                     finally:
                         SharedOptions.db.set(req_id, json.dumps(output))
                         for img_id in user_images:
-                            if os.path.exists(SharedOptions.TEMP_PATH + img_id):
-                                os.remove(SharedOptions.TEMP_PATH + img_id)
+                            if os.path.exists(os.path.join(SharedOptions.TEMP_PATH , img_id)):
+                                os.remove(os.path.join(SharedOptions.TEMP_PATH , img_id))
 
                 elif task_type == "recognize":
 
@@ -301,7 +300,7 @@ def face(thread_name, delay):
                         img_id = req_data["imgid"]
                         threshold = float(req_data["minconfidence"])
 
-                        img = SharedOptions.TEMP_PATH + img_id
+                        img = os.path.join(SharedOptions.TEMP_PATH , img_id)
 
                         pil_image = Image.open(img).convert("RGB")
 
@@ -454,8 +453,8 @@ def face(thread_name, delay):
                     finally:
                         SharedOptions.db.set(req_id, json.dumps(output))
 
-                        if os.path.exists(SharedOptions.TEMP_PATH + img_id):
-                            os.remove(SharedOptions.TEMP_PATH + img_id)
+                        if os.path.exists(os.path.join(SharedOptions.TEMP_PATH , img_id)):
+                            os.remove(os.path.join(SharedOptions.TEMP_PATH , img_id))
 
                 elif task_type == "match":
 
@@ -463,8 +462,8 @@ def face(thread_name, delay):
 
                         user_images = req_data["images"]
 
-                        img1 = SharedOptions.TEMP_PATH + user_images[0]
-                        img2 = SharedOptions.TEMP_PATH + user_images[1]
+                        img1 = os.path.join(SharedOptions.TEMP_PATH , user_images[0])
+                        img2 = os.path.join(SharedOptions.TEMP_PATH , user_images[1])
 
                         image1 = Image.open(img1).convert("RGB")
                         image2 = Image.open(img2).convert("RGB")
@@ -544,11 +543,11 @@ def face(thread_name, delay):
                     finally:
 
                         SharedOptions.db.set(req_id, json.dumps(output))
-                        if os.path.exists(SharedOptions.TEMP_PATH + user_images[0]):
-                            os.remove(SharedOptions.TEMP_PATH + user_images[0])
+                        if os.path.exists(os.path.join(SharedOptions.TEMP_PATH , user_images[0])):
+                            os.remove(os.path.join(SharedOptions.TEMP_PATH , user_images[0]))
 
-                        if os.path.exists(SharedOptions.TEMP_PATH + user_images[1]):
-                            os.remove(SharedOptions.TEMP_PATH + user_images[1])
+                        if os.path.exists(os.path.join(SharedOptions.TEMP_PATH , user_images[1])):
+                            os.remove(os.path.join(SharedOptions.TEMP_PATH , user_images[1]))
 
         time.sleep(delay)
 
@@ -561,9 +560,9 @@ def update_faces(thread_name, delay):
 
         time.sleep(delay)
 
+if __name__ == "__main__":
+    p1 = Process(target=update_faces, args=("", 1))
+    p1.start()
 
-p1 = Process(target=update_faces, args=("", 1))
-p1.start()
-
-p = Process(target=face, args=("", SharedOptions.SLEEP_TIME))
-p.start()
+    p = Process(target=face, args=("", SharedOptions.SLEEP_TIME))
+    p.start()
