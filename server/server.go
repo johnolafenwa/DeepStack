@@ -767,6 +767,8 @@ func main() {
 	var port int
 	var modelStoreDetection string
 
+	os.Setenv("PROFILE", "windows_native")
+
 	flag.StringVar(&visionFace, "VISION-FACE", os.Getenv("VISION-FACE"), "enable face detection")
 	flag.StringVar(&visionDetection, "VISION-DETECTION", os.Getenv("VISION-DETECTION"), "enable object detection")
 	flag.StringVar(&visionScene, "VISION-SCENE", os.Getenv("VISION-SCENE"), "enable scene recognition")
@@ -777,13 +779,14 @@ func main() {
 
 	flag.Parse()
 
+	PROFILE := os.Getenv("PROFILE")
+
 	if !strings.HasSuffix(modelStoreDetection, "/") {
 		modelStoreDetection = modelStoreDetection + "/"
 	}
 
 	APPDIR := os.Getenv("APPDIR")
 	DATA_DIR = os.Getenv("DATA_DIR")
-	PROFILE := os.Getenv("PROFILE")
 
 	startedProcesses := make([]*exec.Cmd, 0)
 
@@ -791,8 +794,15 @@ func main() {
 	interpreter := "python3"
 
 	if PROFILE == "windows_native" {
+
+		APPDIR = "C://Users//johnolafenwa//Documents///AI//DeepStack"
+		os.Chdir("C://Users//johnolafenwa//Documents///AI//DeepStack//server")
 		interpreter = filepath.Join(APPDIR, "interpreter", "python.exe")
 		redis_server = filepath.Join(APPDIR, "redis", "redis-server.exe")
+
+		os.Setenv("VISION-FACE", visionFace)
+		os.Setenv("VISION-DETECTION", visionDetection)
+		os.Setenv("VISION-SCENE", visionScene)
 	}
 
 	if DATA_DIR == "" {
@@ -810,6 +820,12 @@ func main() {
 		if PROFILE == "windows_native" {
 			temp_path = filepath.Join(os.TempDir(), "DeepStack")
 		}
+	}
+
+	if PROFILE == "windows_native" {
+		os.Setenv("APPDIR", "C://Users//johnolafenwa//Documents///AI//DeepStack")
+		os.Setenv("DATA_DIR", DATA_DIR)
+		os.Setenv("TEMP_PATH", temp_path)
 	}
 
 	os.Mkdir(filepath.Join(APPDIR, "logs"), 0755)
@@ -867,6 +883,8 @@ func main() {
 		detectioncmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		detectioncmd.Stdout = stdout
 		detectioncmd.Stderr = stderr
+		detectioncmd.Env = os.Environ()
+
 		err = detectioncmd.Start()
 		if err != nil {
 			stderr.WriteString(err.Error())
@@ -883,6 +901,7 @@ func main() {
 		facecmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		facecmd.Stdout = stdout
 		facecmd.Stderr = stderr
+		facecmd.Env = os.Environ()
 		err = facecmd.Start()
 		if err != nil {
 			stderr.WriteString(err.Error())
@@ -898,6 +917,7 @@ func main() {
 		scenecmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		scenecmd.Stdout = stdout
 		scenecmd.Stderr = stderr
+		scenecmd.Env = os.Environ()
 		err = scenecmd.Start()
 		if err != nil {
 			stderr.WriteString(err.Error())
