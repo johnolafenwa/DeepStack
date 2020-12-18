@@ -9,7 +9,7 @@ import time
 import warnings
 from multiprocessing import Process
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../"))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
 from shared import SharedOptions
 if SharedOptions.PROFILE == "windows_native":
     sys.path.append(os.path.join(SharedOptions.APP_DIR,"windows_packages"))
@@ -72,9 +72,10 @@ def scenerecognition(thread_name, delay):
                 img_id = req_data["imgid"]
                 req_id = req_data["reqid"]
                 req_type = req_data["reqtype"]
+                img_path = os.path.join(SharedOptions.TEMP_PATH,img_id)
                 try:
 
-                    img = Image.open(SharedOptions.TEMP_PATH + img_id).convert("RGB")
+                    img = Image.open(img_path).convert("RGB")
 
                     trans = transforms.Compose(
                         [
@@ -90,7 +91,7 @@ def scenerecognition(thread_name, delay):
                     img = img.numpy()
                     img = np.expand_dims(img, 0).astype(np.float32)
 
-                    os.remove(SharedOptions.TEMP_PATH + img_id)
+                    os.remove(img_path)
 
                     cl, conf = classifier.predict(img)
 
@@ -119,11 +120,11 @@ def scenerecognition(thread_name, delay):
 
                 finally:
                     SharedOptions.db.set(req_id, json.dumps(output))
-                    if os.path.exists(SharedOptions.TEMP_PATH + img_id):
-                        os.remove(SharedOptions.TEMP_PATH + img_id)
+                    if os.path.exists(img_path):
+                        os.remove(img_path)
 
         time.sleep(delay)
 
-
-p = Process(target=scenerecognition, args=("", SharedOptions.SLEEP_TIME))
-p.start()
+if __name__ == "__main__":
+    p = Process(target=scenerecognition, args=("", SharedOptions.SLEEP_TIME))
+    p.start()

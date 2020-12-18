@@ -8,11 +8,13 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-
+	"os/signal"
 	"path"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
+	"flag"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
@@ -758,9 +760,16 @@ func launchservices() {
 
 func main() {
 
+	var visionFace string
+	var visionDetection string
+	var visionScene string
+	var vision
+
 	APPDIR := os.Getenv("APPDIR")
 	DATA_DIR = os.Getenv("DATA_DIR")
 	PROFILE := os.Getenv("PROFILE")
+
+	startedProcesses := make([]*exec.Cmd, 0)
 
 	redis_server := "redis-server"
 	interpreter := "python3"
@@ -772,11 +781,19 @@ func main() {
 
 	if DATA_DIR == "" {
 		DATA_DIR = "/datastore"
+
+		if PROFILE == "windows_native" {
+			DATA_DIR = filepath.Join(os.Getenv("LocalAppData"), "DeepStack")
+		}
 	}
 
 	temp_path = os.Getenv("TEMP_PATH")
 	if temp_path == "" {
 		temp_path = "/deeptemp/"
+
+		if PROFILE == "windows_native" {
+			temp_path = filepath.Join(os.TempDir(), "DeepStack")
+		}
 	}
 
 	os.Mkdir(filepath.Join(APPDIR, "logs"), 0755)
@@ -799,53 +816,76 @@ func main() {
 	sceneScript := filepath.Join(APPDIR, "intelligencelayer/shared/scene.py")
 
 	initcmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+initScript)
+	if PROFILE == "windows_native" {
+		initcmd = exec.CommandContext(ctx, interpreter, initScript)
+	}
 	initcmd.Dir = APPDIR
 	initcmd.Stdout = stdout
 	initcmd.Stderr = stderr
 
 	rediscmd := exec.CommandContext(ctx, "bash", "-c", redis_server+" --daemonize yes")
 	if PROFILE == "windows_native" {
-		rediscmd = exec.CommandContext(ctx, redis_server+" --daemonize yes")
+		rediscmd = exec.CommandContext(ctx, redis_server)
+		rediscmd.Dir = filepath.Join(APPDIR, "redis")
 	}
 
 	rediscmd.Stdout = stdout
 	rediscmd.Stderr = stderr
 
-	rediscmd.Run()
-	initcmd.Run()
+	err := rediscmd.Start()
+	if err != nil {
+		stderr.WriteString(err.Error())
+	}
+	err = initcmd.Run()
+	startedProcesses = append(startedProcesses, initcmd)
+	if err != nil {
+		stderr.WriteString(err.Error())
+	}
 
 	if os.Getenv("VISION-DETECTION") == "True" {
 		detectioncmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+detectionScript)
 		if PROFILE == "windows_native" {
-			detectioncmd = exec.CommandContext(ctx, interpreter, " "+detectionScript)
+			detectioncmd = exec.CommandContext(ctx, interpreter, detectionScript)
 		}
+		startedProcesses = append(startedProcesses, detectioncmd)
 		detectioncmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		detectioncmd.Stdout = stdout
 		detectioncmd.Stderr = stderr
-		detectioncmd.Start()
+		err = detectioncmd.Start()
+		if err != nil {
+			stderr.WriteString(err.Error())
+		}
 
 	}
 
 	if os.Getenv("VISION-FACE") == "True" {
 		facecmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+faceScript)
 		if PROFILE == "windows_native" {
-			facecmd = exec.CommandContext(ctx, interpreter, " "+faceScript)
+			facecmd = exec.CommandContext(ctx, interpreter, faceScript)
 		}
+		startedProcesses = append(startedProcesses, facecmd)
 		facecmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		facecmd.Stdout = stdout
 		facecmd.Stderr = stderr
-		facecmd.Start()
+		err = facecmd.Start()
+		if err != nil {
+			stderr.WriteString(err.Error())
+		}
 
 	}
 	if os.Getenv("VISION-SCENE") == "True" {
 		scenecmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+sceneScript)
 		if PROFILE == "windows_native" {
-			scenecmd = exec.CommandContext(ctx, interpreter, " "+sceneScript)
+			scenecmd = exec.CommandContext(ctx, interpreter, sceneScript)
 		}
+		startedProcesses = append(startedProcesses, scenecmd)
 		scenecmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		scenecmd.Stdout = stdout
 		scenecmd.Stderr = stderr
-		scenecmd.Start()
+		err = scenecmd.Start()
+		if err != nil {
+			stderr.WriteString(err.Error())
+		}
 
 	}
 
@@ -948,11 +988,18 @@ func main() {
 
 					model_name = model_name[:strings.LastIndex(model_name, ".")]
 
-					modelcmd := exec.CommandContext(ctx, "bash", "-c", "python3 "+detectionScript+" --model "+file+" --name "+model_name)
+					modelcmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+detectionScript+" --model "+file+" --name "+model_name)
+					if PROFILE == "windows_native" {
+						modelcmd = exec.CommandContext(ctx, interpreter, detectionScript+" --model "+file+" --name "+model_name)
+					}
+					startedProcesses = append(startedProcesses, modelcmd)
 					modelcmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 					modelcmd.Stdout = stdout
 					modelcmd.Stderr = stderr
-					modelcmd.Start()
+					err = modelcmd.Start()
+					if err != nil {
+						stderr.WriteString(err.Error())
+					}
 
 					custom.POST(model_name, func(c *gin.Context) {
 
@@ -981,6 +1028,21 @@ func main() {
 	port2 := strconv.Itoa(port)
 
 	printlogs()
+
+	signalChannel := make(chan os.Signal, 2)
+	signal.Notify(signalChannel, os.Interrupt, syscall.SIGTERM)
+	go func() {
+		sig := <-signalChannel
+		if sig == syscall.SIGTERM || sig == syscall.SIGKILL {
+			for _, process := range startedProcesses {
+				err = process.Process.Kill()
+				if err != nil {
+					stderr.WriteString(err.Error())
+				}
+			}
+		}
+	}()
+
 	server.Run(":" + port2)
 
 }

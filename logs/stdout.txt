@@ -1,0 +1,15 @@
+[20788] 17 Dec 15:19:23 # Warning: no config file specified, using the default config. In order to specify a config file use 'redis-server /path/to/redis.conf'
+[20788] 17 Dec 15:19:23 * Server started, Redis version 2.4.6
+[20788] 17 Dec 15:19:23 * DB loaded from disk: 0 seconds
+[20788] 17 Dec 15:19:23 * The server is now ready to accept connections on port 6379
+[20788] 17 Dec 15:19:24 - DB 0: 620 keys (0 volatile) in 1536 slots HT.
+[20788] 17 Dec 15:19:24 - 0 clients connected (0 slaves), 1404624 bytes in use
+[20788] 17 Dec 15:19:27 - Accepted 127.0.0.1:56770
+[20788] 17 Dec 15:19:29 - DB 0: 620 keys (0 volatile) in 1024 slots HT.
+[20788] 17 Dec 15:19:29 - 1 clients connected (0 slaves), 1412872 bytes in use
+[20788] 17 Dec 15:19:35 - DB 0: 620 keys (0 volatile) in 1024 slots HT.
+[20788] 17 Dec 15:19:35 - 1 clients connected (0 slaves), 1412872 bytes in use
+[20788] 17 Dec 15:19:39 - Accepted 127.0.0.1:56776
+[20788] 17 Dec 15:19:40 - DB 0: 621 keys (0 volatile) in 1024 slots HT.
+[20788] 17 Dec 15:19:40 - 2 clients connected (0 slaves), 1421712 bytes in use
+[20788] 17 Dec 15:19:45 - Client closed connection

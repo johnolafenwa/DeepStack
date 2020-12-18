@@ -10,7 +10,7 @@ import warnings
 from multiprocessing import Process
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../"))
-from shared import SharedOptions
+from .shared import SharedOptions
 if SharedOptions.PROFILE == "windows_native":
     sys.path.append(os.path.join(SharedOptions.APP_DIR,"windows_packages"))
 
@@ -124,6 +124,6 @@ def scenerecognition(thread_name, delay):
 
         time.sleep(delay)
 
-
-p = Process(target=scenerecognition, args=("", SharedOptions.SLEEP_TIME))
-p.start()
+if __name__ == "__main__":
+    p = Process(target=scenerecognition, args=("", SharedOptions.SLEEP_TIME))
+    p.start()

@@ -1,4 +1,107 @@
-Traceback (most recent call last):
-  File "C:\Users\johnolafenwa\Documents\AI\DeepStack\intelligencelayer\shared\scene.py", line 2, in <module>
-    import torch
-ModuleNotFoundError: No module named 'torch'
+2020-12-17 15:19:25.6002179 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 210 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6004807 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 36 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6005005 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 42 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6005144 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 6 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6005270 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 252 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6005397 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 30 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6005522 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 12 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6005657 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 54 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6005780 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 18 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6005903 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 174 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6006035 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 246 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6006157 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 24 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6006291 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 240 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6006416 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 48 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6006547 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 60 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6006670 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 66 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6006791 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 72 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6006913 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 78 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6007037 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 222 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6007161 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 84 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6007296 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 90 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6007416 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 234 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6007536 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 96 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6008189 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 102 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6008383 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 108 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6008557 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 114 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6008720 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 120 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6008893 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 126 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6009058 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 132 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6009194 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 138 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6009318 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 144 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6009441 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 150 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6009564 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 156 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6009689 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 162 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6009811 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 168 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6009942 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 180 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6010071 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 186 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6010192 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 312 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6010312 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 192 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6010434 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 198 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6010558 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 204 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6010680 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 216 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6010800 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 228 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6010930 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 258 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6011050 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 264 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6011172 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 270 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6011320 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 276 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6011450 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 282 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6011573 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 288 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6011695 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 294 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6011820 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 300 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6011942 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 306 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6012064 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 318 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6044294 [W:onnxruntime:Default, graph.cc:2208 onnxruntime::Graph::CleanUnusedInitializers] 497 exists in this graph's initializers but it is not used by any node
+2020-12-17 15:19:25.6353942 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 6 is not associated with a node. 
+2020-12-17 15:19:25.6354365 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 12 is not associated with a node. 
+2020-12-17 15:19:25.6354526 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 18 is not associated with a node. 
+2020-12-17 15:19:25.6354684 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 24 is not associated with a node. 
+2020-12-17 15:19:25.6354839 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 30 is not associated with a node. 
+2020-12-17 15:19:25.6354994 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 36 is not associated with a node. 
+2020-12-17 15:19:25.6355148 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 42 is not associated with a node. 
+2020-12-17 15:19:25.6355296 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 48 is not associated with a node. 
+2020-12-17 15:19:25.6355447 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 54 is not associated with a node. 
+2020-12-17 15:19:25.6355598 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 60 is not associated with a node. 
+2020-12-17 15:19:25.6355755 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 66 is not associated with a node. 
+2020-12-17 15:19:25.6355905 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 72 is not associated with a node. 
+2020-12-17 15:19:25.6356058 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 78 is not associated with a node. 
+2020-12-17 15:19:25.6356291 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 84 is not associated with a node. 
+2020-12-17 15:19:25.6356685 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 90 is not associated with a node. 
+2020-12-17 15:19:25.6356812 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 96 is not associated with a node. 
+2020-12-17 15:19:25.6356942 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 102 is not associated with a node. 
+2020-12-17 15:19:25.6357071 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 108 is not associated with a node. 
+2020-12-17 15:19:25.6357195 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 114 is not associated with a node. 
+2020-12-17 15:19:25.6357323 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 120 is not associated with a node. 
+2020-12-17 15:19:25.6357452 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 126 is not associated with a node. 
+2020-12-17 15:19:25.6357638 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 132 is not associated with a node. 
+2020-12-17 15:19:25.6357766 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 138 is not associated with a node. 
+2020-12-17 15:19:25.6357891 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 144 is not associated with a node. 
+2020-12-17 15:19:25.6358019 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 150 is not associated with a node. 
+2020-12-17 15:19:25.6358147 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 156 is not associated with a node. 
+2020-12-17 15:19:25.6358270 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 162 is not associated with a node. 
+2020-12-17 15:19:25.6358395 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 168 is not associated with a node. 
+2020-12-17 15:19:25.6358522 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 174 is not associated with a node. 
+2020-12-17 15:19:25.6358648 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 180 is not associated with a node. 
+2020-12-17 15:19:25.6358779 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 186 is not associated with a node. 
+2020-12-17 15:19:25.6358906 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 192 is not associated with a node. 
+2020-12-17 15:19:25.6359032 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 198 is not associated with a node. 
+2020-12-17 15:19:25.6359667 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 204 is not associated with a node. 
+2020-12-17 15:19:25.6359797 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 210 is not associated with a node. 
+2020-12-17 15:19:25.6359925 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 216 is not associated with a node. 
+2020-12-17 15:19:25.6360052 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 222 is not associated with a node. 
+2020-12-17 15:19:25.6360179 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 228 is not associated with a node. 
+2020-12-17 15:19:25.6360308 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 234 is not associated with a node. 
+2020-12-17 15:19:25.6360432 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 240 is not associated with a node. 
+2020-12-17 15:19:25.6360559 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 246 is not associated with a node. 
+2020-12-17 15:19:25.6360693 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 252 is not associated with a node. 
+2020-12-17 15:19:25.6360817 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 258 is not associated with a node. 
+2020-12-17 15:19:25.6360943 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 264 is not associated with a node. 
+2020-12-17 15:19:25.6361069 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 270 is not associated with a node. 
+2020-12-17 15:19:25.6361191 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 276 is not associated with a node. 
+2020-12-17 15:19:25.6361316 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 282 is not associated with a node. 
+2020-12-17 15:19:25.6361443 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 288 is not associated with a node. 
+2020-12-17 15:19:25.6361573 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 294 is not associated with a node. 
+2020-12-17 15:19:25.6361699 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 300 is not associated with a node. 
+2020-12-17 15:19:25.6361826 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 306 is not associated with a node. 
+2020-12-17 15:19:25.6361955 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 312 is not associated with a node. 
+2020-12-17 15:19:25.6362084 [W:onnxruntime:InferenceSession, session_state_initializer.cc:502 onnxruntime::SaveInputOutputNamesToNodeMapping] Graph input with name 318 is not associated with a node. 
