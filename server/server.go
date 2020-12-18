@@ -795,14 +795,15 @@ func main() {
 
 	if PROFILE == "windows_native" {
 
-		APPDIR = "C://Users//johnolafenwa//Documents///AI//DeepStack"
-		os.Chdir("C://Users//johnolafenwa//Documents///AI//DeepStack//server")
+		APPDIR = "C://DeepStack"
+		os.Chdir("C://DeepStack//server")
 		interpreter = filepath.Join(APPDIR, "interpreter", "python.exe")
 		redis_server = filepath.Join(APPDIR, "redis", "redis-server.exe")
 
 		os.Setenv("VISION-FACE", visionFace)
 		os.Setenv("VISION-DETECTION", visionDetection)
 		os.Setenv("VISION-SCENE", visionScene)
+		os.Setenv("APPDIR", APPDIR)
 	}
 
 	if DATA_DIR == "" {
@@ -823,7 +824,6 @@ func main() {
 	}
 
 	if PROFILE == "windows_native" {
-		os.Setenv("APPDIR", "C://Users//johnolafenwa//Documents///AI//DeepStack")
 		os.Setenv("DATA_DIR", DATA_DIR)
 		os.Setenv("TEMP_PATH", temp_path)
 	}
@@ -999,7 +999,7 @@ func main() {
 		{
 			facegroup.POST("/", middlewares.CheckImage(), middlewares.CheckConfidence(), facedetection)
 			facegroup.POST("/recognize", middlewares.CheckImage(), middlewares.CheckConfidence(), facerecognition)
-			facegroup.POST("/register", middlewares.CheckMultiImage(), faceregister)
+			facegroup.POST("/register", middlewares.CheckMultiImage(), middlewares.CheckUserID(), faceregister)
 			facegroup.POST("/match", middlewares.CheckFaceMatch(), facematch)
 			facegroup.POST("/delete", middlewares.CheckUserID(), deleteface)
 			facegroup.POST("/list", listface)

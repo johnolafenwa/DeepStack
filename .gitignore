@@ -6,6 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+*.exe
+!windows_packages/*.exe
+!redis/*.exe
+!interpreter/*.exe
+
 # Distribution / packaging
 .Python
 build/
@@ -27,9 +32,6 @@ share/python-wheels/
 *.egg
 MANIFEST
 server/server
-server/server.exe
-server/deepstack.exe
-
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.

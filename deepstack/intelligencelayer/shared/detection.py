@@ -9,7 +9,7 @@ import time
 import warnings
 from multiprocessing import Process
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../"))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
 
 from shared import SharedOptions
 if SharedOptions.PROFILE == "windows_native":
@@ -82,12 +82,10 @@ def objectdetection(thread_name: str, delay: float):
                 req_id = req_data["reqid"]
                 req_type = req_data["reqtype"]
                 threshold = float(req_data["minconfidence"])
+                img_path = os.path.join(TEMP_PATH, img_id)
 
                 try:
-
-                    img = os.path.join(TEMP_PATH, img_id)
-
-                    det = detector.predict(img, threshold)
+                    det = detector.predict(img_path, threshold)
 
                     outputs = []
 
@@ -136,11 +134,11 @@ def objectdetection(thread_name: str, delay: float):
 
                 finally:
                     db.set(req_id, json.dumps(output))
-                    if os.path.exists(TEMP_PATH + img_id):
-                        os.remove(img)
+                    if os.path.exists(img_path):
+                        os.remove(img_path)
 
         time.sleep(delay)
+if __name__ == "__main__":     
+    p = Process(target=objectdetection, args=("", SharedOptions.SLEEP_TIME))
+    p.start()
 
-
-p = Process(target=objectdetection, args=("", SharedOptions.SLEEP_TIME))
-p.start()

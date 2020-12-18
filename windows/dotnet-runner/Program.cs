@@ -67,8 +67,8 @@ namespace dotnet_runner
                        process.StartInfo.EnvironmentVariables.Add("MODELSTORE-DETECTION", o.ModelStoreDetection);
 
 
-                       process.StartInfo.FileName = @"C:\Users\johnolafenwa\Documents\AI\DeepStack\server\server.exe";
-                       process.StartInfo.WorkingDirectory = @"C:\Users\johnolafenwa\Documents\AI\DeepStack\server"; //process.StartInfo.Arguments = String.Format("-PORT={0}",port);
+                       process.StartInfo.FileName = @"C:\DeepStack";
+                       process.StartInfo.WorkingDirectory = @"C:\DeepStack\server"; //process.StartInfo.Arguments = String.Format("-PORT={0}",port);
                        process.StartInfo.CreateNoWindow = false;
                        process.StartInfo.UseShellExecute = false;
                        //process.StartInfo.RedirectStandardOutput = true;

@@ -130,21 +130,19 @@ func CheckApiKey(sub_data *structures.ActivationData, settings *structures.Setti
 
 	return func(c *gin.Context) {
 
+		if settings.API_KEY != "" {
 
-			if settings.API_KEY != "" {
+			passed_key := c.PostForm("api_key")
 
-				passed_key := c.PostForm("api_key")
+			if passed_key != settings.API_KEY {
 
-				if passed_key != settings.API_KEY {
-
-					response := response.ErrorResponse{Success: false, Error: "Incorrect api key"}
-					c.JSON(401, response)
-					c.Abort()
-
-				}
+				response := response.ErrorResponse{Success: false, Error: "Incorrect api key"}
+				c.JSON(401, response)
+				c.Abort()
 
 			}
 
+		}
 
 	}
 }
@@ -153,20 +151,19 @@ func CheckAdminKey(sub_data *structures.ActivationData, settings *structures.Set
 
 	return func(c *gin.Context) {
 
+		if settings.ADMIN_KEY != "" {
 
-			if settings.ADMIN_KEY != "" {
+			passed_key := c.PostForm("admin_key")
 
-				passed_key := c.PostForm("admin_key")
+			if passed_key != settings.ADMIN_KEY {
 
-				if passed_key != settings.ADMIN_KEY {
-
-					response := response.ErrorResponse{Success: false, Error: "Incorrect admin key"}
-					c.JSON(401, response)
-					c.Abort()
-
-				}
+				response := response.ErrorResponse{Success: false, Error: "Incorrect admin key"}
+				c.JSON(401, response)
+				c.Abort()
 
 			}
+
+		}
 
 	}
 }
@@ -178,7 +175,6 @@ func CheckPremium(sub_data *structures.ActivationData) gin.HandlerFunc {
 		response := response.ErrorResponse{Success: false, Error: "Premium subscription required"}
 		c.JSON(403, response)
 		c.Abort()
-
 
 	}
 }
