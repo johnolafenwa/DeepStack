@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"context"
 	"encoding/json"
+	"flag"
 	"io"
 	"io/ioutil"
 	"os"
@@ -14,7 +15,6 @@ import (
 	"strings"
 	"syscall"
 	"time"
-	"flag"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
@@ -34,7 +34,6 @@ import (
 
 var temp_path = "/deeptemp/"
 var DATA_DIR = "/datastore"
-var port = 5000
 
 var db *sql.DB
 
@@ -763,7 +762,24 @@ func main() {
 	var visionFace string
 	var visionDetection string
 	var visionScene string
-	var vision
+	var apiKey string
+	var adminKey string
+	var port int
+	var modelStoreDetection string
+
+	flag.StringVar(&visionFace, "VISION-FACE", os.Getenv("VISION-FACE"), "enable face detection")
+	flag.StringVar(&visionDetection, "VISION-DETECTION", os.Getenv("VISION-DETECTION"), "enable object detection")
+	flag.StringVar(&visionScene, "VISION-SCENE", os.Getenv("VISION-SCENE"), "enable scene recognition")
+	flag.StringVar(&apiKey, "API-KEY", os.Getenv("API-KEY"), "api key to secure endpoints")
+	flag.StringVar(&adminKey, "ADMIN-KEY", os.Getenv("ADMIN-KEY"), "admin key to secure admin endpoints")
+	flag.StringVar(&modelStoreDetection, "MODELSTORE-DETECTION", "/modelstore/detection/", "path to custom detection models")
+	flag.IntVar(&port, "PORT", 5000, "port")
+
+	flag.Parse()
+
+	if !strings.HasSuffix(modelStoreDetection, "/") {
+		modelStoreDetection = modelStoreDetection + "/"
+	}
 
 	APPDIR := os.Getenv("APPDIR")
 	DATA_DIR = os.Getenv("DATA_DIR")
@@ -842,7 +858,7 @@ func main() {
 		stderr.WriteString(err.Error())
 	}
 
-	if os.Getenv("VISION-DETECTION") == "True" {
+	if visionDetection == "True" {
 		detectioncmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+detectionScript)
 		if PROFILE == "windows_native" {
 			detectioncmd = exec.CommandContext(ctx, interpreter, detectionScript)
@@ -858,7 +874,7 @@ func main() {
 
 	}
 
-	if os.Getenv("VISION-FACE") == "True" {
+	if visionFace == "True" {
 		facecmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+faceScript)
 		if PROFILE == "windows_native" {
 			facecmd = exec.CommandContext(ctx, interpreter, faceScript)
@@ -873,7 +889,7 @@ func main() {
 		}
 
 	}
-	if os.Getenv("VISION-SCENE") == "True" {
+	if visionScene == "True" {
 		scenecmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+sceneScript)
 		if PROFILE == "windows_native" {
 			scenecmd = exec.CommandContext(ctx, interpreter, sceneScript)
@@ -978,7 +994,7 @@ func main() {
 		custom.Use(middlewares.CheckImage())
 		{
 
-			models, err := filepath.Glob("/modelstore/detection/*.pt")
+			models, err := filepath.Glob(modelStoreDetection + "*.pt")
 
 			if err == nil {
 
