@@ -31,8 +31,6 @@ class SharedOptions:
     APPDIR = os.getenv("APPDIR", ".")
     PROFILE = os.getenv("PROFILE", "desktop_cpu")
 
-    print("PROFILE:-",PROFILE)
-
     if PROFILE == "windows_native":
         sys.path.append(os.path.join(APPDIR,"windows_packages"))
 

@@ -768,6 +768,7 @@ func main() {
 	var modelStoreDetection string
 
 	os.Setenv("PROFILE", "windows_native")
+	os.Setenv("CUDA_MODE", "True")
 
 	flag.StringVar(&visionFace, "VISION-FACE", os.Getenv("VISION-FACE"), "enable face detection")
 	flag.StringVar(&visionDetection, "VISION-DETECTION", os.Getenv("VISION-DETECTION"), "enable object detection")
@@ -823,20 +824,23 @@ func main() {
 		}
 	}
 
+	logdir := filepath.Join(APPDIR, "logs")
+
 	if PROFILE == "windows_native" {
 		os.Setenv("DATA_DIR", DATA_DIR)
 		os.Setenv("TEMP_PATH", temp_path)
+		logdir = filepath.Join(DATA_DIR, "logs")
 	}
 
-	os.Mkdir(filepath.Join(APPDIR, "logs"), 0755)
+	os.Mkdir(logdir, 0755)
 	os.Mkdir(DATA_DIR, 0755)
 	os.Mkdir(temp_path, 0755)
 
-	stdout, _ := os.Create(filepath.Join(APPDIR, "logs/stdout.txt"))
+	stdout, _ := os.Create(filepath.Join(logdir, "stdout.txt"))
 
 	defer stdout.Close()
 
-	stderr, _ := os.Create(filepath.Join(APPDIR, "logs/stderr.txt"))
+	stderr, _ := os.Create(filepath.Join(logdir, "stderr.txt"))
 
 	defer stderr.Close()
 
@@ -1026,7 +1030,7 @@ func main() {
 
 					modelcmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+detectionScript+" --model "+file+" --name "+model_name)
 					if PROFILE == "windows_native" {
-						modelcmd = exec.CommandContext(ctx, interpreter, detectionScript+" --model "+file+" --name "+model_name)
+						modelcmd = exec.CommandContext(ctx, interpreter, detectionScript, "--model", file, "--name", model_name)
 					}
 					startedProcesses = append(startedProcesses, modelcmd)
 					modelcmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
