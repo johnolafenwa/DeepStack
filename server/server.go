@@ -48,8 +48,6 @@ var expiring_date = time.Now()
 
 var settings structures.Settings
 var sub_data = structures.ActivationData{}
-var config = structures.Config{PLATFORM: "DOCKER"}
-
 var redis_client *redis.Client
 
 func scene(c *gin.Context) {
@@ -712,10 +710,6 @@ func printlogs() {
 
 	custom := os.Getenv("VISION-CUSTOM")
 
-	if config.PLATFORM == "RPI" {
-		custom = os.Getenv("VISION_CUSTOM")
-	}
-
 	if err == nil && custom == "True" {
 
 		for _, file := range models {
@@ -766,9 +760,29 @@ func main() {
 	var adminKey string
 	var port int
 	var modelStoreDetection string
+	var mode string
 
-	os.Setenv("PROFILE", "windows_native")
-	os.Setenv("CUDA_MODE", "True")
+	if os.Getenv("PROFILE") == "" {
+		platformdata, err := ioutil.ReadFile("platform.json")
+
+		if err != nil {
+			var platform structures.PLATFORM
+
+			json.Unmarshal(platformdata, &platform)
+
+			os.Setenv("PROFILE", platform.PROFILE)
+			os.Setenv("CUDA_MODE", platform.CUDA_MODE)
+		}
+	}
+
+	versionfile, err := os.Open("version.txt")
+
+	if err != nil {
+		versiondata, _ := ioutil.ReadAll(versionfile)
+		version := string(versiondata)
+
+		fmt.Println("DeepStack: Version " + version)
+	}
 
 	flag.StringVar(&visionFace, "VISION-FACE", os.Getenv("VISION-FACE"), "enable face detection")
 	flag.StringVar(&visionDetection, "VISION-DETECTION", os.Getenv("VISION-DETECTION"), "enable object detection")
@@ -777,6 +791,7 @@ func main() {
 	flag.StringVar(&adminKey, "ADMIN-KEY", os.Getenv("ADMIN-KEY"), "admin key to secure admin endpoints")
 	flag.StringVar(&modelStoreDetection, "MODELSTORE-DETECTION", "/modelstore/detection/", "path to custom detection models")
 	flag.IntVar(&port, "PORT", 5000, "port")
+	flag.StringVar(&mode, "MODE", "Medium", "performance mode")
 
 	flag.Parse()
 
@@ -805,6 +820,7 @@ func main() {
 		os.Setenv("VISION-DETECTION", visionDetection)
 		os.Setenv("VISION-SCENE", visionScene)
 		os.Setenv("APPDIR", APPDIR)
+		os.Setenv("MODE", mode)
 	}
 
 	if DATA_DIR == "" {
@@ -868,7 +884,7 @@ func main() {
 	rediscmd.Stdout = stdout
 	rediscmd.Stderr = stderr
 
-	err := rediscmd.Start()
+	err = rediscmd.Start()
 	if err != nil {
 		stderr.WriteString(err.Error())
 	}
@@ -943,21 +959,8 @@ func main() {
 
 	go utils.LogToServer(&sub_data)
 
-	if config.PLATFORM == "RPI" {
-
-		initActivationRPI()
-
-	}
-
 	admin_key := os.Getenv("ADMIN-KEY")
 	api_key := os.Getenv("API-KEY")
-
-	if config.PLATFORM == "RPI" {
-
-		admin_key = os.Getenv("ADMIN_KEY")
-		api_key = os.Getenv("API_KEY")
-
-	}
 
 	if admin_key != "" || api_key != "" {
 

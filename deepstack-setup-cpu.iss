@@ -65,6 +65,8 @@ Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\deepstack\*"; DestDir: "{a
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\interpreter\*"; DestDir: "{app}\interpreter"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\redis\*"; DestDir: "{app}\redis"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\server\*"; DestDir: "{app}\server"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\server\platform.windows.cpu.json"; DestDir: "{app}\server\platform.json"; Flags: ignoreversion
+Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\server\version.txt"; DestDir: "{app}\server"; Flags: ignoreversion
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\sharedfiles\categories_places365.txt"; DestDir: "{app}\sharedfiles"; Flags: ignoreversion
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\sharedfiles\face.pt"; DestDir: "{app}\sharedfiles"; Flags: ignoreversion
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\sharedfiles\facerec-high.model"; DestDir: "{app}\sharedfiles"; Flags: ignoreversion
