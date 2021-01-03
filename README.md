@@ -38,9 +38,9 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
 # Integrations and Community
 The DeepStack ecosystem includes a number of popular integrations and libraries built to expand the functionalities of the AI engine to serve IoT, industrial, monitoring and research applications. A number of them are listed below
 
-- [HASS-DeepStack-Object](https://github.com/robmarkcole/HASS-Deepstack-object)
-- [HASS-DeepStack-Face](https://github.com/robmarkcole/HASS-Deepstack-face)
-- [HASS-DeepStack-Scene](https://github.com/robmarkcole/HASS-Deepstack-scene)
+- [HASS-DeepStack-Object](https://github.com/robmarkcole/HASS-Deepstack-object) [ Object Detection for Home Assistant ]
+- [HASS-DeepStack-Face](https://github.com/robmarkcole/HASS-Deepstack-face) [ Face Recognition and Detection for Home Assistant ]
+- [HASS-DeepStack-Scene](https://github.com/robmarkcole/HASS-Deepstack-scene) [ Scene Recognition for Home Assistant ]
 - [DeepStack with Blue Iris - YouTube video](https://www.youtube.com/watch?v=fwoonl5JKgo)
 - [DeepStack with Blue Iris - Forum Discussion](https://ipcamtalk.com/threads/tool-tutorial-free-ai-person-detection-for-blue-iris.37330/)
 - [DeepStack on Home Assistant](https://community.home-assistant.io/t/face-and-person-detection-with-deepstack-local-and-free/92041)
@@ -48,6 +48,7 @@ The DeepStack ecosystem includes a number of popular integrations and libraries 
 - [DeepStack-Python Helper](https://github.com/robmarkcole/deepstack-python)
 - [DeepStack-Analytics](https://github.com/robmarkcole/deepstack-analytics)
 
+- [DeepStack AI Triggers](https://github.com/danecreekphotography/node-deepstackai-trigger) [ Motion Detection for Blue Iris ]
 
 # Contributors Guide
 (coming soon)
