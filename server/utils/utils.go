@@ -12,6 +12,18 @@ import (
 	"github.com/shirou/gopsutil/host"
 )
 
+func CreateDirs(dirList ...string) {
+	for true {
+		for _, dir := range dirList {
+			pathExists, _ := PathExists(dir)
+			if pathExists == false {
+				os.Mkdir(dir, 0755)
+			}
+		}
+		time.Sleep(1 * time.Second)
+	}
+}
+
 func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {
@@ -95,7 +107,6 @@ func LogToServer(sub_data *structures.ActivationData) {
 			"time":      time.Now(),
 		}
 
-		
 		req.Post("https://register.deepstack.cc/loguser", params)
 		time.Sleep(86400 * time.Second)
 

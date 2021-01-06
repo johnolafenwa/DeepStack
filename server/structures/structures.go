@@ -14,9 +14,9 @@ type Settings struct {
 	API_KEY   string `json:"apikey"`
 }
 
-type Config struct {
-	PLATFORM  string `json:"PLATFORM"`
-	PROCESSOR string `json:"PROCESSOR"`
+type PLATFORM struct {
+	PROFILE   string `json:"PROFILE"`
+	CUDA_MODE string `json:"CUDA_MODE"`
 }
 
 type ActivationSuccessResponse struct {

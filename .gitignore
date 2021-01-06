@@ -6,12 +6,18 @@ __pycache__/
 # C extensions
 *.so
 
+*.exe
+!windows_packages/*.exe
+!redis/*.exe
+!interpreter/*.exe
+
 # Distribution / packaging
 .Python
 build/
 develop-eggs/
 dist/
 downloads/
+logs
 eggs/
 .eggs/
 lib/
@@ -26,7 +32,6 @@ share/python-wheels/
 *.egg
 MANIFEST
 server/server
-
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.

@@ -9,12 +9,16 @@ import time
 import warnings
 from multiprocessing import Process
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
+
+from shared import SharedOptions
+if SharedOptions.PROFILE == "windows_native":
+    sys.path.append(os.path.join(SharedOptions.APP_DIR,"windows_packages"))
+
 import numpy as np
 import torch
 import torch.nn.functional as F
 from PIL import Image, UnidentifiedImageError
-
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../"))
 
 import argparse
 import traceback
@@ -22,7 +26,6 @@ import traceback
 import torchvision.transforms as transforms
 from PIL import UnidentifiedImageError
 from process import YOLODetector
-from shared import SharedOptions
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", type=str, default=None)
@@ -79,12 +82,10 @@ def objectdetection(thread_name: str, delay: float):
                 req_id = req_data["reqid"]
                 req_type = req_data["reqtype"]
                 threshold = float(req_data["minconfidence"])
+                img_path = os.path.join(TEMP_PATH, img_id)
 
                 try:
-
-                    img = os.path.join(TEMP_PATH, img_id)
-
-                    det = detector.predict(img, threshold)
+                    det = detector.predict(img_path, threshold)
 
                     outputs = []
 
@@ -133,11 +134,11 @@ def objectdetection(thread_name: str, delay: float):
 
                 finally:
                     db.set(req_id, json.dumps(output))
-                    if os.path.exists(TEMP_PATH + img_id):
-                        os.remove(img)
+                    if os.path.exists(img_path):
+                        os.remove(img_path)
 
         time.sleep(delay)
+if __name__ == "__main__":     
+    p = Process(target=objectdetection, args=("", SharedOptions.SLEEP_TIME))
+    p.start()
 
-
-p = Process(target=objectdetection, args=("", SharedOptions.SLEEP_TIME))
-p.start()

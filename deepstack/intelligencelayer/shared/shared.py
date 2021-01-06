@@ -2,9 +2,6 @@ import os
 import sys
 from enum import Enum
 
-from redis import RedisError, StrictRedis
-
-
 class Settings:
     def __init__(
         self,
@@ -33,6 +30,11 @@ class SharedOptions:
 
     APPDIR = os.getenv("APPDIR", ".")
     PROFILE = os.getenv("PROFILE", "desktop_cpu")
+
+    if PROFILE == "windows_native":
+        sys.path.append(os.path.join(APPDIR,"windows_packages"))
+
+    from redis import RedisError, StrictRedis
 
     TEMP_PATH = os.getenv("TEMP_PATH", "/deeptemp/")
     SLEEP_TIME = 0.01
@@ -87,6 +89,16 @@ class SharedOptions:
             FACE_MEDIUM=256,
             FACE_LOW=192,
             FACE_MODEL="face_lite.pt",
+        ),
+        "windows_native": Settings(
+            DETECTION_HIGH=640,
+            DETECTION_MEDIUM=416,
+            DETECTION_LOW=256,
+            DETECTION_MODEL="yolov5m.pt",
+            FACE_HIGH=416,
+            FACE_MEDIUM=320,
+            FACE_LOW=256,
+            FACE_MODEL="face.pt",
         ),
     }
 

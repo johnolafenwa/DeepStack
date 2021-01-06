@@ -1,0 +1,15 @@
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\bin\Debug\netcoreapp3.1\deepstack-runner.exe
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\bin\Debug\netcoreapp3.1\deepstack-runner.deps.json
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\bin\Debug\netcoreapp3.1\deepstack-runner.runtimeconfig.json
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\bin\Debug\netcoreapp3.1\deepstack-runner.runtimeconfig.dev.json
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\bin\Debug\netcoreapp3.1\deepstack-runner.dll
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\bin\Debug\netcoreapp3.1\deepstack-runner.pdb
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\bin\Debug\netcoreapp3.1\CommandLine.dll
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\obj\Debug\netcoreapp3.1\deepstack-runner.csprojAssemblyReference.cache
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\obj\Debug\netcoreapp3.1\deepstack-runner.AssemblyInfoInputs.cache
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\obj\Debug\netcoreapp3.1\deepstack-runner.AssemblyInfo.cs
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\obj\Debug\netcoreapp3.1\deepstack-runner.csproj.CoreCompileInputs.cache
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\obj\Debug\netcoreapp3.1\deepstack-runner.csproj.CopyComplete
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\obj\Debug\netcoreapp3.1\deepstack-runner.dll
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\obj\Debug\netcoreapp3.1\deepstack-runner.pdb
+C:\Users\johnolafenwa\Documents\AI\DeepStack\windows\dotnet-runner\obj\Debug\netcoreapp3.1\deepstack-runner.genruntimeconfig.cache
