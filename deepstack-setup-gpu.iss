@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 #include "environment.iss"
 #define MyAppName "DeepStack"
-#define MyAppVersion "2020.12.beta"
+#define MyAppVersion "2021.01.beta"
 #define MyAppPublisher "DeepQuestAI"
 #define MyAppURL "https://www.deepstack.cc"
 #define MyAppExeName "deepstack.exe"
@@ -24,7 +24,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\{#MyAppName}
 DisableDirPage=yes
 DefaultGroupName=DeepStack
-OutputBaseFilename=DeepStack-Installer-GPU.2020.12.beta
+OutputBaseFilename=DeepStack-Installer-GPU.2021.01.beta
 Compression=lzma
 SolidCompression=yes
 
@@ -65,7 +65,7 @@ Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\deepstack\*"; DestDir: "{a
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\interpreter\*"; DestDir: "{app}\interpreter"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\redis\*"; DestDir: "{app}\redis"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\server\*"; DestDir: "{app}\server"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\server\platform.windows.cpu.json"; DestDir: "{app}\server\platform.json"; Flags: ignoreversion
+Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\platform\platform.windows.gpu.json"; DestDir: "{app}\server\platform.json"; Flags: ignoreversion
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\server\version.txt"; DestDir: "{app}\server"; Flags: ignoreversion
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\sharedfiles\categories_places365.txt"; DestDir: "{app}\sharedfiles"; Flags: ignoreversion
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\sharedfiles\face.pt"; DestDir: "{app}\sharedfiles"; Flags: ignoreversion

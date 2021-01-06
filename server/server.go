@@ -763,9 +763,10 @@ func main() {
 	var mode string
 
 	if os.Getenv("PROFILE") == "" {
+		os.Chdir("C://DeepStack//server")
 		platformdata, err := ioutil.ReadFile("platform.json")
 
-		if err != nil {
+		if err == nil {
 			var platform structures.PLATFORM
 
 			json.Unmarshal(platformdata, &platform)
@@ -777,7 +778,7 @@ func main() {
 
 	versionfile, err := os.Open("version.txt")
 
-	if err != nil {
+	if err == nil {
 		versiondata, _ := ioutil.ReadAll(versionfile)
 		version := string(versiondata)
 
@@ -812,7 +813,6 @@ func main() {
 	if PROFILE == "windows_native" {
 
 		APPDIR = "C://DeepStack"
-		os.Chdir("C://DeepStack//server")
 		interpreter = filepath.Join(APPDIR, "interpreter", "python.exe")
 		redis_server = filepath.Join(APPDIR, "redis", "redis-server.exe")
 
@@ -851,6 +851,10 @@ func main() {
 	os.Mkdir(logdir, 0755)
 	os.Mkdir(DATA_DIR, 0755)
 	os.Mkdir(temp_path, 0755)
+
+	if PROFILE == "windows_native" {
+		go utils.CreateDirs(logdir, DATA_DIR, temp_path)
+	}
 
 	stdout, _ := os.Create(filepath.Join(logdir, "stdout.txt"))
 
