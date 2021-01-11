@@ -1,4 +1,4 @@
 {
     "PROFILE":"windows_native",
-    "CUDA_MODE":true
+    "CUDA_MODE":"True"
 }

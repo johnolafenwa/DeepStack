@@ -1,8 +1,8 @@
-[![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/airctic/icevision/blob/master/LICENSE)  
-
 # DeepStack
 The World's Leading Cross Platform AI Engine for Edge Devices, with over `3.2 million` installs on **Docker Hub**.
+
+[![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/airctic/icevision/blob/master/LICENSE)  
 
 **Website**: [https://deepstack.cc](https://deepstack.cc)
 
@@ -33,14 +33,32 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
 - **NodeJS**
 
 # Build from Source
-( coming soon )
+- **Install Prerequisites**
+    - [Install Golang](https://golang.org)
+    - [Install Docker](https://docker.com)
+    - [Install GIT](https://git-scm.com)
+    - [Install GIT LFS](https://github.com/git-lfs/git-lfs/wiki/Installation)
+- **Clone DeepStack Repo** 
+    ```git clone https://github.com/johnolafenwa/DeepStack.git```
+- **CD to DeepStack Repo Dir**
+    ```cd DeepStack```
+- **Fetch Repo Files**
+    ``git lfs pull``
+-- **Build DeepStack Server**
+    ```cd server && go build```
+-- **Build DeepStack CPU Version**
+    ```cd .. && sudo docker build -t deepquestai/deepstack:cpu . -f Dockerfile.cpu```
+-- **Build DeepStack GPU Version**
+    ```sudo docker build -t deepquestai/deepstack:gpu . -f Dockerfile.gpu```
+-- **Build DeepStack Jetson Version**
+    ```sudo docker build -t deepquestai/deepstack:jetpack . -f Dockerfile.gpu-jetpack```
 
 # Integrations and Community
 The DeepStack ecosystem includes a number of popular integrations and libraries built to expand the functionalities of the AI engine to serve IoT, industrial, monitoring and research applications. A number of them are listed below
 
-- [HASS-DeepStack-Object](https://github.com/robmarkcole/HASS-Deepstack-object) [ Object Detection for Home Assistant ]
-- [HASS-DeepStack-Face](https://github.com/robmarkcole/HASS-Deepstack-face) [ Face Recognition and Detection for Home Assistant ]
-- [HASS-DeepStack-Scene](https://github.com/robmarkcole/HASS-Deepstack-scene) [ Scene Recognition for Home Assistant ]
+- [HASS-DeepStack-Object](https://github.com/robmarkcole/HASS-Deepstack-object)
+- [HASS-DeepStack-Face](https://github.com/robmarkcole/HASS-Deepstack-face)
+- [HASS-DeepStack-Scene](https://github.com/robmarkcole/HASS-Deepstack-scene)
 - [DeepStack with Blue Iris - YouTube video](https://www.youtube.com/watch?v=fwoonl5JKgo)
 - [DeepStack with Blue Iris - Forum Discussion](https://ipcamtalk.com/threads/tool-tutorial-free-ai-person-detection-for-blue-iris.37330/)
 - [DeepStack on Home Assistant](https://community.home-assistant.io/t/face-and-person-detection-with-deepstack-local-and-free/92041)
@@ -48,7 +66,6 @@ The DeepStack ecosystem includes a number of popular integrations and libraries 
 - [DeepStack-Python Helper](https://github.com/robmarkcole/deepstack-python)
 - [DeepStack-Analytics](https://github.com/robmarkcole/deepstack-analytics)
 
-- [DeepStack AI Triggers](https://github.com/danecreekphotography/node-deepstackai-trigger) [ Motion Detection for Blue Iris ]
 
 # Contributors Guide
 (coming soon)
