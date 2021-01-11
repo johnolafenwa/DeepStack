@@ -30,7 +30,25 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
 - **NodeJS**
 
 # Build from Source
-( coming soon )
+- **Install Prerequisites**
+    - [Install Golang](https://golang.org)
+    - [Install Docker](https://docker.com)
+    - [Install GIT](https://git-scm.com)
+    - [Install GIT LFS](https://github.com/git-lfs/git-lfs/wiki/Installation)
+- **Clone DeepStack Repo** 
+    ```git clone https://github.com/johnolafenwa/DeepStack.git```
+- **CD to DeepStack Repo Dir**
+    ```cd DeepStack```
+- **Fetch Repo Files**
+    ``git lfs pull``
+-- **Build DeepStack Server**
+    ```cd server && go build```
+-- **Build DeepStack CPU Version**
+    ```cd .. && sudo docker build -t deepquestai/deepstack:cpu . -f Dockerfile.cpu```
+-- **Build DeepStack GPU Version**
+    ```sudo docker build -t deepquestai/deepstack:gpu . -f Dockerfile.gpu```
+-- **Build DeepStack Jetson Version**
+    ```sudo docker build -t deepquestai/deepstack:jetpack . -f Dockerfile.gpu-jetpack```
 
 # Integrations and Community
 The DeepStack ecosystem includes a number of popular integrations and libraries built to expand the functionalities of the AI engine to serve IoT, industrial, monitoring and research applications. A number of them are listed below
