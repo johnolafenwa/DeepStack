@@ -35,30 +35,38 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
 # Build from Source
 
 - **Install Prerequisites**
+
     - [Install Golang](https://golang.org)
     - [Install Docker](https://docker.com)
     - [Install GIT](https://git-scm.com)
     - [Install GIT LFS](https://github.com/git-lfs/git-lfs/wiki/Installation)
 
 - **Clone DeepStack Repo** 
+
     ```git clone https://github.com/johnolafenwa/DeepStack.git```
 
 - **CD to DeepStack Repo Dir**
+
     ```cd DeepStack```
 
 - **Fetch Repo Files**
+
     ``git lfs pull``
 
 - **Build DeepStack Server**
+
     ```cd server && go build```
 
 - **Build DeepStack CPU Version**
+
     ```cd .. && sudo docker build -t deepquestai/deepstack:cpu . -f Dockerfile.cpu```
 
 - **Build DeepStack GPU Version**
+
     ```sudo docker build -t deepquestai/deepstack:gpu . -f Dockerfile.gpu```
 
 - **Build DeepStack Jetson Version**
+
     ```sudo docker build -t deepquestai/deepstack:jetpack . -f Dockerfile.gpu-jetpack```
 
 # Integrations and Community
