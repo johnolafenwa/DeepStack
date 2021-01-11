@@ -1,6 +1,9 @@
 # DeepStack
 The World's Leading Cross Platform AI Engine for Edge Devices, with over `3.2 million` installs on **Docker Hub**.
 
+[![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/airctic/icevision/blob/master/LICENSE)  
+
 **Website**: [https://deepstack.cc](https://deepstack.cc)
 
 **Documentation**: [https://docs.deepstack.cc](https://docs.deepstack.cc)
