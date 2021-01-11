@@ -49,16 +49,16 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
 - **Fetch Repo Files**
     ``git lfs pull``
 
--- **Build DeepStack Server**
+- **Build DeepStack Server**
     ```cd server && go build```
 
--- **Build DeepStack CPU Version**
+- **Build DeepStack CPU Version**
     ```cd .. && sudo docker build -t deepquestai/deepstack:cpu . -f Dockerfile.cpu```
 
--- **Build DeepStack GPU Version**
+- **Build DeepStack GPU Version**
     ```sudo docker build -t deepquestai/deepstack:gpu . -f Dockerfile.gpu```
-    
--- **Build DeepStack Jetson Version**
+
+- **Build DeepStack Jetson Version**
     ```sudo docker build -t deepquestai/deepstack:jetpack . -f Dockerfile.gpu-jetpack```
 
 # Integrations and Community
