@@ -94,7 +94,7 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
 
     - Set Any of the APIS to enable;
         ```$env:VISION_DETECTION = "True"```, ```$env:VISION_FACE = "True"```, ```$env:VISION_SCENE = "True"```
-        
+
     - Run DeepStack
         ```.\server```
 
@@ -113,6 +113,7 @@ The DeepStack ecosystem includes a number of popular integrations and libraries 
 - [DeepStack-UI](https://github.com/robmarkcole/deepstack-ui)
 - [DeepStack-Python Helper](https://github.com/robmarkcole/deepstack-python)
 - [DeepStack-Analytics](https://github.com/robmarkcole/deepstack-analytics)
+- [DeepStackAI Trigger](https://github.com/danecreekphotography/node-deepstackai-trigger)
 
 
 # Contributors Guide
