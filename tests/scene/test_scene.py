@@ -9,8 +9,7 @@ def test_scene():
 
     response = requests.post(
         "http://localhost:80/v1/vision/scene",
-        files={"image": image_data},
-        data={"api_key": "Mojohn1"},
+        files={"image": image_data}
     ).json()
 
     assert response["success"] == True
