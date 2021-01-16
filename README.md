@@ -32,7 +32,7 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
 - **C#**
 - **NodeJS**
 
-# Build from Source
+# Build from Source (For Docker Version)
 
 - **Install Prerequisites**
 
@@ -40,6 +40,9 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
     - [Install Docker](https://docker.com)
     - [Install GIT](https://git-scm.com)
     - [Install GIT LFS](https://github.com/git-lfs/git-lfs/wiki/Installation)
+    - [Install Redis Server](https://redis.io/)
+    - [Install Python3.7](https://python.org)
+    - [Install Powershell 7+](https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/install/installing-windows-powershell?view=powershell-7.1)
 
 - **Clone DeepStack Repo** 
 
@@ -68,6 +71,24 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
 - **Build DeepStack Jetson Version**
 
     ```sudo docker build -t deepquestai/deepstack:jetpack . -f Dockerfile.gpu-jetpack```
+
+- **Running and Testing Locally Without Building**
+    
+    - Start Powershell 
+        ```pwsh```
+    - For CPU Version, Run ```.\setup_docker_cpu.ps1```
+    - For GPU Version, Run ```.\setup_docker_gpu.ps1```
+    - CD To Server Dir
+        ```cd server```
+    - Build DeepStack Server
+        ```go build```
+    - Set Any of the APIS to enable;
+        ```$env:VISION_DETECTION = "True"```, ```$env:VISION_FACE = "True"```, ```$env:VISION_SCENE = "True"```
+    - Run DeepStack
+        ```.\server```
+
+    You can find all logs in the ```directory``` in the repo root.
+    Note that DeepStack will be running on the default port ```5000```.
 
 # Integrations and Community
 The DeepStack ecosystem includes a number of popular integrations and libraries built to expand the functionalities of the AI engine to serve IoT, industrial, monitoring and research applications. A number of them are listed below
