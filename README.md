@@ -74,18 +74,27 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
 
 - **Running and Testing Locally Without Building**
     - Install Requirements ```pip install -r requirements.txt```
+
     - For CPU Version, Install PyTorch with ```pip3 install pip install torch==1.6.0+cpu torchvision==0.7.0+cpu -f https://download.pytorch.org/whl/torch_stable.html```
+
     - For GPU Version, Install Pytorch with ```pip3 install torch==1.6.0+cu101 torchvision==0.7.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html```
+
     - Start Powershell 
         ```pwsh```
+
     - For CPU Version, Run ```.\setup_docker_cpu.ps1```
+
     - For GPU Version, Run ```.\setup_docker_gpu.ps1```
+
     - CD To Server Dir
         ```cd server```
+
     - Build DeepStack Server
         ```go build```
+
     - Set Any of the APIS to enable;
         ```$env:VISION_DETECTION = "True"```, ```$env:VISION_FACE = "True"```, ```$env:VISION_SCENE = "True"```
+        
     - Run DeepStack
         ```.\server```
 
