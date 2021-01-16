@@ -1,0 +1,14 @@
+name: Build and Test PRs on DeepStack Dev Branch
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+  publish:
+    name: Deploy to Live Docs Server
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
