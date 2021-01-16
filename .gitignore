@@ -144,3 +144,7 @@ dmypy.json
 cython_debug/
 
 *.out
+
+deeptemp
+datastore
+logs

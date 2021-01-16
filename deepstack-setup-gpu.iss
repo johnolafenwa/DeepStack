@@ -61,7 +61,7 @@ Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescrip
 [Files]
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\server\deepstack.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\*"; DestDir: "{app}";
-Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\deepstack\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\intelligencelayer\*"; DestDir: "{app}\intelligencelayer"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\interpreter\*"; DestDir: "{app}\interpreter"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\redis\*"; DestDir: "{app}\redis"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\server\*"; DestDir: "{app}\server"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -74,6 +74,7 @@ Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\sharedfiles\scene.model"; 
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\sharedfiles\yolov5m.pt"; DestDir: "{app}\sharedfiles"; Flags: ignoreversion
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\windows_packages_gpu\*"; DestDir: "{app}\windows_packages"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\logo.ico"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\johnolafenwa\Documents\AI\DeepStack\init.py"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

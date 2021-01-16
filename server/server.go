@@ -733,15 +733,13 @@ func home(c *gin.Context) {
 
 }
 
-func initActivationRPI() {
+func initActivation() {
 
-	face1 := os.Getenv("VISION_FACE")
-	face2 := os.Getenv("VISION_FACE2")
+	face := os.Getenv("VISION_FACE")
 	detection := os.Getenv("VISION_DETECTION")
 	scene := os.Getenv("VISION_SCENE")
 
-	os.Setenv("VISION-FACE", face1)
-	os.Setenv("VISION-FACE2", face2)
+	os.Setenv("VISION-FACE", face)
 	os.Setenv("VISION-DETECTION", detection)
 	os.Setenv("VISION-SCENE", scene)
 
@@ -752,6 +750,8 @@ func launchservices() {
 }
 
 func main() {
+
+	initActivation()
 
 	var visionFace string
 	var visionDetection string
@@ -890,12 +890,12 @@ func main() {
 
 	err = rediscmd.Start()
 	if err != nil {
-		stderr.WriteString(err.Error())
+		stderr.WriteString("Redis server failed to start: " + err.Error())
 	}
 	err = initcmd.Run()
 	startedProcesses = append(startedProcesses, initcmd)
 	if err != nil {
-		stderr.WriteString(err.Error())
+		stderr.WriteString("Init process failed to start " + err.Error())
 	}
 
 	if visionDetection == "True" {
@@ -911,7 +911,7 @@ func main() {
 
 		err = detectioncmd.Start()
 		if err != nil {
-			stderr.WriteString(err.Error())
+			stderr.WriteString("Detection process failed to start" + err.Error())
 		}
 
 	}
@@ -928,7 +928,7 @@ func main() {
 		facecmd.Env = os.Environ()
 		err = facecmd.Start()
 		if err != nil {
-			stderr.WriteString(err.Error())
+			stderr.WriteString("face process failed to start " + err.Error())
 		}
 
 	}
@@ -944,7 +944,7 @@ func main() {
 		scenecmd.Env = os.Environ()
 		err = scenecmd.Start()
 		if err != nil {
-			stderr.WriteString(err.Error())
+			stderr.WriteString("scene process failed to start: " + err.Error())
 		}
 
 	}
