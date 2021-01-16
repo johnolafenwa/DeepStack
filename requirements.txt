@@ -1,0 +1,10 @@
+onnxruntime==0.4.0
+redis
+opencv-python
+Cython
+pillow
+scipy
+tqdm
+tensorboard
+PyYAML
+Matplotlib
