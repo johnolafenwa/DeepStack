@@ -34,9 +34,9 @@ RUN mkdir /app/server
 COPY ./server /app/server
 
 RUN mkdir /app/intelligencelayer
-COPY ./deepstack/intelligencelayer /app/intelligencelayer
+COPY ./intelligencelayer /app/intelligencelayer
 
-COPY ./deepstack/init.py /app 
+COPY ./init.py /app 
 
 EXPOSE 5000
 
