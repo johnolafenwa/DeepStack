@@ -33,11 +33,34 @@ jobs:
       run: cd server && go build
     - name: Build DeepStack CPU Version
       run: sudo docker build -t deepquestai/deepstack:cpu . -f Dockerfile.cpu
-    - name: Run DeepStack
+    - name: Run DeepStack With S
       run: sudo docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:cpu
-    - name: Run Tests
+    - name: Test Scene
       run: |
+        sudo docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:cpu
         cd tests
         export TEST_IMAGES_DIR=$PWD"/test_images"
         export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd scene
         python3 -m pytest
+        sudo docker container rm -f deepstack
+
+    - name: Test Detection
+      run: |
+        sudo docker run -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:cpu
+        cd tests
+        export TEST_IMAGES_DIR=$PWD"/test_images"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd detection
+        python3 -m pytest
+        sudo docker container rm -f deepstack
+
+    - name: Test Face
+      run: |
+        sudo docker run -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:cpu
+        cd tests
+        export TEST_IMAGES_DIR=$PWD"/test_images"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd face
+        python3 -m pytest
+        sudo docker container rm -f deepstack
