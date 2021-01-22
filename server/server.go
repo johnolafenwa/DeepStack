@@ -739,10 +739,15 @@ func initActivation() {
 	detection := os.Getenv("VISION_DETECTION")
 	scene := os.Getenv("VISION_SCENE")
 
-	os.Setenv("VISION-FACE", face)
-	os.Setenv("VISION-DETECTION", detection)
-	os.Setenv("VISION-SCENE", scene)
-
+	if os.Getenv("VISION-FACE") == "" {
+		os.Setenv("VISION-FACE", face)
+	}
+	if os.Getenv("VISION-DETECTION") == "" {
+		os.Setenv("VISION-DETECTION", detection)
+	}
+	if os.Getenv("VISION-SCENE") == "" {
+		os.Setenv("VISION-SCENE", scene)
+	}
 }
 
 func launchservices() {
