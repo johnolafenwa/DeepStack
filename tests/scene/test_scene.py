@@ -13,7 +13,9 @@ def test_scene():
     response = requests.post(
         DEEPSTACK_URL+"/v1/vision/scene",
         files={"image": image_data}, data={"api_key": API_KEY}
-    ).json()
+    )
+    response_json = response.json()
 
-    assert response["success"] == True
-    assert response["label"] == "conference_room"
+    assert response.status_code == 200
+    assert response_json["success"] == True
+    assert response_json["label"] == "conference_room"

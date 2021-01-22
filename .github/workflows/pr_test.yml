@@ -36,4 +36,8 @@ jobs:
     - name: Run DeepStack
       run: sudo docker run -d --name deepstack -e VISION-FACE=True -e VISION-SCENE=True -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:cpu
     - name: Run Tests
-      run: pwsh -Command "cd tests && .\tests.ps1 -DeepStackURL 'http://localhost:80'"
+      run: |
+        cd tests
+        export TEST_IMAGES_DIR=$PWD"/test_images"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        pytest
