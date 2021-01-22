@@ -34,7 +34,7 @@ jobs:
     - name: Build DeepStack CPU Version
       run: sudo docker build -t deepquestai/deepstack:cpu . -f Dockerfile.cpu
     - name: Run DeepStack
-      run: sudo docker run -d --name deepstack -e VISION-FACE=True -e VISION-SCENE=True -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:cpu
+      run: sudo docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:cpu
     - name: Run Tests
       run: |
         cd tests
