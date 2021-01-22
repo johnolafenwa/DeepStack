@@ -34,4 +34,4 @@ jobs:
     - name: Run DeepStack
       run: sudo docker run -d --name deepstack -e VISION-FACE=True -e VISION-SCENE=True -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:cpu
     - name: Run Tests
-      run: pwsh && .\tests.ps1 -DeepStackURL "http://localhost:80"
+      run: pwsh -Command ".\tests.ps1 -DeepStackURL 'http://localhost:80'"
