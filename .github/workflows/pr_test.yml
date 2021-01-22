@@ -40,4 +40,4 @@ jobs:
         cd tests
         export TEST_IMAGES_DIR=$PWD"/test_images"
         export TEST_DEEPSTACK_URL="http://localhost:80"
-        pytest
+        python3 -m pytest
