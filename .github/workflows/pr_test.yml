@@ -16,6 +16,8 @@ jobs:
       uses: actions/checkout@master
     - name: Fetch GIT LFS
       run: git lfs checkout
+    - name: Install Pytest
+      run: pip3 install pytest
     - name: Setup Golang
       uses: actions/setup-go@v2
     - name: Setup Powershell
