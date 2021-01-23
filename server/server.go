@@ -43,6 +43,7 @@ var sub_key = ""
 
 var state = true
 var gpu = true
+var request_timeout = 60.0
 
 var expiring_date = time.Now()
 
@@ -64,9 +65,12 @@ func scene(c *gin.Context) {
 
 	redis_client.RPush("scene_queue", req_string)
 
+	t1 := time.Now()
+
 	for true {
 
 		output, _ := redis_client.Get(req_id).Result()
+		duration := time.Since(t1).Seconds()
 
 		if output != "" {
 
@@ -89,11 +93,17 @@ func scene(c *gin.Context) {
 				return
 
 			}
-
 			break
+
+		} else if duration > request_timeout {
+
+			final_res := response.ErrorResponse{Success: false, Error: "failed to process request before timeout"}
+
+			c.JSON(500, final_res)
+			return
 		}
 
-		time.Sleep(1 * time.Millisecond)
+		time.Sleep(5 * time.Millisecond)
 	}
 }
 
@@ -121,9 +131,12 @@ func detection(c *gin.Context, queue_name string) {
 
 	redis_client.RPush(queue_name, face_req_string)
 
+	t1 := time.Now()
+
 	for true {
 
 		output, _ := redis_client.Get(req_id).Result()
+		duration := time.Since(t1).Seconds()
 
 		if output != "" {
 
@@ -148,6 +161,12 @@ func detection(c *gin.Context, queue_name string) {
 			}
 
 			break
+		} else if duration > request_timeout {
+
+			final_res := response.ErrorResponse{Success: false, Error: "failed to process request before timeout"}
+
+			c.JSON(500, final_res)
+			return
 		}
 
 		time.Sleep(1 * time.Millisecond)
@@ -177,9 +196,12 @@ func facedetection(c *gin.Context) {
 
 	redis_client.RPush("face_queue", face_req_string)
 
+	t1 := time.Now()
+
 	for true {
 
 		output, _ := redis_client.Get(req_id).Result()
+		duration := time.Since(t1).Seconds()
 
 		if output != "" {
 
@@ -202,6 +224,12 @@ func facedetection(c *gin.Context) {
 			}
 
 			break
+		} else if duration > request_timeout {
+
+			final_res := response.ErrorResponse{Success: false, Error: "failed to process request before timeout"}
+
+			c.JSON(500, final_res)
+			return
 		}
 
 		time.Sleep(1 * time.Millisecond)
@@ -231,9 +259,11 @@ func facerecognition(c *gin.Context) {
 
 	redis_client.RPush("face_queue", face_req_string)
 
+	t1 := time.Now()
 	for true {
 
 		output, _ := redis_client.Get(req_id).Result()
+		duration := time.Since(t1).Seconds()
 
 		if output != "" {
 
@@ -256,6 +286,12 @@ func facerecognition(c *gin.Context) {
 			}
 
 			break
+		} else if duration > request_timeout {
+
+			final_res := response.ErrorResponse{Success: false, Error: "failed to process request before timeout"}
+
+			c.JSON(500, final_res)
+			return
 		}
 
 		time.Sleep(1 * time.Millisecond)
@@ -288,9 +324,12 @@ func faceregister(c *gin.Context) {
 
 	redis_client.RPush("face_queue", request_string)
 
+	t1 := time.Now()
+
 	for true {
 
 		output, _ := redis_client.Get(req_id).Result()
+		duration := time.Since(t1).Seconds()
 
 		if output != "" {
 
@@ -312,6 +351,12 @@ func faceregister(c *gin.Context) {
 			}
 
 			break
+		} else if duration > request_timeout {
+
+			final_res := response.ErrorResponse{Success: false, Error: "failed to process request before timeout"}
+
+			c.JSON(500, final_res)
+			return
 		}
 
 		time.Sleep(1 * time.Millisecond)
@@ -342,9 +387,12 @@ func facematch(c *gin.Context) {
 
 	redis_client.RPush("face_queue", request_string)
 
+	t1 := time.Now()
+
 	for true {
 
 		output, _ := redis_client.Get(req_id).Result()
+		duration := time.Since(t1).Seconds()
 
 		if output != "" {
 
@@ -366,6 +414,12 @@ func facematch(c *gin.Context) {
 			}
 
 			break
+		} else if duration > request_timeout {
+
+			final_res := response.ErrorResponse{Success: false, Error: "failed to process request before timeout"}
+
+			c.JSON(500, final_res)
+			return
 		}
 
 		time.Sleep(1 * time.Millisecond)
@@ -739,10 +793,15 @@ func initActivation() {
 	detection := os.Getenv("VISION_DETECTION")
 	scene := os.Getenv("VISION_SCENE")
 
-	os.Setenv("VISION-FACE", face)
-	os.Setenv("VISION-DETECTION", detection)
-	os.Setenv("VISION-SCENE", scene)
-
+	if os.Getenv("VISION-FACE") == "" {
+		os.Setenv("VISION-FACE", face)
+	}
+	if os.Getenv("VISION-DETECTION") == "" {
+		os.Setenv("VISION-DETECTION", detection)
+	}
+	if os.Getenv("VISION-SCENE") == "" {
+		os.Setenv("VISION-SCENE", scene)
+	}
 }
 
 func launchservices() {
@@ -792,6 +851,7 @@ func main() {
 	flag.StringVar(&adminKey, "ADMIN-KEY", os.Getenv("ADMIN-KEY"), "admin key to secure admin endpoints")
 	flag.StringVar(&modelStoreDetection, "MODELSTORE-DETECTION", "/modelstore/detection/", "path to custom detection models")
 	flag.IntVar(&port, "PORT", 5000, "port")
+	flag.Float64Var(&request_timeout, "TIMEOUT", 60, "request timeout in seconds")
 	flag.StringVar(&mode, "MODE", "Medium", "performance mode")
 
 	flag.Parse()
@@ -848,6 +908,13 @@ func main() {
 		logdir = filepath.Join(DATA_DIR, "logs")
 	}
 
+	request_timeout_str := os.Getenv("TIMEOUT")
+	request_timeout_val, err := strconv.ParseFloat(request_timeout_str, 64)
+
+	if request_timeout_str != "" && err == nil {
+		request_timeout = request_timeout_val
+	}
+
 	os.Mkdir(logdir, 0755)
 	os.Mkdir(DATA_DIR, 0755)
 	os.Mkdir(temp_path, 0755)
@@ -898,6 +965,12 @@ func main() {
 		stderr.WriteString("Init process failed to start " + err.Error())
 	}
 
+	redis_client = redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+
 	if visionDetection == "True" {
 		detectioncmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+detectionScript)
 		if PROFILE == "windows_native" {
@@ -913,6 +986,8 @@ func main() {
 		if err != nil {
 			stderr.WriteString("Detection process failed to start" + err.Error())
 		}
+
+		// go utils.KeepProcess(detectioncmd, redis_client, "detection", PROFILE, interpreter, detectionScript, APPDIR, stdout, stderr, &ctx, startedProcesses)
 
 	}
 
@@ -930,6 +1005,7 @@ func main() {
 		if err != nil {
 			stderr.WriteString("face process failed to start " + err.Error())
 		}
+		// go utils.KeepProcess(facecmd, redis_client, "face", PROFILE, interpreter, faceScript, APPDIR, stdout, stderr, &ctx, startedProcesses)
 
 	}
 	if visionScene == "True" {
@@ -937,6 +1013,7 @@ func main() {
 		if PROFILE == "windows_native" {
 			scenecmd = exec.CommandContext(ctx, interpreter, sceneScript)
 		}
+
 		startedProcesses = append(startedProcesses, scenecmd)
 		scenecmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		scenecmd.Stdout = stdout
@@ -946,14 +1023,9 @@ func main() {
 		if err != nil {
 			stderr.WriteString("scene process failed to start: " + err.Error())
 		}
+		// go utils.KeepProcess(scenecmd, redis_client, "scene", PROFILE, interpreter, sceneScript, APPDIR, stdout, stderr, &ctx, startedProcesses)
 
 	}
-
-	redis_client = redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "",
-		DB:       0,
-	})
 
 	db, _ = sql.Open("sqlite3", filepath.Join(DATA_DIR, "faceembedding.db"))
 
@@ -1073,7 +1145,6 @@ func main() {
 	server.GET("/admin", home)
 
 	port2 := strconv.Itoa(port)
-
 	printlogs()
 
 	signalChannel := make(chan os.Signal, 2)

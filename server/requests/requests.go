@@ -1,5 +1,10 @@
 package requests
 
+type Request struct {
+	Reqtype string `json:"reqtype"`
+	Reqid   string `json:"reqid"`
+}
+
 type RecognitionRequest struct {
 	Imgid   string `json:"imgid"`
 	Reqtype string `json:"reqtype"`

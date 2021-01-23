@@ -147,5 +147,4 @@ cython_debug/
 
 deeptemp
 datastore
-logs
-.vscode/settings.json
+logs/
