@@ -69,6 +69,6 @@ jobs:
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80" 
-        cd face
+        cd custom
         python3 -m pytest
         sudo docker container rm -f deepstack
