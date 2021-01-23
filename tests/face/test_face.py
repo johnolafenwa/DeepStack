@@ -73,7 +73,7 @@ def test_match():
 
     assert response.status_code == 200, "Request failed with error: {}".format(response_json["error"])
     assert response_json["success"] == True
-    assert response_json["similarity"] > 0.6
+    assert response_json["similarity"] > 0.65
 
     response = requests.post(
         DEEPSTACK_URL+"/v1/vision/face/match", files={"image1": image_data1,"image2": image_data3}, data={"api_key": API_KEY}
@@ -83,7 +83,7 @@ def test_match():
 
     assert response.status_code == 200, "Request failed with error: {}".format(response_json["error"])
     assert response_json["success"] == True
-    assert response_json["similarity"] < 0.5
+    assert response_json["similarity"] < 0.55
 
 def test_list():
 
