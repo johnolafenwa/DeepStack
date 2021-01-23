@@ -62,3 +62,13 @@ jobs:
         cd face
         python3 -m pytest
         sudo docker container rm -f deepstack
+
+    - name: Test Custom Detection
+      run: |
+        sudo docker run -d --name deepstack -v $PWD"/test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:cpu
+        cd tests
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80" 
+        cd face
+        python3 -m pytest
+        sudo docker container rm -f deepstack
