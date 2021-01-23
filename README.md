@@ -73,13 +73,15 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
     ```sudo docker build -t deepquestai/deepstack:jetpack . -f Dockerfile.gpu-jetpack```
 
 - **Running and Testing Locally Without Building**
-    - Install Requirements ```pip install -r requirements.txt```
+    - Unless you wish to install requirements system wide, create a virtual environment with ```python3.7 -m venv venv``` and activate with ```source venv/bin/activate```
 
-    - For CPU Version, Install PyTorch with ```pip3 install pip install torch==1.6.0+cpu torchvision==0.7.0+cpu -f https://download.pytorch.org/whl/torch_stable.html```
+    - Install Requirements with ```pip3 install -r requirements.txt```
+
+    - For CPU Version, Install PyTorch with ```pip3 install torch==1.6.0+cpu torchvision==0.7.0+cpu -f https://download.pytorch.org/whl/torch_stable.html```
 
     - For GPU Version, Install Pytorch with ```pip3 install torch==1.6.0+cu101 torchvision==0.7.0+cu101 -f https://download.pytorch.org/whl/torch_stable.html```
 
-    - Start Powershell 
+    - Start Powershell
         ```pwsh```
 
     - For CPU Version, Run ```.\setup_docker_cpu.ps1```
