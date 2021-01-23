@@ -3,7 +3,7 @@ The World's Leading Cross Platform AI Engine for Edge Devices, with over `3.2 mi
 
 [![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![license](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](hhttps://github.com/johnolafenwa/DeepStack/blob/dev/LICENSE)  
-
+![DevTest](https://github.com/johnolafenwa/DeepStack/workflows/DevTest/badge.svg)
 **Website**: [https://deepstack.cc](https://deepstack.cc)
 
 **Documentation**: [https://docs.deepstack.cc](https://docs.deepstack.cc)
