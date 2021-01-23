@@ -51,7 +51,7 @@ def test_recognize():
         DEEPSTACK_URL+"/v1/vision/face/recognize", files={"image": image_data}, data={"api_key": API_KEY}
     )
 
-    response_json = response
+    response_json = response.json()
 
     assert response.status_code == 200, "Request failed with error: {}".format(response_json["error"])
     assert response_json["success"] == True
@@ -100,8 +100,8 @@ def test_list_after_delete():
     time.sleep(10)
 
     response = requests.post(DEEPSTACK_URL+"/v1/vision/face/list",data={"api_key": API_KEY})
-    response_json = response_json.json()
+    response_json = response.json()
 
     assert response.status_code == 200, "Request failed with error: {}".format(response_json["error"])
-    assert response["success"] == True
-    assert "Adele" not in response["faces"]
+    assert response_json["success"] == True
+    assert "Adele" not in response_json["faces"]

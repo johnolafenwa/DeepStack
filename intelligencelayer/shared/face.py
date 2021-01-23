@@ -266,7 +266,7 @@ def face(thread_name, delay):
 
                         output = {
                             "success": False,
-                            "error": "error occured on the server",
+                            "error": err_trace,
                             "code": 500,
                         }
 
