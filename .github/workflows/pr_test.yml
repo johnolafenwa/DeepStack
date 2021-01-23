@@ -65,9 +65,9 @@ jobs:
 
     - name: Test Custom Detection
       run: |
-        modeldir=$(pwd)/"test_data"
-        sudo docker run -d --name deepstack -v $modeldir:/modelstore/detection -p 80:5000 deepquestai/deepstack:cpu
         cd tests
+        modeldir=$(pwd)
+        sudo docker run -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:cpu
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80" 
         cd custom
