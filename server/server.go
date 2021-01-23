@@ -919,6 +919,8 @@ func main() {
 			stderr.WriteString("Detection process failed to start" + err.Error())
 		}
 
+		go utils.KeepProcess(detectioncmd, redis_client, "detection", PROFILE, interpreter, detectionScript, APPDIR, stdout, stderr, &ctx, startedProcesses)
+
 	}
 
 	if visionFace == "True" {
@@ -935,6 +937,7 @@ func main() {
 		if err != nil {
 			stderr.WriteString("face process failed to start " + err.Error())
 		}
+		go utils.KeepProcess(facecmd, redis_client, "face", PROFILE, interpreter, faceScript, APPDIR, stdout, stderr, &ctx, startedProcesses)
 
 	}
 	if visionScene == "True" {
@@ -942,6 +945,7 @@ func main() {
 		if PROFILE == "windows_native" {
 			scenecmd = exec.CommandContext(ctx, interpreter, sceneScript)
 		}
+
 		startedProcesses = append(startedProcesses, scenecmd)
 		scenecmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
 		scenecmd.Stdout = stdout
@@ -951,6 +955,7 @@ func main() {
 		if err != nil {
 			stderr.WriteString("scene process failed to start: " + err.Error())
 		}
+		go utils.KeepProcess(scenecmd, redis_client, "scene", PROFILE, interpreter, sceneScript, APPDIR, stdout, stderr, &ctx, startedProcesses)
 
 	}
 
