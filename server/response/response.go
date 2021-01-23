@@ -1,8 +1,9 @@
 package response
 
 type ErrorResponse struct {
-	Success bool   `json:"success"`
-	Error   string `json:"error"`
+	Success  bool    `json:"success"`
+	Error    string  `json:"error"`
+	Duration float64 `json:"duration"`
 }
 
 type ErrorResponseInternal struct {
@@ -15,21 +16,25 @@ type RecognitionResponse struct {
 	Success    bool    `json:"success"`
 	Confidence float32 `json:"confidence"`
 	Label      string  `json:"label"`
+	Duration   float64 `json:"duration"`
 }
 
 type FaceMatchResponse struct {
 	Success    bool    `json:"success"`
 	Similarity float32 `json:"similarity"`
+	Duration   float64 `json:"duration"`
 }
 
 type ModelRegisterResponse struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
+	Success  bool    `json:"success"`
+	Message  string  `json:"message"`
+	Duration float64 `json:"duration"`
 }
 
 type ModelDeleteResponse struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
+	Success  bool    `json:"success"`
+	Message  string  `json:"message"`
+	Duration float64 `json:"duration"`
 }
 
 type FaceDetectionPrediction struct {
@@ -50,27 +55,32 @@ type FaceRecognitionPrediction struct {
 }
 
 type FaceDeleteResponse struct {
-	Success bool `json:"success"`
+	Success  bool    `json:"success"`
+	Duration float64 `json:"duration"`
 }
 
 type FaceRegisterResponse struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
+	Success  bool    `json:"success"`
+	Message  string  `json:"message"`
+	Duration float64 `json:"duration"`
 }
 
 type FaceDetectionResponse struct {
 	Success     bool                      `json:"success"`
 	Predictions []FaceDetectionPrediction `json:"predictions"`
+	Duration    float64                   `json:"duration"`
 }
 
 type FaceRecognitionResponse struct {
 	Success     bool                        `json:"success"`
 	Predictions []FaceRecognitionPrediction `json:"predictions"`
+	Duration    float64                     `json:"duration"`
 }
 
 type FacelistResponse struct {
-	Success bool     `json:"success"`
-	Faces   []string `json:"faces"`
+	Success  bool     `json:"success"`
+	Faces    []string `json:"faces"`
+	Duration float64  `json:"duration"`
 }
 
 type DetectionPrediction struct {
@@ -85,10 +95,12 @@ type DetectionPrediction struct {
 type DetectionResponse struct {
 	Success     bool                  `json:"success"`
 	Predictions []DetectionPrediction `json:"predictions"`
+	Duration    float64               `json:"duration"`
 }
 
 type RestoreResponse struct {
-	Success bool `json:"success"`
+	Success  bool    `json:"success"`
+	Duration float64 `json:"duration"`
 }
 
 type ActivationSuccessResponse struct {

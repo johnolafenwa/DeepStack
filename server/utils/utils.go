@@ -195,12 +195,12 @@ func KeepProcess(proc *exec.Cmd, redis_client *redis.Client, key string, profile
 			if err != nil {
 				stderr.WriteString(key + " process failed to re-start: will retry " + err.Error())
 			} else {
-				go KeepProcess(procmd, redis_client, key, profile, interpreter, script, APPDIR, stdout, stderr, ctx, startedProcesses)
+				// go KeepProcess(procmd, redis_client, key, profile, interpreter, script, APPDIR, stdout, stderr, ctx, startedProcesses)
 				break
 			}
 
 		}
-		time.Sleep(1 * time.Second)
+		time.Sleep(5 * time.Second)
 	}
 
 }
