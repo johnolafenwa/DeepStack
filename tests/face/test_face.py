@@ -57,6 +57,24 @@ def test_recognize():
     assert response_json["success"] == True
     assert response_json["predictions"][0]["userid"] == "Adele"
 
+def test_recognize():
+
+    time.sleep(4)
+
+    image_data1 = open(os.path.join(IMAGES_DIR,"obama1.jpg"), "rb").read()
+    image_data2 = open(os.path.join(IMAGES_DIR,"obama2.jpg"), "rb").read()
+
+    response = requests.post(
+        DEEPSTACK_URL+"/v1/vision/face/match", files={"image": image_data}, data={"api_key": API_KEY}
+    )
+
+    response_json = response.json()
+
+    assert response.status_code == 200, "Request failed with error: {}".format(response_json["error"])
+    assert response_json["success"] == True
+    assert response_json["predictions"][0]["userid"] == "Adele"
+
+
 def test_list():
 
     response = requests.post(DEEPSTACK_URL+"/v1/vision/face/list",data={"api_key": API_KEY})
