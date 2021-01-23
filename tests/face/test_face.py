@@ -57,23 +57,33 @@ def test_recognize():
     assert response_json["success"] == True
     assert response_json["predictions"][0]["userid"] == "Adele"
 
-def test_recognize():
+def test_match():
 
     time.sleep(4)
 
     image_data1 = open(os.path.join(IMAGES_DIR,"obama1.jpg"), "rb").read()
     image_data2 = open(os.path.join(IMAGES_DIR,"obama2.jpg"), "rb").read()
+    image_data3 = open(os.path.join(IMAGES_DIR,"bradley.jpg"), "rb").read()
 
     response = requests.post(
-        DEEPSTACK_URL+"/v1/vision/face/match", files={"image": image_data}, data={"api_key": API_KEY}
+        DEEPSTACK_URL+"/v1/vision/face/match", files={"image1": image_data1,"image2": image_data2}, data={"api_key": API_KEY}
     )
 
     response_json = response.json()
 
     assert response.status_code == 200, "Request failed with error: {}".format(response_json["error"])
     assert response_json["success"] == True
-    assert response_json["predictions"][0]["userid"] == "Adele"
+    assert response_json["similarity"] > 0.7
 
+    response = requests.post(
+        DEEPSTACK_URL+"/v1/vision/face/match", files={"image1": image_data1,"image2": image_data3}, data={"api_key": API_KEY}
+    )
+
+    response_json = response.json()
+
+    assert response.status_code == 200, "Request failed with error: {}".format(response_json["error"])
+    assert response_json["success"] == True
+    assert response_json["similarity"] < 0.5
 
 def test_list():
 
