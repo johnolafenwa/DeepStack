@@ -20,7 +20,7 @@ import torch
 # import cv2
 import torch.nn.functional as F
 import torchvision.transforms as transforms
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from process import YOLODetector
 from recognition import FaceRecognitionModel
 from redis import RedisError, StrictRedis
@@ -183,7 +183,7 @@ def face(thread_name, delay):
                             img_path = os.path.join(SharedOptions.TEMP_PATH , img_id)
                             pil_image = Image.open(img_path).convert("RGB")
 
-                            det = detector.predict(img, 0.55)
+                            det = detector.predict(img_path, 0.55)
                             os.remove(img_path)
 
                             outputs = []
@@ -266,7 +266,7 @@ def face(thread_name, delay):
 
                         output = {
                             "success": False,
-                            "error": err_trace,
+                            "error": "error occured on the server",
                             "code": 500,
                         }
 

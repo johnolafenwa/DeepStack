@@ -868,7 +868,7 @@ func main() {
 	startedProcesses := make([]*exec.Cmd, 0)
 
 	redis_server := "redis-server"
-	interpreter := "python"
+	interpreter := "python3"
 
 	if PROFILE == "windows_native" {
 
