@@ -16,6 +16,6 @@ def test_scene():
     )
     response_json = response.json()
 
-    assert response.status_code == 200
+    assert response.status_code == 200, "Request failed with error: {}".format(response_json["error"])
     assert response_json["success"] == True
     assert response_json["label"] == "conference_room"

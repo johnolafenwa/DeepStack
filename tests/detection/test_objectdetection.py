@@ -13,7 +13,10 @@ def test_detection():
     response = requests.post(
         DEEPSTACK_URL+"/v1/vision/detection",
         files={"image": image_data},data={"api_key": API_KEY}
-    ).json()
+    )
+    response_json = response.json()
 
-    assert response["success"] == True
-    assert len(response["predictions"]) == 3
+    assert response.status_code == 200, "Request failed with error: {}".format(response_json["error"])
+
+    assert response_json["success"] == True
+    assert len(response_json["predictions"]) == 3
