@@ -3,13 +3,13 @@ from io import open
 import os
 import requests
 
-IMAGES_DIR = os.getenv("TEST_IMAGES_DIR")
+DATA_DIR = os.getenv("TEST_DATA_DIR")
 DEEPSTACK_URL = os.getenv("TEST_DEEPSTACK_URL")
 API_KEY = os.getenv("TEST_API_KEY")
 
 def test_detection():
 
-    image_data = open(os.path.join(IMAGES_DIR,"face_detection.jpg"), "rb").read()
+    image_data = open(os.path.join(DATA_DIR,"face_detection.jpg"), "rb").read()
     response = requests.post(
         DEEPSTACK_URL+"/v1/vision/face", files={"image": image_data}, data={"api_key": API_KEY}
     )
@@ -22,7 +22,7 @@ def test_detection():
 
 def test_register():
 
-    image_data = open(os.path.join(IMAGES_DIR,"adele1.jpg"), "rb").read()
+    image_data = open(os.path.join(DATA_DIR,"adele1.jpg"), "rb").read()
     requests.post(
         DEEPSTACK_URL+"/v1/vision/face/register",
         files={"image": image_data},
@@ -45,7 +45,7 @@ def test_recognize():
 
     time.sleep(4)
 
-    image_data = open(os.path.join(IMAGES_DIR,"adele2.jpg"), "rb").read()
+    image_data = open(os.path.join(DATA_DIR,"adele2.jpg"), "rb").read()
 
     response = requests.post(
         DEEPSTACK_URL+"/v1/vision/face/recognize", files={"image": image_data}, data={"api_key": API_KEY}
@@ -61,9 +61,9 @@ def test_match():
 
     time.sleep(4)
 
-    image_data1 = open(os.path.join(IMAGES_DIR,"obama1.jpg"), "rb").read()
-    image_data2 = open(os.path.join(IMAGES_DIR,"obama2.jpg"), "rb").read()
-    image_data3 = open(os.path.join(IMAGES_DIR,"bradley.jpg"), "rb").read()
+    image_data1 = open(os.path.join(DATA_DIR,"obama1.jpg"), "rb").read()
+    image_data2 = open(os.path.join(DATA_DIR,"obama2.jpg"), "rb").read()
+    image_data3 = open(os.path.join(DATA_DIR,"bradley.jpg"), "rb").read()
 
     response = requests.post(
         DEEPSTACK_URL+"/v1/vision/face/match", files={"image1": image_data1,"image2": image_data2}, data={"api_key": API_KEY}
@@ -73,7 +73,7 @@ def test_match():
 
     assert response.status_code == 200, "Request failed with error: {}".format(response_json["error"])
     assert response_json["success"] == True
-    assert response_json["similarity"] > 0.6
+    assert response_json["similarity"] > 0.65
 
     response = requests.post(
         DEEPSTACK_URL+"/v1/vision/face/match", files={"image1": image_data1,"image2": image_data3}, data={"api_key": API_KEY}
@@ -83,7 +83,7 @@ def test_match():
 
     assert response.status_code == 200, "Request failed with error: {}".format(response_json["error"])
     assert response_json["success"] == True
-    assert response_json["similarity"] < 0.5
+    assert response_json["similarity"] < 0.55
 
 def test_list():
 
@@ -111,7 +111,7 @@ def test_recognize_after_delete():
 
     time.sleep(10)
 
-    image_data = open(os.path.join(IMAGES_DIR,"adele2.jpg"), "rb").read()
+    image_data = open(os.path.join(DATA_DIR,"adele2.jpg"), "rb").read()
 
     response = requests.post(
         DEEPSTACK_URL+"/v1/vision/face/recognize", files={"image": image_data}, data={"api_key": API_KEY}

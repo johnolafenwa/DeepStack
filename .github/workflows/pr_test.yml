@@ -37,7 +37,7 @@ jobs:
       run: |
         sudo docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:cpu
         cd tests
-        export TEST_IMAGES_DIR=$PWD"/test_images"
+        export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
         cd scene
         python3 -m pytest
@@ -47,7 +47,7 @@ jobs:
       run: |
         sudo docker run -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:cpu
         cd tests
-        export TEST_IMAGES_DIR=$PWD"/test_images"
+        export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
         cd detection
         python3 -m pytest
@@ -57,8 +57,19 @@ jobs:
       run: |
         sudo docker run -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:cpu
         cd tests
-        export TEST_IMAGES_DIR=$PWD"/test_images"
+        export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
         cd face
+        python3 -m pytest
+        sudo docker container rm -f deepstack
+
+    - name: Test Custom Detection
+      run: |
+        cd tests
+        modeldir=$(pwd)
+        sudo docker run -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:cpu
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80" 
+        cd custom
         python3 -m pytest
         sudo docker container rm -f deepstack
