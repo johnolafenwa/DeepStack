@@ -97,7 +97,7 @@ jobs:
         shell: powershell
         run: .\build_windows.ps1
       - name: Install DeepStack CPU Version
-        run: DeepStack-Installer-CPU.exe /VERYSILENT
+        run: cd Output && DeepStack-Installer-CPU.exe /VERYSILENT
       - name: Start DeepStack 
         shell: powershell
         run: Start-Process -FilePath "deepstack" -ArgumentList "--VISION-SCENE True --PORT 80" -RedirectStandardOutput ".\console.out" -RedirectStandardError ".\console.err" -NoNewWindow
