@@ -103,7 +103,7 @@ jobs:
         run: |
           cd tests
           $ErrorActionPreference = "Stop"
-          $env:TEST_DATA_DIR="$PSScriptRoot\test_data"
+          $env:TEST_DATA_DIR=[System.IO.Directory]::GetCurrentDirectory()+"\test_data"
           $env:TEST_DEEPSTACK_URL="http://localhost:80"
           cd scene
           python -m pytest
