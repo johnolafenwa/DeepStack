@@ -1,4 +1,4 @@
-name: Build and Test PRs on DeepStack Dev Branch
+name: DevTest
 on:
   push:
     branches:

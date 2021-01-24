@@ -10,6 +10,7 @@ __pycache__/
 !windows_packages/*.exe
 !redis/*.exe
 !interpreter/*.exe
+!windows_setup/*.exe
 
 # Distribution / packaging
 .Python
