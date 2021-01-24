@@ -92,7 +92,7 @@ jobs:
         run: cd server && go build -o deepstack.exe
       - name: Generate CPU Build Script
         shell: powershell
-        run: .\generate_windows_setup.ps1 -Platform CPU - Version 1.0
+        run: .\generate_windows_setup.ps1 -Platform CPU -Version 1.0
       - name: Build CPU Version 
         shell: powershell
         run: .\build_windows.ps1
