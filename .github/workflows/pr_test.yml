@@ -100,11 +100,11 @@ jobs:
       - name: Start DeepStack 
         run: Start-Process -FilePath "C:\DeepStack\deepstack.exe" -ArgumentList "--VISION-SCENE True --PORT 80" -RedirectStandardOutput ".\console.out" -RedirectStandardError ".\console.err" -NoNewWindow
       - name: Test Scene
-        shell: cmd
         run: |
           cd tests
-          export TEST_DATA_DIR=$PWD"/test_data"
-          export TEST_DEEPSTACK_URL="http://localhost:80"
+          $ErrorActionPreference = "Stop"
+          $env:TEST_DATA_DIR="$PSScriptRoot\test_data"
+          $env:TEST_DEEPSTACK_URL="http://localhost:80"
           cd scene
           python -m pytest
           
