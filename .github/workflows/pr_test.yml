@@ -84,8 +84,8 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: "3.7"
-      - name: Install Pytest
-        run: pip install pytest
+      - name: Install Pytest and Requests
+        run: pip install pytest requests
       - name: Setup Golang
         uses: actions/setup-go@v2
       - name: Build DeepStack Go Component
