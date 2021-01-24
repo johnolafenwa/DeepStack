@@ -91,17 +91,16 @@ jobs:
       - name: Build DeepStack Go Component
         run: cd server && go build -o deepstack.exe
       - name: Generate CPU Build Script
-        shell: powershell
         run: .\generate_windows_setup.ps1 -Platform CPU -Version 1.0
       - name: Build CPU Version 
-        shell: powershell
         run: .\build_windows.ps1
       - name: Install DeepStack CPU Version
+        shell: cmd
         run: cd Output && DeepStack-Installer-CPU.exe /VERYSILENT
       - name: Start DeepStack 
-        shell: powershell
         run: Start-Process -FilePath "deepstack" -ArgumentList "--VISION-SCENE True --PORT 80" -RedirectStandardOutput ".\console.out" -RedirectStandardError ".\console.err" -NoNewWindow
       - name: Test Scene
+        shell: cmd
         run: |
           cd tests
           export TEST_DATA_DIR=$PWD"/test_data"
