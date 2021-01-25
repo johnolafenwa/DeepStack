@@ -98,7 +98,7 @@ jobs:
         shell: cmd
         run: cd Output && DeepStack-Installer-CPU.exe /VERYSILENT
       - name: Start DeepStack 
-        run: Start-Process -FilePath "C:\DeepStack\deepstack.exe" -ArgumentList "--VISION-SCENE True --PORT 80" -RedirectStandardOutput ".\console.out" -RedirectStandardError ".\console.err" -NoNewWindow
+        run: Start-Process -FilePath "C:\DeepStack\deepstack.exe" -ArgumentList "--VISION-SCENE True --PORT 80" -NoNewWindow
       - name: Test Scene
         run: |
           cd tests
