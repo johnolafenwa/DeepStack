@@ -10,6 +10,8 @@ def test_scene():
 
     image_data = open(os.path.join(DATA_DIR,"scene.jpg"), "rb").read()
 
+    assert DEEPSTACK_URL+"/v1/vision/scene" == "http://localhost:80/v1/vision/scene"
+
     response = requests.post(
         DEEPSTACK_URL+"/v1/vision/scene",
         files={"image": image_data}, data={"api_key": API_KEY}
