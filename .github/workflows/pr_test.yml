@@ -96,7 +96,8 @@ jobs:
         run: .\build_windows.ps1
       - name: Install DeepStack CPU Version
         run: |
-          Start-Process -FilePath [System.IO.Directory]::GetCurrentDirectory()+"\Output\DeepStack-Installer-CPU.exe" -ArgumentList "/VERYSILENT" -Wait -NoNewWindow
+          $deepstack_installer = [System.IO.Directory]::GetCurrentDirectory()+"\Output\DeepStack-Installer-CPU.exe"
+          Start-Process -FilePath $deepstack_installer -ArgumentList "/VERYSILENT" -Wait -NoNewWindow
       - name: Test Scene
         run: |
           cd tests
