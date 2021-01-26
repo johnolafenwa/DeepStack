@@ -95,16 +95,16 @@ jobs:
       - name: Build CPU Version 
         run: .\build_windows.ps1
       - name: Install DeepStack CPU Version
-        shell: cmd
-        run: cd Output && DeepStack-Installer-CPU.exe /VERYSILENT
-      - name: Start DeepStack 
-        run: Start-Process -FilePath "C:\DeepStack\deepstack.exe" -ArgumentList "--PORT 80" -NoNewWindow
+        run: |
+          Start-Process -FilePath [System.IO.Directory]::GetCurrentDirectory()+"\Output\DeepStack-Installer-CPU.exe" -ArgumentList "/VERYSILENT" -Wait -NoNewWindow
       - name: Test Scene
         run: |
           cd tests
           $ErrorActionPreference = "Stop"
           $env:TEST_DATA_DIR=[System.IO.Directory]::GetCurrentDirectory()+"\tests\test_data"
           $env:TEST_DEEPSTACK_URL="http://localhost:80"
+          Start-Process -FilePath "C:\DeepStack\deepstack.exe" -ArgumentList "--PORT 80" -NoNewWindow
+          Start-Sleep 30
           cd scene
           python -m pytest
           
