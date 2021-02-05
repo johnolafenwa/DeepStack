@@ -9,7 +9,7 @@ on:
       - dev
       - master
 jobs:
-  build:
+  docker-build:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repo
@@ -73,3 +73,39 @@ jobs:
         cd custom
         python3 -m pytest
         sudo docker container rm -f deepstack
+  windows-build:
+    runs-on: windows-2019
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@master
+      - name: Fetch GIT LFS
+        run: git lfs checkout && git lfs pull
+      - name: Install python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+      - name: Install Pytest and Requests
+        run: pip install pytest requests
+      - name: Setup Golang
+        uses: actions/setup-go@v2
+      - name: Build DeepStack Go Component
+        run: cd server && go build -o deepstack.exe
+      - name: Generate CPU Build Script
+        run: .\generate_windows_setup.ps1 -Platform CPU -Version 1.0
+      - name: Build CPU Version 
+        run: .\build_windows.ps1
+      - name: Install DeepStack CPU Version
+        run: |
+          $deepstack_installer = [System.IO.Directory]::GetCurrentDirectory()+"\Output\DeepStack-Installer-CPU.exe"
+          Start-Process -FilePath $deepstack_installer -ArgumentList "/VERYSILENT" -Wait -NoNewWindow
+      - name: Test Scene
+        run: |
+          cd tests
+          $ErrorActionPreference = "Stop"
+          $env:TEST_DATA_DIR=[System.IO.Directory]::GetCurrentDirectory()+"\tests\test_data"
+          $env:TEST_DEEPSTACK_URL="http://localhost:80"
+          Start-Process -FilePath "C:\DeepStack\deepstack.exe" -ArgumentList "--PORT 80" -NoNewWindow
+          Start-Sleep 30
+          cd scene
+          python -m pytest
+          

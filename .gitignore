@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+*.err
+*.out
+*.iss
+!environment.iss
+
 # C extensions
 *.so
 

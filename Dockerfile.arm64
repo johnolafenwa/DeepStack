@@ -1,0 +1,42 @@
+FROM deepquestai/deepstack-base:arm64 as arm
+
+ENV SLEEP_TIME 0.01
+ENV CUDA_MODE False
+ENV APPDIR /app
+
+RUN mkdir /deeptemp
+RUN mkdir /datastore
+
+ENV DATA_DIR /datastore
+ENV TEMP_PATH /deeptemp/
+ENV PROFILE jetson
+
+WORKDIR /app
+
+RUN pip3 install redis
+RUN pip3 install Cython
+RUN pip3 install pillow
+RUN pip3 install scipy
+RUN pip3 install tqdm
+RUN pip3 install PyYAML
+
+RUN mkdir /app/sharedfiles
+COPY ./sharedfiles/yolov5s.pt /app/sharedfiles/yolov5s.pt
+COPY ./sharedfiles/face_lite.pt /app/sharedfiles/face_lite.pt
+COPY ./sharedfiles/facerec-high.model /app/sharedfiles/facerec-high.model
+COPY ./sharedfiles/scene.pt /app/sharedfiles/scene.pt
+COPY ./sharedfiles/categories_places365.txt /app/sharedfiles/categories_places365.txt
+
+RUN mkdir /app/server
+COPY ./server /app/server
+
+RUN mkdir /app/intelligencelayer
+COPY ./intelligencelayer /app/intelligencelayer
+
+COPY ./init.py /app 
+
+EXPOSE 5000
+
+WORKDIR /app/server
+
+CMD ["/app/server/server"]
