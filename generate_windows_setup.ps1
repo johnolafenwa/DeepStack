@@ -81,7 +81,7 @@ $setup_script += "`nSource: ""$PSScriptRoot\server\version.txt""; DestDir: ""{ap
 $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\categories_places365.txt""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\face.pt""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\facerec-high.model""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
-$setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\scene.model""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
+$setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\scene.pt""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\yolov5m.pt""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
 if($Platform -eq "CPU"){
     $setup_script += "`nSource: ""$PSScriptRoot\windows_packages_cpu\*""; DestDir: ""{app}\windows_packages""; Flags: ignoreversion recursesubdirs createallsubdirs"

@@ -23,24 +23,32 @@ from PIL import Image, UnidentifiedImageError
 import traceback
 
 import torchvision.transforms as transforms
+from torchvision.models import resnet50
 
 
 
 class SceneModel(object):
     def __init__(self, model_path, cuda=False):
 
-        self.sess = rt.InferenceSession(model_path)
-        self.input_name = self.sess.get_inputs()[0].name
+        self.cuda = cuda
+
+        self.model = resnet50(num_classes=365)
+        checkpoint = torch.load(model_path, map_location=lambda storage, loc: storage)
+        state_dict = {str.replace(k,'module.',''): v for k,v in checkpoint['state_dict'].items()}
+        self.model.load_state_dict(state_dict)
+        self.model.eval()
+        if self.cuda:
+            self.model = self.model.cuda()
 
     def predict(self, image_tensors):
 
-        out = self.sess.run(None, {self.input_name: image_tensors})
+        if self.cuda:
+            image_tensors = image_tensors.cuda()
 
-        out = np.array(out)
-        torch_out = torch.from_numpy(out).squeeze(1)
-        torch_out = torch.softmax(torch_out, 1)
+        logit = self.model.forward(image_tensors)
+        out = torch.softmax(logit, 1)
 
-        return out.argmax(), torch_out.max().item()
+        return out.argmax(), out.max().item()
 
 
 def scenerecognition(thread_name, delay):
@@ -56,7 +64,7 @@ def scenerecognition(thread_name, delay):
 
     IMAGE_QUEUE = "scene_queue"
     classifier = SceneModel(
-        os.path.join(SharedOptions.SHARED_APP_DIR, "scene.model"),
+        os.path.join(SharedOptions.SHARED_APP_DIR, "scene.pt"),
         SharedOptions.CUDA_MODE,
     )
 
@@ -87,10 +95,8 @@ def scenerecognition(thread_name, delay):
                             ),
                         ]
                     )
-                    img = trans(img)
-                    img = img.numpy()
-                    img = np.expand_dims(img, 0).astype(np.float32)
-
+                    img = trans(img).unsqueeze(0)
+                    
                     os.remove(img_path)
 
                     cl, conf = classifier.predict(img)

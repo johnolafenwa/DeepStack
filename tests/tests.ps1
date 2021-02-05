@@ -19,5 +19,5 @@ if($IsWindows){
     $python = "python"
 }
 
-$p = Start-Process -FilePath $python -ArgumentList "-m pytest" -Wait -NoNewWindow 
+$p = Start-Process -FilePath $python -ArgumentList "-m pytest" -Wait -NoNewWindow
 exit($p.ExitCode)

@@ -24,7 +24,7 @@ RUN mkdir /app/sharedfiles
 COPY ./sharedfiles/yolov5s.pt /app/sharedfiles/yolov5s.pt
 COPY ./sharedfiles/face_lite.pt /app/sharedfiles/face_lite.pt
 COPY ./sharedfiles/facerec-high.model /app/sharedfiles/facerec-high.model
-COPY ./sharedfiles/scene.model /app/sharedfiles/scene.model
+COPY ./sharedfiles/scene.pt /app/sharedfiles/scene.pt
 COPY ./sharedfiles/categories_places365.txt /app/sharedfiles/categories_places365.txt
 
 RUN mkdir /app/server
