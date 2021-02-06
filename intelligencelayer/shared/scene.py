@@ -15,7 +15,6 @@ if SharedOptions.PROFILE == "windows_native":
     sys.path.append(os.path.join(SharedOptions.APP_DIR,"windows_packages"))
 
 import numpy as np
-import onnxruntime as rt
 import torch
 import torch.nn.functional as F
 from PIL import Image, UnidentifiedImageError
@@ -24,8 +23,6 @@ import traceback
 
 import torchvision.transforms as transforms
 from torchvision.models import resnet50
-
-
 
 class SceneModel(object):
     def __init__(self, model_path, cuda=False):
