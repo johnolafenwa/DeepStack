@@ -48,7 +48,7 @@ class YOLODetector(object):
 
         img0 = Image.open(img_path).convert("RGB")
         img = np.asarray(letterbox(img0, new_shape=self.reso)[0])
-        img = img[:, :, ::-1].transpose(2, 0, 1)
+        img = img.transpose(2, 0, 1)
         img = np.ascontiguousarray(img)
 
         img = torch.from_numpy(img).to(self.device)
