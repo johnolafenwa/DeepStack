@@ -39,7 +39,7 @@ COPY ./intelligencelayer /app/intelligencelayer
 
 COPY ./init.py /app 
 
-EXPOSE 5000
+# EXPOSE 5000
 
 WORKDIR /app/server
 
