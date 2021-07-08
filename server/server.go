@@ -850,9 +850,16 @@ func main() {
 	flag.StringVar(&apiKey, "API-KEY", os.Getenv("API-KEY"), "api key to secure endpoints")
 	flag.StringVar(&adminKey, "ADMIN-KEY", os.Getenv("ADMIN-KEY"), "admin key to secure admin endpoints")
 	flag.StringVar(&modelStoreDetection, "MODELSTORE-DETECTION", "/modelstore/detection/", "path to custom detection models")
-	flag.IntVar(&port, "PORT", 5000, "port")
 	flag.Float64Var(&request_timeout, "TIMEOUT", 60, "request timeout in seconds")
 	flag.StringVar(&mode, "MODE", "Medium", "performance mode")
+
+	getPort := os.Getenv("PORT")
+	intPortVal, err := strconv.Atoi(getPort)
+	if err != nil{
+		flag.IntVar(&port, "PORT", 5000, "port")
+	}else{
+		flag.IntVar(&port, "PORT", intPortVal, "port")
+	}
 
 	flag.Parse()
 

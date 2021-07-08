@@ -39,7 +39,7 @@ COPY ./intelligencelayer /app/intelligencelayer
 
 COPY ./init.py /app 
 
-EXPOSE 5000
+# EXPOSE 400 this should be removed so that any port can be exposed
 
 WORKDIR /app/server
 
