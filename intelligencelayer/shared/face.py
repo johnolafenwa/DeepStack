@@ -345,7 +345,7 @@ def face(thread_name, delay):
                                 x_min = int(face[0])
                                 if x_min < 0:
                                     x_min = 0
-                                _min = int(face[1])
+                                y_min = int(face[1])
                                 if y_min < 0:
                                     y_min = 0
                                 x_max = int(face[2])
