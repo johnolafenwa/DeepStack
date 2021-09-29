@@ -29,6 +29,9 @@ jobs:
         sudo apt-get update
         sudo add-apt-repository universe
         sudo apt-get install -y powershell
+    - name: Download Binary Dependencies
+      run: .\download_dependencies.ps1
+      shell: pwsh
     - name: Build DeepStack Go Component
       run: cd server && go build
     - name: Build DeepStack CPU Version
@@ -88,6 +91,8 @@ jobs:
         run: pip install pytest requests
       - name: Setup Golang
         uses: actions/setup-go@v2
+      - name: Download Binary Dependencies
+        run: .\download_dependencies.ps1
       - name: Build DeepStack Go Component
         run: cd server && go build -o deepstack.exe
       - name: Generate CPU Build Script

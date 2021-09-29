@@ -58,6 +58,8 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
 - **Fetch Repo Files**
 
     ``git lfs pull``
+- **Download Binary Dependencies With Powershell**
+    ```.\download_dependencies.ps1```
 
 - **Build DeepStack Server**
 

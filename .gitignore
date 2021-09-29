@@ -1,5 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+*.py[cod]
+*$py.class
 
 *.err
 *.out
@@ -10,10 +12,13 @@ __pycache__/
 *.so
 
 *.exe
-!windows_packages/
-!redis/
-!interpreter/
-!windows_setup/
+windows_packages/
+windows_packages_cpu/
+windows_packages_gpu/
+redis/
+interpreter/
+windows_setup/
+sharedfiles/
 
 # Distribution / packaging
 .Python
@@ -152,4 +157,3 @@ cython_debug/
 deeptemp
 datastore
 logs/
-Output/
