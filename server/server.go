@@ -855,9 +855,9 @@ func main() {
 
 	getPort := os.Getenv("PORT")
 	intPortVal, err := strconv.Atoi(getPort)
-	if err != nil{
+	if err != nil {
 		flag.IntVar(&port, "PORT", 5000, "port")
-	}else{
+	} else {
 		flag.IntVar(&port, "PORT", intPortVal, "port")
 	}
 
