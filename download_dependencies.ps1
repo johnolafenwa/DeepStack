@@ -1,7 +1,7 @@
 function Download($URL, $NAME){
 
     (New-Object System.Net.WebClient).DownloadFile($URL, $NAME+".zip")
-    Expand-Archive -Path $NAME".zip"
+    Expand-Archive -Path $NAME".zip" -Force
 
 }
 
