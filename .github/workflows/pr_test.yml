@@ -109,7 +109,7 @@ jobs:
           $ErrorActionPreference = "Stop"
           $env:TEST_DATA_DIR=[System.IO.Directory]::GetCurrentDirectory()+"\tests\test_data"
           $env:TEST_DEEPSTACK_URL="http://localhost:80"
-          Start-Process -FilePath "C:\DeepStack\deepstack.exe" -ArgumentList "--PORT 80" -NoNewWindow
+          Start-Process -FilePath "C:\DeepStack\deepstack.exe" -ArgumentList "--VISION-SCENE=True --PORT 80" -NoNewWindow
           Start-Sleep 30
           cd scene
           python -m pytest
