@@ -12,10 +12,13 @@ __pycache__/
 *.so
 
 *.exe
-!windows_packages/*.exe
-!redis/*.exe
-!interpreter/*.exe
-!windows_setup/*.exe
+windows_packages/
+windows_packages_cpu/
+windows_packages_gpu/
+redis/
+interpreter/
+windows_setup/
+sharedfiles/
 
 # Distribution / packaging
 .Python
