@@ -792,6 +792,7 @@ func initActivation() {
 	face := os.Getenv("VISION_FACE")
 	detection := os.Getenv("VISION_DETECTION")
 	scene := os.Getenv("VISION_SCENE")
+	api_key := os.Getenv("API_KEY")
 
 	if os.Getenv("VISION-FACE") == "" {
 		os.Setenv("VISION-FACE", face)
@@ -801,6 +802,9 @@ func initActivation() {
 	}
 	if os.Getenv("VISION-SCENE") == "" {
 		os.Setenv("VISION-SCENE", scene)
+	}
+	if os.Getenv("API-KEY") == "" {
+		os.Setenv("API-KEY", api_key)
 	}
 }
 
