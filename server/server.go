@@ -824,6 +824,7 @@ func main() {
 	var port int
 	var modelStoreDetection string
 	var mode string
+	var certPath string
 
 	if os.Getenv("PROFILE") == "" {
 		os.Chdir("C://DeepStack//server")
@@ -854,6 +855,7 @@ func main() {
 	flag.StringVar(&apiKey, "API-KEY", os.Getenv("API-KEY"), "api key to secure endpoints")
 	flag.StringVar(&adminKey, "ADMIN-KEY", os.Getenv("ADMIN-KEY"), "admin key to secure admin endpoints")
 	flag.StringVar(&modelStoreDetection, "MODELSTORE-DETECTION", "/modelstore/detection/", "path to custom detection models")
+	flag.StringVar(&certPath, "CERT-PATH", "/cert", "path to ssl certificate files")
 	flag.Float64Var(&request_timeout, "TIMEOUT", 60, "request timeout in seconds")
 	flag.StringVar(&mode, "MODE", "Medium", "performance mode")
 
@@ -871,6 +873,10 @@ func main() {
 
 	if !strings.HasSuffix(modelStoreDetection, "/") {
 		modelStoreDetection = modelStoreDetection + "/"
+	}
+
+	if !strings.HasSuffix(certPath, "/") {
+		certPath = certPath + "/"
 	}
 
 	APPDIR := os.Getenv("APPDIR")
@@ -1172,6 +1178,17 @@ func main() {
 		}
 	}()
 
-	server.Run(":" + port2)
+	fullChain := filepath.Join(certPath, "fullchain.pem")
+	key := filepath.Join(certPath, "key.pem")
+
+	fullchain_exists, _ := utils.PathExists(fullChain)
+	key_exists, _ := utils.PathExists(key)
+
+	if fullchain_exists == true && key_exists == true {
+		fmt.Println("DeepStack is Running on HTTPS")
+		server.RunTLS(":443", fullChain, key)
+	} else {
+		server.Run(":" + port2)
+	}
 
 }
