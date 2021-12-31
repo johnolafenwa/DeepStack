@@ -44,3 +44,9 @@ type FaceMatchRequest struct {
 	Reqid   string   `json:"reqid"`
 	Reqtype string   `json:"reqtype"`
 }
+
+type SuperresolutionRequest struct {
+	Imgid         string `json:"imgid"`
+	Reqtype       string `json:"reqtype"`
+	Reqid         string `json:"reqid"`
+}

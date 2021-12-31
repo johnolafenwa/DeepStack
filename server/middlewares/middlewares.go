@@ -76,16 +76,16 @@ func CheckCustomVision() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		activate_face := false
+		activate_custom_vision := false
 		custom := os.Getenv("VISION-CUSTOM")
 
 		if custom == "True" {
 
-			activate_face = true
+			activate_custom_vision = true
 
 		}
 
-		if activate_face == false {
+		if activate_custom_vision == false {
 
 			response := response.ErrorResponse{Success: false, Error: "Custom vision endpoint not activated"}
 			c.JSON(403, response)
@@ -103,18 +103,45 @@ func CheckDetection() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 
-		activate_face := false
-		scene := os.Getenv("VISION-DETECTION")
+		activate_detection := false
+		detection := os.Getenv("VISION-DETECTION")
 
-		if scene == "True" {
+		if detection == "True" {
 
-			activate_face = true
+			activate_detection = true
 
 		}
 
-		if activate_face == false {
+		if activate_detection == false {
 
 			response := response.ErrorResponse{Success: false, Error: "Detection endpoint not activated"}
+			c.JSON(403, response)
+			c.Abort()
+
+			return
+		} else {
+			c.Next()
+		}
+
+	}
+}
+
+func CheckSuperresolution() gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+
+		activate_enhance := false
+		enhance := os.Getenv("VISION-ENHANCE")
+
+		if enhance == "True" {
+
+			activate_enhance = true
+
+		}
+
+		if activate_enhance == false {
+
+			response := response.ErrorResponse{Success: false, Error: "Enhance endpoint not activated"}
 			c.JSON(403, response)
 			c.Abort()
 

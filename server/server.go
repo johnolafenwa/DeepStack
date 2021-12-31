@@ -705,6 +705,64 @@ func restore(c *gin.Context) {
 
 }
 
+func superresolution(c *gin.Context, queue_name string) {
+
+	img_id := uuid.NewV4().String()
+
+	req_id := uuid.NewV4().String()
+
+	superres_req := requests.SuperresolutionRequest{Imgid: img_id, Reqtype: "superresolution", Reqid: req_id}
+
+	superres_req_string, _ := json.Marshal(superres_req)
+
+	file, _ := c.FormFile("image")
+
+	c.SaveUploadedFile(file, filepath.Join(temp_path, img_id))
+
+	redis_client.RPush(queue_name, superres_req_string)
+
+	t1 := time.Now()
+
+	for true {
+
+		output, _ := redis_client.Get(req_id).Result()
+		duration := time.Since(t1).Seconds()
+
+		if output != "" {
+
+			var res response.SuperresolutionResponse
+
+			json.Unmarshal([]byte(output), &res)
+
+			if res.Success == false {
+
+				var error_response response.ErrorResponseInternal
+				json.Unmarshal([]byte(output), &error_response)
+
+				final_res := response.ErrorResponse{Success: false, Error: error_response.Error}
+
+				c.JSON(error_response.Code, final_res)
+				return
+
+			} else {
+				c.JSON(200, res)
+
+				return
+			}
+
+			break
+		} else if duration > request_timeout {
+
+			final_res := response.ErrorResponse{Success: false, Error: "failed to process request before timeout"}
+
+			c.JSON(500, final_res)
+			return
+		}
+
+		time.Sleep(1 * time.Millisecond)
+	}
+}
+
 func printfromprocess(cmd *exec.Cmd) {
 
 	for true {
@@ -728,6 +786,7 @@ func printlogs() {
 	face2 := os.Getenv("VISION-FACE2")
 	detection := os.Getenv("VISION-DETECTION")
 	scene := os.Getenv("VISION-SCENE")
+	enhance := os.Getenv("VISION-ENHANCE")
 
 	if face1 == "True" || face2 == "True" {
 
@@ -756,6 +815,13 @@ func printlogs() {
 	if scene == "True" {
 
 		fmt.Println("/v1/vision/scene")
+		fmt.Println("---------------------------------------")
+
+	}
+
+	if enhance == "True" {
+
+		fmt.Println("/v1/vision/enhance")
 		fmt.Println("---------------------------------------")
 
 	}
@@ -792,6 +858,7 @@ func initActivation() {
 	face := os.Getenv("VISION_FACE")
 	detection := os.Getenv("VISION_DETECTION")
 	scene := os.Getenv("VISION_SCENE")
+	enhance := os.Getenv("VISION_ENHANCE")
 	api_key := os.Getenv("API_KEY")
 
 	if os.Getenv("VISION-FACE") == "" {
@@ -802,6 +869,9 @@ func initActivation() {
 	}
 	if os.Getenv("VISION-SCENE") == "" {
 		os.Setenv("VISION-SCENE", scene)
+	}
+	if os.Getenv("VISION-ENHANCE") == "" {
+		os.Setenv("VISION-ENHANCE", enhance)
 	}
 	if os.Getenv("API-KEY") == "" {
 		os.Setenv("API-KEY", api_key)
@@ -819,12 +889,12 @@ func main() {
 	var visionFace string
 	var visionDetection string
 	var visionScene string
+	var visionEnhance string
 	var apiKey string
 	var adminKey string
 	var port int
 	var modelStoreDetection string
 	var mode string
-	var certPath string
 
 	if os.Getenv("PROFILE") == "" {
 		os.Chdir("C://DeepStack//server")
@@ -852,10 +922,10 @@ func main() {
 	flag.StringVar(&visionFace, "VISION-FACE", os.Getenv("VISION-FACE"), "enable face detection")
 	flag.StringVar(&visionDetection, "VISION-DETECTION", os.Getenv("VISION-DETECTION"), "enable object detection")
 	flag.StringVar(&visionScene, "VISION-SCENE", os.Getenv("VISION-SCENE"), "enable scene recognition")
+	flag.StringVar(&visionEnhance, "VISION-ENHANCE", os.Getenv("VISION-ENHANCE"), "enable image superresolution")
 	flag.StringVar(&apiKey, "API-KEY", os.Getenv("API-KEY"), "api key to secure endpoints")
 	flag.StringVar(&adminKey, "ADMIN-KEY", os.Getenv("ADMIN-KEY"), "admin key to secure admin endpoints")
 	flag.StringVar(&modelStoreDetection, "MODELSTORE-DETECTION", "/modelstore/detection/", "path to custom detection models")
-	flag.StringVar(&certPath, "CERT-PATH", "/cert", "path to ssl certificate files")
 	flag.Float64Var(&request_timeout, "TIMEOUT", 60, "request timeout in seconds")
 	flag.StringVar(&mode, "MODE", "Medium", "performance mode")
 
@@ -875,10 +945,6 @@ func main() {
 		modelStoreDetection = modelStoreDetection + "/"
 	}
 
-	if !strings.HasSuffix(certPath, "/") {
-		certPath = certPath + "/"
-	}
-
 	APPDIR := os.Getenv("APPDIR")
 	DATA_DIR = os.Getenv("DATA_DIR")
 
@@ -896,6 +962,7 @@ func main() {
 		os.Setenv("VISION-FACE", visionFace)
 		os.Setenv("VISION-DETECTION", visionDetection)
 		os.Setenv("VISION-SCENE", visionScene)
+		os.Setenv("VISION-ENHANCE", visionEnhance)
 		os.Setenv("APPDIR", APPDIR)
 		os.Setenv("MODE", mode)
 	}
@@ -954,6 +1021,7 @@ func main() {
 	detectionScript := filepath.Join(APPDIR, "intelligencelayer/shared/detection.py")
 	faceScript := filepath.Join(APPDIR, "intelligencelayer/shared/face.py")
 	sceneScript := filepath.Join(APPDIR, "intelligencelayer/shared/scene.py")
+	enhanceScript := filepath.Join(APPDIR, "intelligencelayer/shared/superresolution.py")
 
 	initcmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+initScript)
 	if PROFILE == "windows_native" {
@@ -1044,6 +1112,25 @@ func main() {
 
 	}
 
+	if visionEnhance == "True" {
+		enhancecmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+enhanceScript)
+		if PROFILE == "windows_native" {
+			enhancecmd = exec.CommandContext(ctx, interpreter, enhanceScript)
+		}
+
+		startedProcesses = append(startedProcesses, enhancecmd)
+		enhancecmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")
+		enhancecmd.Stdout = stdout
+		enhancecmd.Stderr = stderr
+		enhancecmd.Env = os.Environ()
+		err = enhancecmd.Start()
+		if err != nil {
+			stderr.WriteString("scene process failed to start: " + err.Error())
+		}
+		// go utils.KeepProcess(scenecmd, redis_client, "scene", PROFILE, interpreter, enhanceScript, APPDIR, stdout, stderr, &ctx, startedProcesses)
+
+	}
+
 	db, _ = sql.Open("sqlite3", filepath.Join(DATA_DIR, "faceembedding.db"))
 
 	gin.SetMode(gin.ReleaseMode)
@@ -1091,6 +1178,12 @@ func main() {
 		vision.POST("/detection", middlewares.CheckDetection(), middlewares.CheckImage(), middlewares.CheckConfidence(), func(c *gin.Context) {
 
 			detection(c, "detection_queue")
+
+		})
+
+		vision.POST("/enhance", middlewares.CheckSuperresolution(), middlewares.CheckImage(), func(c *gin.Context) {
+
+			superresolution(c, "superresolution_queue")
 
 		})
 
@@ -1178,17 +1271,6 @@ func main() {
 		}
 	}()
 
-	fullChain := filepath.Join(certPath, "fullchain.pem")
-	key := filepath.Join(certPath, "key.pem")
-
-	fullchain_exists, _ := utils.PathExists(fullChain)
-	key_exists, _ := utils.PathExists(key)
-
-	if fullchain_exists == true && key_exists == true {
-		fmt.Println("DeepStack is Running on HTTPS")
-		server.RunTLS(":443", fullChain, key)
-	} else {
-		server.Run(":" + port2)
-	}
+	server.Run(":" + port2)
 
 }
