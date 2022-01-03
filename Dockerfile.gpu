@@ -1,4 +1,4 @@
-FROM deepquestai/deepstack-base:gpu-412378893 as gpu
+FROM deepquestai/deepstack-base:gpu-1647248158 as gpu
 
 ENV SLEEP_TIME 0.01
 ENV CUDA_MODE True
