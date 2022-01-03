@@ -1,3 +1,0 @@
-7107:C 23 Jan 2021 16:27:58.643 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
-7107:C 23 Jan 2021 16:27:58.643 # Redis version=5.0.7, bits=64, commit=00000000, modified=0, pid=7107, just started
-7107:C 23 Jan 2021 16:27:58.643 # Configuration loaded

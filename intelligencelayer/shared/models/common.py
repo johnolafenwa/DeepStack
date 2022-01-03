@@ -4,7 +4,7 @@ import math
 import torch
 import torch.nn as nn
 from utils.general import non_max_suppression
-
+import torch.nn.functional as F
 
 def autopad(k, p=None):  # kernel, padding
     # Pad to 'same'
@@ -26,7 +26,7 @@ class Conv(nn.Module):
         super(Conv, self).__init__()
         self.conv = nn.Conv2d(c1, c2, k, s, autopad(k, p), groups=g, bias=False)
         self.bn = nn.BatchNorm2d(c2)
-        self.act = nn.Hardswish() if act else nn.Identity()
+        self.act = Hardswish() if act else nn.Identity()
 
     def forward(self, x):
         return self.act(self.bn(self.conv(x)))
