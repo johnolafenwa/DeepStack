@@ -4,7 +4,7 @@ import platform
 import shutil
 import time
 from pathlib import Path
-
+import models
 import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
@@ -39,7 +39,7 @@ class YOLODetector(object):
         # Update model
         for k, m in self.model.named_modules():
             m._non_persistent_buffers_set = set()  # pytorch 1.6.0 compatability
-            if isinstance(m, self.models.common.Conv) and isinstance(m.act, nn.Hardswish):
+            if isinstance(m, models.common.Conv) and isinstance(m.act, nn.Hardswish):
                 m.act = Hardswish()  # assign activation
 
         self.names = (
