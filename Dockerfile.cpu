@@ -24,8 +24,6 @@ RUN pip3 install tensorboard
 RUN pip3 install PyYAML
 RUN pip3 install Matplotlib
 RUN pip3 install easydict
-RUN pip3 install torch
-RUN pip3 install torchvision
 RUN pip3 install future
 RUN pip3 install numpy
 RUN pip3 install scikit-image
