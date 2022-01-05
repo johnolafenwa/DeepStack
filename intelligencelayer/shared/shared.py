@@ -2,6 +2,10 @@ import os
 import sys
 from enum import Enum
 
+def chunks(l, n):
+    n = max(1, n)
+    return (l[i:i+n] for i in range(0, len(l), n))
+
 class Settings:
     def __init__(
         self,
@@ -33,6 +37,8 @@ class SharedOptions:
 
     if PROFILE == "windows_native":
         sys.path.append(os.path.join(APPDIR,"windows_packages"))
+
+    THREADCOUNT = int(os.getenv("THREADCOUNT", "4"))
 
     from redis import RedisError, StrictRedis
 
