@@ -14,7 +14,6 @@ import torch
 from PIL import ExifTags, Image, ImageOps
 from torch.utils.data import Dataset
 from tqdm import tqdm
-from utils.general import torch_distributed_zero_first, xywh2xyxy, xyxy2xywh
 
 def letterbox(
     img,

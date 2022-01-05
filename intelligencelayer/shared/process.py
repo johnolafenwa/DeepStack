@@ -11,16 +11,10 @@ import torch.backends.cudnn as cudnn
 from models.experimental import attempt_load
 from numpy import random
 from PIL import Image
-from utils.datasets import LoadImages, LoadStreams, letterbox
+from utils.datasets import letterbox
 from utils.general import (
-    apply_classifier,
-    check_img_size,
     non_max_suppression,
-    plot_one_box,
-    scale_coords,
-    set_logging,
-    strip_optimizer,
-    xyxy2xywh,
+    scale_coords
 )
 
 import torch.nn as nn
