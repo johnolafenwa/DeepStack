@@ -38,7 +38,7 @@ class SharedOptions:
     if PROFILE == "windows_native":
         sys.path.append(os.path.join(APPDIR,"windows_packages"))
 
-    THREADCOUNT = int(os.getenv("THREADCOUNT", "4"))
+    THREADCOUNT = int(os.getenv("THREADCOUNT", "5"))
 
     from redis import RedisError, StrictRedis
 
