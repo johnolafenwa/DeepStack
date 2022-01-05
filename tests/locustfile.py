@@ -39,17 +39,11 @@ class FaceDetectionCaller(HttpUser):
 
 class FaceRecognition(HttpUser):
 
-    def on_start(self):
-        image_data = open(os.path.join(DATA_DIR,"adele2.jpg"), "rb").read()
-
-        self.client.post("/v1/vision/face/recognize",
-        files={"image": image_data},data={"api_key": API_KEY})
-        
     @task()
     def recognize(self):
 
-        image_data = open(os.path.join(DATA_DIR,"face_detection.jpg"), "rb").read()
+        image_data = open(os.path.join(DATA_DIR,"adele2.jpg"), "rb").read()
 
-        self.client.post("/v1/vision/face",
+        self.client.post("/v1/vision/face/recognize",
         files={"image": image_data},data={"api_key": API_KEY})
         
