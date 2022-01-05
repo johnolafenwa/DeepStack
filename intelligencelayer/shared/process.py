@@ -22,7 +22,7 @@ from utils.general import (
     strip_optimizer,
     xyxy2xywh,
 )
-from utils.torch_utils import load_classifier, select_device, time_synchronized
+
 import torch.nn as nn
 from utils.activations import Hardswish
 
