@@ -1,6 +1,7 @@
 import argparse
-import cv2
+from PIL import Image
 import numpy as np
+import cv2
 import os
 import sys
 import torch
@@ -77,7 +78,7 @@ def superresolution4x(thread_name: str, delay: float):
                         req_type = req_data["reqtype"]
                         img_path = os.path.join(TEMP_PATH, img_id)
 
-                        lr_img = cv2.imread(img_path, cv2.IMREAD_COLOR)
+                        lr_img = Image.open(img_path).convert("RGB")
                         lr_img = np.transpose(lr_img[:, :, ::-1], (2, 0, 1)).astype(np.float32) / 255.0
                         lr_img = torch.from_numpy(lr_img).float().to(device).unsqueeze(0)
 
@@ -121,64 +122,3 @@ def superresolution4x(thread_name: str, delay: float):
 if __name__ == "__main__":     
     p = Process(target=superresolution4x, args=("", SharedOptions.SLEEP_TIME))
     p.start()
-
-
-"""
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--sr_type', type=str, default='SISR')
-    parser.add_argument('--model_path', type=str, default=None)
-    parser.add_argument('--input_path', type=str, default=None)
-    parser.add_argument('--output_path', type=str, default=None)
-    parser.add_argument('--gt_path', type=str, default=None)
-    args = parser.parse_args()
-    if args.output_path and not os.path.exists(args.output_path):
-        os.makedirs(args.output_path)
-    
-    use_cuda = False
-    use_cpu = False if use_cuda else True
-    print('Loading Network ...')
-    config, model = get_network(args.model_path)
-    if use_cuda:
-        device = torch.device('cuda')
-    else:
-        device = torch.device('cpu')
-    
-    model = model.to(device)
-    load_model(model, args.model_path, strict=True, cpu=use_cpu)
-    down = config.MODEL.DOWN
-    scale = config.MODEL.SCALE
-    print('Reading Images ...')
-    ipath_l = []
-    for f in sorted(os.listdir(args.input_path)):
-        if f.endswith('png') or f.endswith('jpg'):
-            ipath_l.append(os.path.join(args.input_path, f))
-    with torch.no_grad():
-        for i, f in enumerate(ipath_l):
-            img_name = f.split('/')[-1]
-            print('Processing: %s' % img_name)
-            lr_img = cv2.imread(f, cv2.IMREAD_COLOR)
-            lr_img = np.transpose(lr_img[:, :, ::-1], (2, 0, 1)).astype(np.float32) / 255.0
-            lr_img = torch.from_numpy(lr_img).float().to(device).unsqueeze(0)
-            _, C, H, W = lr_img.size()
-            need_pad = False
-            if H % down != 0 or W % down != 0:
-                need_pad = True
-                pad_y_t = (down - H % down) % down // 2
-                pad_y_b = (down - H % down) % down - pad_y_t
-                pad_x_l = (down - W % down) % down // 2
-                pad_x_r = (down - W % down) % down - pad_x_l
-                lr_img = torch.nn.functional.pad(lr_img, pad=(pad_x_l, pad_x_r, pad_y_t, pad_y_b), mode='replicate')
-            output = model(lr_img)
-            if need_pad:
-                y_end = -pad_y_b * scale if pad_y_b != 0 else output.size(2)
-                x_end = -pad_x_r * scale if pad_x_r != 0 else output.size(3)
-                output = output[:, :, pad_y_t * scale: y_end, pad_x_l * scale: x_end]
-            output = tensor2img(output)
-            if args.output_path:
-                print(f"Saving {os.path.join(args.output_path, img_name)}")
-                output_path = os.path.join(args.output_path, os.path.basename(img_name))
-                output = cv2.cvtColor(output, cv2.COLOR_BGR2RGB)
-                cv2.imwrite(output_path, output)
-    print('Finished!')
-"""
