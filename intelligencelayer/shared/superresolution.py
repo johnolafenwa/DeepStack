@@ -1,7 +1,6 @@
 import argparse
 from PIL import Image
 import numpy as np
-import cv2
 import os
 import sys
 import torch
@@ -12,7 +11,7 @@ import time
 
 
 from superresolution.utils import load_model
-from superresolution.common import tensor2img, calculate_psnr, calculate_ssim, bgr2ycbcr
+from superresolution.common import tensor2img
 
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
@@ -78,7 +77,7 @@ def superresolution4x(thread_name: str, delay: float):
                         req_type = req_data["reqtype"]
                         img_path = os.path.join(TEMP_PATH, img_id)
 
-                        lr_img = Image.open(img_path).convert("RGB")
+                        lr_img = np.array(Image.open(img_path).convert("RGB"))
                         lr_img = np.transpose(lr_img[:, :, ::-1], (2, 0, 1)).astype(np.float32) / 255.0
                         lr_img = torch.from_numpy(lr_img).float().to(device).unsqueeze(0)
 
@@ -104,8 +103,8 @@ def superresolution4x(thread_name: str, delay: float):
 
                         img_h, img_w, _ = output.shape
 
-                        retval, buffer = cv2.imencode('.jpg', output)
-                        base64_img = base64.b64encode(buffer)
+                        output_pil = Image.fromarray(output.astype('uint8'), 'RGB')
+                        base64_img = base64.b64encode(output_pil.tobytes())
 
                         output_response = {"success": True, "base64": base64_img.decode("utf-8"), "width": img_w, "height": img_h}
                 except Exception as e:
