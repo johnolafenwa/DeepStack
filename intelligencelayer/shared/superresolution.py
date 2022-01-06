@@ -1,5 +1,6 @@
 import argparse
 from PIL import Image
+from io import BytesIO
 import numpy as np
 import os
 import sys
@@ -100,11 +101,13 @@ def superresolution4x(thread_name: str, delay: float):
                             output = output[:, :, pad_y_t * scale: y_end, pad_x_l * scale: x_end]
 
                         output = tensor2img(output)
-
                         img_h, img_w, _ = output.shape
 
-                        output_pil = Image.fromarray(output.astype('uint8'), 'RGB')
-                        base64_img = base64.b64encode(output_pil.tobytes())
+                        output_pil = Image.fromarray(output, 'RGB')
+                    
+                        buffered = BytesIO()
+                        output_pil.save(buffered, format="JPEG")
+                        base64_img = base64.b64encode(buffered.getvalue())
 
                         output_response = {"success": True, "base64": base64_img.decode("utf-8"), "width": img_w, "height": img_h}
                 except Exception as e:
