@@ -22,7 +22,6 @@ RUN pip3 install PyYAML
 RUN pip3 install easydict
 RUN pip3 install future
 RUN pip3 install numpy
-RUN pip3 install scikit-image
 
 RUN wget https://nvidia.box.com/shared/static/6lxbakd8zaf2p5nkgcn7ih116iqm1wzm.whl -O onnxruntime_gpu-1.5.2-cp36-cp36m-linux_aarch64.whl
 RUN pip3 install onnxruntime_gpu-1.5.2-cp36-cp36m-linux_aarch64.whl

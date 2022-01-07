@@ -22,7 +22,6 @@ RUN pip3 install PyYAML
 RUN pip3 install easydict
 RUN pip3 install future
 RUN pip3 install numpy
-RUN pip3 install scikit-image
 
 RUN mkdir /app/sharedfiles
 COPY ./sharedfiles/yolov5s.pt /app/sharedfiles/yolov5s.pt
