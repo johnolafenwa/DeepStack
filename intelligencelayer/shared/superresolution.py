@@ -112,7 +112,7 @@ def superresolution4x(thread_name: str, delay: float):
                         output_response = {"success": True, "base64": base64_img.decode("utf-8"), "width": img_w, "height": img_h}
                 except Exception as e:
                     output_response = {"success": False,
-                            "error": str(e),
+                            "error": "An error occured",
                             "code": 500,
                             }
                 finally:
