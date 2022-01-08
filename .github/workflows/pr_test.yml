@@ -76,6 +76,15 @@ jobs:
         cd custom
         python3 -m pytest
         sudo docker container rm -f deepstack
+    - name: Test Enhance
+      run: |
+        sudo docker run -d --name deepstack -e VISION-ENHANCE=True -p 80:5000 deepquestai/deepstack:cpu
+        cd tests
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd enhance
+        python3 -m pytest
+        sudo docker container rm -f deepstack
   windows-build:
     runs-on: windows-2019
     steps:
