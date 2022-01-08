@@ -25,9 +25,9 @@ def test_enhance():
     assert type(response_json["height"]) == int
     assert len(response_json["base64"]) > 1000
 
-    image4X_byte = base64.b64decode(response["base64"])
+    image4X_byte = base64.b64decode(response_json["base64"])
     image = Image.open(BytesIO(image4X_byte))
     width, height = image.size
-    
+
     assert width == 1200
     assert height == 632
