@@ -1,6 +1,8 @@
 FROM deepquestai/deepstack-base:cpu-1647248158 as cpu 
 
 ENV SLEEP_TIME 0.01
+ENV TIMEOUT 60
+ENV SEND_LOGS True
 ENV CUDA_MODE False
 ENV APPDIR /app
 
