@@ -19,6 +19,9 @@ RUN pip3 install pillow
 RUN pip3 install scipy
 RUN pip3 install tqdm
 RUN pip3 install PyYAML
+RUN pip3 install easydict
+RUN pip3 install future
+RUN pip3 install numpy
 
 RUN wget https://nvidia.box.com/shared/static/6lxbakd8zaf2p5nkgcn7ih116iqm1wzm.whl -O onnxruntime_gpu-1.5.2-cp36-cp36m-linux_aarch64.whl
 RUN pip3 install onnxruntime_gpu-1.5.2-cp36-cp36m-linux_aarch64.whl
@@ -29,6 +32,7 @@ COPY ./sharedfiles/face_lite.pt /app/sharedfiles/face_lite.pt
 COPY ./sharedfiles/facerec-high.model /app/sharedfiles/facerec-high.model
 COPY ./sharedfiles/scene.pt /app/sharedfiles/scene.pt
 COPY ./sharedfiles/categories_places365.txt /app/sharedfiles/categories_places365.txt
+COPY ./sharedfiles/bebygan_x4.pth /app/sharedfiles/bebygan_x4.pth
 
 RUN mkdir /app/server
 COPY ./server /app/server

@@ -19,6 +19,9 @@ RUN pip3 install pillow
 RUN pip3 install scipy
 RUN pip3 install tqdm
 RUN pip3 install PyYAML
+RUN pip3 install easydict
+RUN pip3 install future
+RUN pip3 install numpy
 
 RUN mkdir /app/sharedfiles
 COPY ./sharedfiles/yolov5s.pt /app/sharedfiles/yolov5s.pt
@@ -26,6 +29,7 @@ COPY ./sharedfiles/face_lite.pt /app/sharedfiles/face_lite.pt
 COPY ./sharedfiles/facerec-high.model /app/sharedfiles/facerec-high.model
 COPY ./sharedfiles/scene.pt /app/sharedfiles/scene.pt
 COPY ./sharedfiles/categories_places365.txt /app/sharedfiles/categories_places365.txt
+COPY ./sharedfiles/bebygan_x4.pth /app/sharedfiles/bebygan_x4.pth
 
 RUN mkdir /app/server
 COPY ./server /app/server

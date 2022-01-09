@@ -18,6 +18,8 @@ jobs:
       run: git lfs checkout && git lfs pull
     - name: Install Pytest
       run: pip3 install pytest
+    - name: Install PIL
+      run: pip3 install pillow
     - name: Setup Golang
       uses: actions/setup-go@v2
     - name: Setup Powershell
@@ -74,6 +76,15 @@ jobs:
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80" 
         cd custom
+        python3 -m pytest
+        sudo docker container rm -f deepstack
+    - name: Test Enhance
+      run: |
+        sudo docker run -d --name deepstack -e VISION-ENHANCE=True -p 80:5000 deepquestai/deepstack:cpu
+        cd tests
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd enhance
         python3 -m pytest
         sudo docker container rm -f deepstack
   windows-build:

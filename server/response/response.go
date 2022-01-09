@@ -117,3 +117,10 @@ type ActivationServerResponse struct {
 	Datecreated         string `json:"date_created"`
 	Dateexpiring        string `json:"date_expiring"`
 }
+
+type SuperresolutionResponse struct {
+	Success bool   `json:"success"`
+	Base64  string `json:"base64"`
+	Width   int    `json:"width"`
+	Height  int    `json:"height"`
+}

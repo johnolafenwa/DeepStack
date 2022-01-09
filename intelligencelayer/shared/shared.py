@@ -17,6 +17,7 @@ class Settings:
         FACE_MEDIUM,
         FACE_LOW,
         FACE_MODEL,
+        SUPERRESOLUTION_MODEL,
     ):
         self.DETECTION_HIGH = DETECTION_HIGH
         self.DETECTION_MEDIUM = DETECTION_MEDIUM
@@ -26,6 +27,7 @@ class Settings:
         self.FACE_MEDIUM = FACE_MEDIUM
         self.FACE_LOW = FACE_LOW
         self.FACE_MODEL = FACE_MODEL
+        self.SUPERRESOLUTION_MODEL = SUPERRESOLUTION_MODEL
 
 
 class SharedOptions:
@@ -74,6 +76,7 @@ class SharedOptions:
             FACE_MEDIUM=320,
             FACE_LOW=256,
             FACE_MODEL="face.pt",
+            SUPERRESOLUTION_MODEL="bebygan_x4.pth",
         ),
         "desktop_gpu": Settings(
             DETECTION_HIGH=640,
@@ -84,6 +87,7 @@ class SharedOptions:
             FACE_MEDIUM=320,
             FACE_LOW=256,
             FACE_MODEL="face.pt",
+            SUPERRESOLUTION_MODEL="bebygan_x4.pth",
         ),
         "jetson": Settings(
             DETECTION_HIGH=416,
@@ -94,6 +98,7 @@ class SharedOptions:
             FACE_MEDIUM=256,
             FACE_LOW=192,
             FACE_MODEL="face_lite.pt",
+            SUPERRESOLUTION_MODEL="bebygan_x4.pth",
         ),
         "windows_native": Settings(
             DETECTION_HIGH=640,
@@ -104,6 +109,7 @@ class SharedOptions:
             FACE_MEDIUM=320,
             FACE_LOW=256,
             FACE_MODEL="face.pt",
+            SUPERRESOLUTION_MODEL="bebygan_x4.pth",
         ),
     }
 
