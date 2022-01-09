@@ -2,6 +2,10 @@ import os
 import sys
 from enum import Enum
 
+def chunks(l, n):
+    n = max(1, n)
+    return (l[i:i+n] for i in range(0, len(l), n))
+
 class Settings:
     def __init__(
         self,
@@ -36,12 +40,13 @@ class SharedOptions:
     if PROFILE == "windows_native":
         sys.path.append(os.path.join(APPDIR,"windows_packages"))
 
+    THREADCOUNT = int(os.getenv("THREADCOUNT", "5"))
+
     from redis import RedisError, StrictRedis
 
     TEMP_PATH = os.getenv("TEMP_PATH", "/deeptemp/")
     SLEEP_TIME = 0.01
     SHARED_APP_DIR = os.path.join(APPDIR, "sharedfiles")
-    # SHARED_APP_DIR="/home/johnolafenwa/Documents/Source/DeepStack/sharedfiles"
     GPU_APP_DIR = os.path.join(APPDIR, "gpufiles")
     CPU_APP_DIR = os.path.join(APPDIR, "cpufiles")
     DATA_DIR = os.getenv("DATA_DIR", "/datastore")
