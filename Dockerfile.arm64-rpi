@@ -11,7 +11,7 @@ RUN mkdir /datastore
 
 ENV DATA_DIR /datastore
 ENV TEMP_PATH /deeptemp/
-ENV PROFILE jetson
+ENV PROFILE arm64_rpi
 
 WORKDIR /app
 
