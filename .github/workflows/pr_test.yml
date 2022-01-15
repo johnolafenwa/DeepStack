@@ -20,8 +20,6 @@ jobs:
       run: pip3 install pytest
     - name: Install PIL
       run: pip3 install pillow
-    - name: Setup Golang
-      uses: actions/setup-go@v2
     - name: Setup Powershell
       run: |
         sudo apt-get update
@@ -34,8 +32,6 @@ jobs:
     - name: Download Binary Dependencies
       run: .\download_dependencies.ps1
       shell: pwsh
-    - name: Build DeepStack Go Component
-      run: cd server && go build
     - name: Build DeepStack CPU Version
       run: sudo docker build -t deepquestai/deepstack:cpu . -f Dockerfile.cpu
     - name: Test Scene

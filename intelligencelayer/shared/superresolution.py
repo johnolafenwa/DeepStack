@@ -130,7 +130,7 @@ def superresolution4x(delay: float):
             for req_data in queue:
 
                 req_data = json.JSONDecoder().decode(req_data)
-                queue.put(req_data)
+                q.put(req_data)
                         
         time.sleep(delay)
 
