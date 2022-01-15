@@ -1,6 +1,8 @@
 FROM deepquestai/deepstack-base:arm64 as arm
 
 ENV SLEEP_TIME 0.01
+ENV TIMEOUT 60
+ENV SEND_LOGS True
 ENV CUDA_MODE False
 ENV APPDIR /app
 

@@ -117,7 +117,7 @@ func ReadRegisteryEntry() string {
 
 }
 
-func LogToServer(sub_data *structures.ActivationData) {
+func LogToServer(sub_data *structures.ActivationData, profile string, version string, enhance bool, detection bool, face bool, scene bool, custom_detection int) {
 
 	for true {
 
@@ -134,14 +134,33 @@ func LogToServer(sub_data *structures.ActivationData) {
 			break
 		}
 
+		end_points := []string{}
+
+		if enhance {
+			end_points = append(end_points, "enhance")
+		}
+		if detection {
+			end_points = append(end_points, "detection")
+		}
+		if face {
+			end_points = append(end_points, "face")
+		}
+		if scene {
+			end_points = append(end_points, "scene")
+		}
+
 		params := req.Param{
-			"key":       sub_data.Key,
-			"cores":     num_cores,
-			"cpu":       cpu,
-			"platform":  platform,
-			"os":        os,
-			"osversion": osversion,
-			"time":      time.Now(),
+			"key":               sub_data.Key,
+			"cores":             num_cores,
+			"cpu":               cpu,
+			"platform":          platform,
+			"os":                os,
+			"osversion":         osversion,
+			"time":              time.Now(),
+			"deepstack_version": version,
+			"profile":           profile,
+			"endpoints":         end_points,
+			"custom_detection":  custom_detection,
 		}
 
 		req.Post("https://register.deepstack.cc/loguser", params)

@@ -1,6 +1,8 @@
 FROM deepquestai/deepstack-base:gpu-jetpack as jetpack
 
 ENV SLEEP_TIME 0.01
+ENV TIMEOUT 60
+ENV SEND_LOGS True
 ENV CUDA_MODE True
 ENV APPDIR /app
 

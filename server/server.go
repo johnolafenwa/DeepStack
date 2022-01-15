@@ -860,6 +860,7 @@ func initActivation() {
 	scene := os.Getenv("VISION_SCENE")
 	enhance := os.Getenv("VISION_ENHANCE")
 	api_key := os.Getenv("API_KEY")
+	send_logs := os.Getenv("SEND_LOGS")
 
 	if os.Getenv("VISION-FACE") == "" {
 		os.Setenv("VISION-FACE", face)
@@ -875,6 +876,9 @@ func initActivation() {
 	}
 	if os.Getenv("API-KEY") == "" {
 		os.Setenv("API-KEY", api_key)
+	}
+	if os.Getenv("SEND-LOGS") == "" {
+		os.Setenv("SEND-LOGS", send_logs)
 	}
 }
 
@@ -896,6 +900,7 @@ func main() {
 	var modelStoreDetection string
 	var mode string
 	var certPath string
+	var sendLogs string
 
 	if os.Getenv("PROFILE") == "" {
 		os.Chdir("C://DeepStack//server")
@@ -912,12 +917,13 @@ func main() {
 	}
 
 	versionfile, err := os.Open("version.txt")
+	deepstack_version := ""
 
 	if err == nil {
 		versiondata, _ := ioutil.ReadAll(versionfile)
-		version := string(versiondata)
+		deepstack_version = string(versiondata)
 
-		fmt.Println("DeepStack: Version " + version)
+		fmt.Println("DeepStack: Version " + deepstack_version)
 	}
 
 	flag.StringVar(&visionFace, "VISION-FACE", os.Getenv("VISION-FACE"), "enable face detection")
@@ -928,8 +934,29 @@ func main() {
 	flag.StringVar(&adminKey, "ADMIN-KEY", os.Getenv("ADMIN-KEY"), "admin key to secure admin endpoints")
 	flag.StringVar(&modelStoreDetection, "MODELSTORE-DETECTION", "/modelstore/detection/", "path to custom detection models")
 	flag.StringVar(&certPath, "CERT-PATH", "/cert", "path to ssl certificate files")
-	flag.Float64Var(&request_timeout, "TIMEOUT", 60, "request timeout in seconds")
-	flag.StringVar(&mode, "MODE", "Medium", "performance mode")
+
+	floatTimeoutVal, err := strconv.ParseFloat(os.Getenv("TIMEOUT"), 32)
+	if err != nil {
+		flag.Float64Var(&request_timeout, "TIMEOUT", 60, "request timeout in seconds")
+	} else {
+		flag.Float64Var(&request_timeout, "TIMEOUT", floatTimeoutVal, "request timeout in seconds")
+	}
+
+	mode_val, mode_set := os.LookupEnv("MODE")
+
+	if mode_set {
+		flag.StringVar(&mode, "MODE", mode_val, "performance mode")
+	} else {
+		flag.StringVar(&mode, "MODE", "Medium", "performance mode")
+	}
+
+	send_logs_val, send_logs_set := os.LookupEnv("MODE")
+
+	if send_logs_set {
+		flag.StringVar(&sendLogs, "SEND-LOGS", send_logs_val, "log system info to deepquestai server")
+	} else {
+		flag.StringVar(&sendLogs, "SEND-LOGS", "True", "log system info to deepquestai server")
+	}
 
 	getPort := os.Getenv("PORT")
 	intPortVal, err := strconv.Atoi(getPort)
@@ -1143,8 +1170,6 @@ func main() {
 
 	server := gin.New()
 
-	go utils.LogToServer(&sub_data)
-
 	admin_key := os.Getenv("ADMIN-KEY")
 	api_key := os.Getenv("API-KEY")
 
@@ -1171,6 +1196,8 @@ func main() {
 		}
 
 	}
+
+	num_custom_det_models := 0
 
 	server.Use(gin.Recovery())
 
@@ -1213,6 +1240,8 @@ func main() {
 		{
 
 			models, err := filepath.Glob(modelStoreDetection + "*.pt")
+
+			num_custom_det_models = len(models)
 
 			if err == nil {
 
@@ -1259,6 +1288,9 @@ func main() {
 	server.GET("/", home)
 	server.GET("/admin", home)
 
+	if sendLogs == "True" {
+		go utils.LogToServer(&sub_data, PROFILE, deepstack_version, (visionEnhance == "True"), (visionDetection == "True"), (visionFace == "True"), (visionScene == "True"), num_custom_det_models)
+	}
 	port2 := strconv.Itoa(port)
 	printlogs()
 
