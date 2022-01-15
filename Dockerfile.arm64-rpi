@@ -1,0 +1,56 @@
+FROM deepquestai/deepstack-base:arm64 as arm
+
+ENV SLEEP_TIME 0.01
+ENV TIMEOUT 60
+ENV SEND_LOGS True
+ENV CUDA_MODE False
+ENV APPDIR /app
+
+RUN mkdir /deeptemp
+RUN mkdir /datastore
+
+ENV DATA_DIR /datastore
+ENV TEMP_PATH /deeptemp/
+ENV PROFILE arm64_rpi
+
+WORKDIR /app
+
+RUN wget https://go.dev/dl/go1.17.6.linux-arm64.tar.gz
+RUN rm -rf /usr/local/go && tar -C /usr/local -xzf go1.17.6.linux-arm64.tar.gz
+ENV PATH=$PATH:/usr/local/go/bin
+RUN rm go1.17.6.linux-arm64.tar.gz
+
+RUN pip3 install redis
+RUN pip3 install Cython
+RUN pip3 install pillow
+RUN pip3 install scipy
+RUN pip3 install tqdm
+RUN pip3 install PyYAML
+RUN pip3 install easydict
+RUN pip3 install future
+RUN pip3 install numpy
+
+RUN mkdir /app/sharedfiles
+COPY ./sharedfiles/yolov5s.pt /app/sharedfiles/yolov5s.pt
+COPY ./sharedfiles/face_lite.pt /app/sharedfiles/face_lite.pt
+COPY ./sharedfiles/facerec-high.model /app/sharedfiles/facerec-high.model
+COPY ./sharedfiles/scene.pt /app/sharedfiles/scene.pt
+COPY ./sharedfiles/categories_places365.txt /app/sharedfiles/categories_places365.txt
+COPY ./sharedfiles/bebygan_x4.pth /app/sharedfiles/bebygan_x4.pth
+
+RUN mkdir /app/server
+COPY ./server /app/server
+WORKDIR /app/server
+RUN go build
+WORKDIR /app
+
+RUN mkdir /app/intelligencelayer
+COPY ./intelligencelayer /app/intelligencelayer
+
+COPY ./init.py /app 
+
+EXPOSE 5000
+
+WORKDIR /app/server
+
+CMD ["/app/server/server"]

@@ -11,9 +11,14 @@ RUN mkdir /datastore
 
 ENV DATA_DIR /datastore
 ENV TEMP_PATH /deeptemp/
-ENV PROFILE jetson
+ENV PROFILE arm64_cpu
 
 WORKDIR /app
+
+RUN wget https://go.dev/dl/go1.17.6.linux-arm64.tar.gz
+RUN rm -rf /usr/local/go && tar -C /usr/local -xzf go1.17.6.linux-arm64.tar.gz
+ENV PATH=$PATH:/usr/local/go/bin
+RUN rm go1.17.6.linux-arm64.tar.gz
 
 RUN pip3 install redis
 RUN pip3 install Cython
@@ -26,8 +31,8 @@ RUN pip3 install future
 RUN pip3 install numpy
 
 RUN mkdir /app/sharedfiles
-COPY ./sharedfiles/yolov5s.pt /app/sharedfiles/yolov5s.pt
-COPY ./sharedfiles/face_lite.pt /app/sharedfiles/face_lite.pt
+COPY ./sharedfiles/yolov5m.pt /app/sharedfiles/yolov5m.pt
+COPY ./sharedfiles/face.pt /app/sharedfiles/face.pt
 COPY ./sharedfiles/facerec-high.model /app/sharedfiles/facerec-high.model
 COPY ./sharedfiles/scene.pt /app/sharedfiles/scene.pt
 COPY ./sharedfiles/categories_places365.txt /app/sharedfiles/categories_places365.txt
@@ -35,6 +40,9 @@ COPY ./sharedfiles/bebygan_x4.pth /app/sharedfiles/bebygan_x4.pth
 
 RUN mkdir /app/server
 COPY ./server /app/server
+WORKDIR /app/server
+RUN go build
+WORKDIR /app
 
 RUN mkdir /app/intelligencelayer
 COPY ./intelligencelayer /app/intelligencelayer

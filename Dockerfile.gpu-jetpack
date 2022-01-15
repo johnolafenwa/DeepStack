@@ -15,6 +15,11 @@ ENV PROFILE jetson
 
 WORKDIR /app
 
+RUN wget https://go.dev/dl/go1.17.6.linux-arm64.tar.gz
+RUN rm -rf /usr/local/go && tar -C /usr/local -xzf go1.17.6.linux-arm64.tar.gz
+ENV PATH=$PATH:/usr/local/go/bin
+RUN rm go1.17.6.linux-arm64.tar.gz
+
 RUN pip3 install redis
 RUN pip3 install Cython
 RUN pip3 install pillow
@@ -38,6 +43,9 @@ COPY ./sharedfiles/bebygan_x4.pth /app/sharedfiles/bebygan_x4.pth
 
 RUN mkdir /app/server
 COPY ./server /app/server
+WORKDIR /app/server
+RUN go build
+WORKDIR /app
 
 RUN mkdir /app/intelligencelayer
 COPY ./intelligencelayer /app/intelligencelayer

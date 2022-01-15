@@ -14,6 +14,12 @@ ENV TEMP_PATH /deeptemp/
 ENV PROFILE desktop_cpu
 
 WORKDIR /app
+
+RUN wget https://go.dev/dl/go1.17.6.linux-amd64.tar.gz
+RUN rm -rf /usr/local/go && tar -C /usr/local -xzf go1.17.6.linux-amd64.tar.gz
+ENV PATH=$PATH:/usr/local/go/bin
+RUN rm go1.17.6.linux-amd64.tar.gz
+
 RUN pip install onnxruntime==0.4.0
 
 RUN pip3 install redis
@@ -39,6 +45,9 @@ COPY ./sharedfiles/bebygan_x4.pth /app/sharedfiles/bebygan_x4.pth
 
 RUN mkdir /app/server
 COPY ./server /app/server
+WORKDIR /app/server
+RUN go build
+WORKDIR /app
 
 RUN mkdir /app/intelligencelayer
 COPY ./intelligencelayer /app/intelligencelayer
