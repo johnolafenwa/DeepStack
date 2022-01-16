@@ -66,7 +66,6 @@ $setup_script += "`nName: ""quicklaunchicon""; Description: ""{cm:CreateQuickLau
 
 $setup_script += "`n`n[Files]"
 $setup_script += "`nSource: ""$PSScriptRoot\server\deepstack.exe""; DestDir: ""{app}""; Flags: ignoreversion"
-$setup_script += "`nSource: ""$PSScriptRoot\*""; DestDir: ""{app}"";"
 $setup_script += "`nSource: ""$PSScriptRoot\intelligencelayer\*""; DestDir: ""{app}\intelligencelayer""; Flags: ignoreversion recursesubdirs createallsubdirs"
 $setup_script += "`nSource: ""$PSScriptRoot\interpreter\*""; DestDir: ""{app}\interpreter""; Flags: ignoreversion recursesubdirs createallsubdirs"
 $setup_script += "`nSource: ""$PSScriptRoot\redis\*""; DestDir: ""{app}\redis""; Flags: ignoreversion recursesubdirs createallsubdirs"
@@ -90,6 +89,7 @@ elseif($Platform -eq "GPU"){
     $setup_script += "`nSource: ""$PSScriptRoot\windows_env_gpu\*""; DestDir: ""{app}\windows_env""; Flags: ignoreversion recursesubdirs createallsubdirs"
 }
 
+$setup_script += "`nSource: ""$PSScriptRoot\run_script.bat""; DestDir: ""{app}""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\logo.ico""; DestDir: ""{app}""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\init.py""; DestDir: ""{app}""; Flags: ignoreversion"
 
