@@ -989,7 +989,7 @@ func main() {
 	if PROFILE == "windows_native" {
 
 		APPDIR = "C://DeepStack"
-		interpreter = filepath.Join(APPDIR, "interpreter", "python.exe")
+		interpreter = "run_script.bat"
 		redis_server = filepath.Join(APPDIR, "redis", "redis-server.exe")
 
 		os.Setenv("VISION-FACE", visionFace)
@@ -1253,7 +1253,7 @@ func main() {
 
 					modelcmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+detectionScript+" --model "+file+" --name "+model_name)
 					if PROFILE == "windows_native" {
-						modelcmd = exec.CommandContext(ctx, interpreter, detectionScript, "--model", file, "--name", model_name)
+						modelcmd = exec.CommandContext(ctx, interpreter, detectionScript, file, model_name)
 					}
 					startedProcesses = append(startedProcesses, modelcmd)
 					modelcmd.Dir = filepath.Join(APPDIR, "intelligencelayer/shared")

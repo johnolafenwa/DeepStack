@@ -84,10 +84,10 @@ $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\facerec-high.model""; De
 $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\scene.pt""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\yolov5m.pt""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
 if($Platform -eq "CPU"){
-    $setup_script += "`nSource: ""$PSScriptRoot\windows_packages_cpu\*""; DestDir: ""{app}\windows_packages""; Flags: ignoreversion recursesubdirs createallsubdirs"
+    $setup_script += "`nSource: ""$PSScriptRoot\windows_env_cpu\*""; DestDir: ""{app}\windows_env""; Flags: ignoreversion recursesubdirs createallsubdirs"
 } 
 elseif($Platform -eq "GPU"){
-    $setup_script += "`nSource: ""$PSScriptRoot\windows_packages_gpu\*""; DestDir: ""{app}\windows_packages""; Flags: ignoreversion recursesubdirs createallsubdirs"
+    $setup_script += "`nSource: ""$PSScriptRoot\windows_env_gpu\*""; DestDir: ""{app}\windows_env""; Flags: ignoreversion recursesubdirs createallsubdirs"
 }
 
 $setup_script += "`nSource: ""$PSScriptRoot\logo.ico""; DestDir: ""{app}""; Flags: ignoreversion"
