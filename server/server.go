@@ -989,7 +989,7 @@ func main() {
 	if PROFILE == "windows_native" {
 
 		APPDIR = "C://DeepStack"
-		interpreter = "run_script.bat"
+		interpreter = "C://DeepStack//run_script.bat"
 		redis_server = filepath.Join(APPDIR, "redis", "redis-server.exe")
 
 		os.Setenv("VISION-FACE", visionFace)

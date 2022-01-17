@@ -59,13 +59,7 @@ $setup_script += "`nName: ""spanish""; MessagesFile: ""compiler:Languages\Spanis
 $setup_script += "`nName: ""turkish""; MessagesFile: ""compiler:Languages\Turkish.isl"""
 $setup_script += "`nName: ""ukrainian""; MessagesFile: ""compiler:Languages\Ukrainian.isl"""
 
-
-$setup_script += "`n`n[Tasks]"
-$setup_script += "`nName: ""desktopicon""; Description: ""{cm:CreateDesktopIcon}""; GroupDescription: ""{cm:AdditionalIcons}""; Flags: unchecked"
-$setup_script += "`nName: ""quicklaunchicon""; Description: ""{cm:CreateQuickLaunchIcon}""; GroupDescription: ""{cm:AdditionalIcons}""; Flags: unchecked; OnlyBelowVersion: 0,6.1"
-
 $setup_script += "`n`n[Files]"
-$setup_script += "`nSource: ""$PSScriptRoot\server\deepstack.exe""; DestDir: ""{app}""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\intelligencelayer\*""; DestDir: ""{app}\intelligencelayer""; Flags: ignoreversion recursesubdirs createallsubdirs"
 $setup_script += "`nSource: ""$PSScriptRoot\interpreter\*""; DestDir: ""{app}\interpreter""; Flags: ignoreversion recursesubdirs createallsubdirs"
 $setup_script += "`nSource: ""$PSScriptRoot\redis\*""; DestDir: ""{app}\redis""; Flags: ignoreversion recursesubdirs createallsubdirs"
@@ -94,10 +88,7 @@ $setup_script += "`nSource: ""$PSScriptRoot\logo.ico""; DestDir: ""{app}""; Flag
 $setup_script += "`nSource: ""$PSScriptRoot\init.py""; DestDir: ""{app}""; Flags: ignoreversion"
 
 $setup_script += "`n`n[Icons]"
-$setup_script += "`nName: ""{group}\{#MyAppName}""; Filename: ""{app}\{#MyAppExeName}"""
 $setup_script += "`nName: ""{group}\{cm:UninstallProgram,{#MyAppName}}""; Filename: ""{uninstallexe}"""
-$setup_script += "`nName: ""{commondesktop}\{#MyAppName}""; Filename: ""{app}\{#MyAppExeName}""; IconFilename: {app}\{#MyAppIcon}; Tasks: desktopicon quicklaunchicon"
-$setup_script += "`nName: ""{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}""; Filename: ""{app}\{#MyAppExeName}""; IconFilename: {app}\{#MyAppIcon}; Tasks: quicklaunchicon"
 
 $setup_script += "`n[Code]"
 $setup_script += "`nprocedure CurStepChanged(CurStep: TSetupStep);"
