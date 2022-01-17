@@ -76,6 +76,8 @@ $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\face.pt""; DestDir: ""{a
 $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\facerec-high.model""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\scene.pt""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\yolov5m.pt""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
+$setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\bebygan_x4.pth""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
+
 if($Platform -eq "CPU"){
     $setup_script += "`nSource: ""$PSScriptRoot\windows_env_cpu\*""; DestDir: ""{app}\windows_env""; Flags: ignoreversion recursesubdirs createallsubdirs"
 } 
