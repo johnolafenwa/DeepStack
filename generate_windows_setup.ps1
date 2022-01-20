@@ -59,14 +59,7 @@ $setup_script += "`nName: ""spanish""; MessagesFile: ""compiler:Languages\Spanis
 $setup_script += "`nName: ""turkish""; MessagesFile: ""compiler:Languages\Turkish.isl"""
 $setup_script += "`nName: ""ukrainian""; MessagesFile: ""compiler:Languages\Ukrainian.isl"""
 
-
-$setup_script += "`n`n[Tasks]"
-$setup_script += "`nName: ""desktopicon""; Description: ""{cm:CreateDesktopIcon}""; GroupDescription: ""{cm:AdditionalIcons}""; Flags: unchecked"
-$setup_script += "`nName: ""quicklaunchicon""; Description: ""{cm:CreateQuickLaunchIcon}""; GroupDescription: ""{cm:AdditionalIcons}""; Flags: unchecked; OnlyBelowVersion: 0,6.1"
-
 $setup_script += "`n`n[Files]"
-$setup_script += "`nSource: ""$PSScriptRoot\server\deepstack.exe""; DestDir: ""{app}""; Flags: ignoreversion"
-$setup_script += "`nSource: ""$PSScriptRoot\*""; DestDir: ""{app}"";"
 $setup_script += "`nSource: ""$PSScriptRoot\intelligencelayer\*""; DestDir: ""{app}\intelligencelayer""; Flags: ignoreversion recursesubdirs createallsubdirs"
 $setup_script += "`nSource: ""$PSScriptRoot\interpreter\*""; DestDir: ""{app}\interpreter""; Flags: ignoreversion recursesubdirs createallsubdirs"
 $setup_script += "`nSource: ""$PSScriptRoot\redis\*""; DestDir: ""{app}\redis""; Flags: ignoreversion recursesubdirs createallsubdirs"
@@ -83,21 +76,21 @@ $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\face.pt""; DestDir: ""{a
 $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\facerec-high.model""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\scene.pt""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\yolov5m.pt""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
+$setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\bebygan_x4.pth""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
+
 if($Platform -eq "CPU"){
-    $setup_script += "`nSource: ""$PSScriptRoot\windows_packages_cpu\*""; DestDir: ""{app}\windows_packages""; Flags: ignoreversion recursesubdirs createallsubdirs"
+    $setup_script += "`nSource: ""$PSScriptRoot\windows_env_cpu\*""; DestDir: ""{app}\windows_env""; Flags: ignoreversion recursesubdirs createallsubdirs"
 } 
 elseif($Platform -eq "GPU"){
-    $setup_script += "`nSource: ""$PSScriptRoot\windows_packages_gpu\*""; DestDir: ""{app}\windows_packages""; Flags: ignoreversion recursesubdirs createallsubdirs"
+    $setup_script += "`nSource: ""$PSScriptRoot\windows_env_gpu\*""; DestDir: ""{app}\windows_env""; Flags: ignoreversion recursesubdirs createallsubdirs"
 }
 
+$setup_script += "`nSource: ""$PSScriptRoot\run_script.bat""; DestDir: ""{app}""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\logo.ico""; DestDir: ""{app}""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\init.py""; DestDir: ""{app}""; Flags: ignoreversion"
 
 $setup_script += "`n`n[Icons]"
-$setup_script += "`nName: ""{group}\{#MyAppName}""; Filename: ""{app}\{#MyAppExeName}"""
 $setup_script += "`nName: ""{group}\{cm:UninstallProgram,{#MyAppName}}""; Filename: ""{uninstallexe}"""
-$setup_script += "`nName: ""{commondesktop}\{#MyAppName}""; Filename: ""{app}\{#MyAppExeName}""; IconFilename: {app}\{#MyAppIcon}; Tasks: desktopicon quicklaunchicon"
-$setup_script += "`nName: ""{userappdata}\Microsoft\Internet Explorer\Quick Launch\{#MyAppName}""; Filename: ""{app}\{#MyAppExeName}""; IconFilename: {app}\{#MyAppIcon}; Tasks: quicklaunchicon"
 
 $setup_script += "`n[Code]"
 $setup_script += "`nprocedure CurStepChanged(CurStep: TSetupStep);"
