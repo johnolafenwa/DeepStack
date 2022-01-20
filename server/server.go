@@ -901,6 +901,7 @@ func main() {
 	var mode string
 	var certPath string
 	var sendLogs string
+	var threadcount int
 
 	if os.Getenv("PROFILE") == "" {
 		os.Chdir("C://DeepStack//server")
@@ -940,6 +941,13 @@ func main() {
 		flag.Float64Var(&request_timeout, "TIMEOUT", 60, "request timeout in seconds")
 	} else {
 		flag.Float64Var(&request_timeout, "TIMEOUT", floatTimeoutVal, "request timeout in seconds")
+	}
+
+	intThreadcountVal, err := strconv.Atoi(os.Getenv("THREADCOUNT"))
+	if err != nil {
+		flag.IntVar(&threadcount, "THREADCOUNT", 5, "number of threads to use for each endpoint")
+	} else {
+		flag.IntVar(&threadcount, "THREADCOUNT", intThreadcountVal, "number of threads to use for each endpoint")
 	}
 
 	mode_val, mode_set := os.LookupEnv("MODE")
@@ -998,6 +1006,7 @@ func main() {
 		os.Setenv("VISION-ENHANCE", visionEnhance)
 		os.Setenv("APPDIR", APPDIR)
 		os.Setenv("MODE", mode)
+		os.Setenv("THREADCOUNT", strconv.Itoa(threadcount))
 	}
 
 	if DATA_DIR == "" {
