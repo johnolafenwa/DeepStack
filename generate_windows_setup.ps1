@@ -79,13 +79,12 @@ $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\yolov5m.pt""; DestDir: "
 $setup_script += "`nSource: ""$PSScriptRoot\sharedfiles\bebygan_x4.pth""; DestDir: ""{app}\sharedfiles""; Flags: ignoreversion"
 
 if($Platform -eq "CPU"){
-    $setup_script += "`nSource: ""$PSScriptRoot\windows_env_cpu\*""; DestDir: ""{app}\windows_env""; Flags: ignoreversion recursesubdirs createallsubdirs"
+    $setup_script += "`nSource: ""$PSScriptRoot\windows_packages_cpu\*""; DestDir: ""{app}\windows_packages""; Flags: ignoreversion recursesubdirs createallsubdirs"
 } 
 elseif($Platform -eq "GPU"){
-    $setup_script += "`nSource: ""$PSScriptRoot\windows_env_gpu\*""; DestDir: ""{app}\windows_env""; Flags: ignoreversion recursesubdirs createallsubdirs"
+    $setup_script += "`nSource: ""$PSScriptRoot\windows_packages_gpu\*""; DestDir: ""{app}\windows_packages""; Flags: ignoreversion recursesubdirs createallsubdirs"
 }
 
-$setup_script += "`nSource: ""$PSScriptRoot\run_script.bat""; DestDir: ""{app}""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\logo.ico""; DestDir: ""{app}""; Flags: ignoreversion"
 $setup_script += "`nSource: ""$PSScriptRoot\init.py""; DestDir: ""{app}""; Flags: ignoreversion"
 
