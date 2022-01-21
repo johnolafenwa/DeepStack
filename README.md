@@ -1,5 +1,5 @@
 # DeepStack
-The World's Leading Cross Platform AI Engine for Edge Devices, with over `3.2 million` installs on **Docker Hub**.
+The World's Leading Cross Platform AI Engine for Edge Devices, with over `10 million` installs on [**Docker Hub**](https://hub.docker.com/r/deepquestai/deepstack).
 
 [![black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
@@ -23,10 +23,38 @@ DeepStack is an AI API engine that serves pre-built models and custom models on 
 
 - **Linux OS** via Docker ( CPU and NVIDIA GPU support )
 - **Mac OS** via Docker
-- **Windows 10** ( native application )
+- **Windows 10** ( native application, CPU and GPU )
 - **NVIDIA Jetson** via Docker.
+- **Rasperry Pi & ARM64 Devices** via Docker.
 
 DeepStack runs completely offline and independent of the cloud. You can also install and run DeepStack on any cloud VM with docker installed to serve as your private, state-of-the-art and real-time AI server.
+
+# Features
+
+- **Face APIs**: Face detection, recognition and matching.
+
+    ![Face API](demo/face_api.jpg)
+
+- **Common Objects APIs**: Object detection for [80 common objects](https://docs.deepstack.cc/object-detection/index.html#classes)
+
+    ![Detection API](demo/detection_api.jpg)
+
+- **Custom Models**: Train and deploy new models to detect any custom object(s)
+
+    ![Custom Models API](demo/custom_model.jpg)
+
+- **Image Enhance**: 4X image superresolution
+
+    `Input`
+
+    ![Image Enhance API Iput](demo/enhance_input.jpg)
+
+     `Output`
+    ![Image Enhance API Iput](demo/enhance_output.jpg)
+
+- **Scene Recognition**: Image scene recognition
+- **SSL Support**
+- **API Key support**: Security options to protect your DeepStack endpoints
 
 # Installation and Usage
 Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/getting-started/) for installation instructions. The documentation provides example codes for the following programming languages with more to be added soon.
