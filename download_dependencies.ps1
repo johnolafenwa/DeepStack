@@ -1,8 +1,9 @@
 function Download($URL, $NAME){
 
-    (New-Object System.Net.WebClient).DownloadFile($URL, $NAME+".zip")
-    Expand-Archive -Path $NAME".zip" -Force
-    Remove-Item -Path $NAME".zip" -Force
+    $DEST=$PSScriptRoot+"\"+$NAME+".zip"
+    (New-Object System.Net.WebClient).DownloadFile($URL, $DEST)
+    Expand-Archive -Path $DEST -Force
+    Remove-Item -Path $DEST -Force
 
 }
 
