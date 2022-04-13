@@ -50,3 +50,11 @@ type SuperresolutionRequest struct {
 	Reqtype string `json:"reqtype"`
 	Reqid   string `json:"reqid"`
 }
+
+type FaceDetectionRequest_1 struct{
+	Imgid string `json:"imgid"`
+	Reqtype string `json:"reqtype"`
+	Reqid string `json:"reqid"`
+	Minconfidence string `json:"minconfidence"`
+
+}

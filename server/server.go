@@ -298,6 +298,63 @@ func facerecognition(c *gin.Context) {
 	}
 }
 
+/*Creating a detection1 endpoint*/
+
+func detection1 (c, *gin.Context, queue_name string){
+/*Receiving the image from the client*/
+	nms:=c.PostForm('min_confidence')
+	if nms=""{
+		nms="0.35"
+	}
+	img_id:=uuid.NewV4().String()
+	req_id:=uuid.NewV4().String()
+
+	detec1_req:=requests.FaceDetectionRequest_1{ Imgid: img_id,Minconfidence:nms,Reqtype: "detection1",Reqid: req_id}
+	face_req_1_string, _ := json.Marshal(detec1_req)
+	file _:=c.FormFile("image")
+
+	c.SaveUploadedFile(file, filepath.Join(temp_path, img_id))
+	redis_client.Rpush(queue_name, face_req_1_string)
+	t_1:=time.Now()
+/*Checking if the request is processed or not, from the intelligence layer*/
+	for true{
+		output, _ := redis_client.Get(req_id).Result()
+		duration:=time.Since(t_1).Seconds()
+
+		if output!=""{
+			var res response.FaceDetectionResponse_1
+			json.Unmarshal([]byte(output), &res)
+
+			if res.Success==false{
+				var error_response response.ErrorResponseInternal
+				json.Unmarshal([]byte(output), &error_response)
+
+				final_res := response.ErrorResponse{Success: false, Error: error_response.Error}
+				c.JSON(error_response.Code, final_res)
+				return
+
+			}else{
+
+				c.JSON(200, res)
+				return
+			}
+
+			break
+		}else if duration>request_timeout{
+			final_res := response.ErrorResponse{Success: false, Error: "failed to process request before timeout"}
+
+			c.JSON(500, final_res)
+			return
+		}
+
+		time.Sleep(1*time.Millisecond)
+	}
+
+
+
+
+}
+
 func faceregister(c *gin.Context) {
 
 	userid := c.PostForm("userid")
@@ -1221,7 +1278,13 @@ func main() {
 
 			detection(c, "detection_queue")
 
-		})
+		}
+	
+		vision.POST("/detection1", middlewares.CheckDetection(), middlewares.CheckImage(), middlewares.CheckConfidence(), func(c *gin.Context) {
+
+			detection(c, "detection_queue")
+
+		}))
 		vision.POST("/enhance", middlewares.CheckSuperresolution(), middlewares.CheckImage(), func(c *gin.Context) {
 
 			superresolution(c, "superresolution_queue")

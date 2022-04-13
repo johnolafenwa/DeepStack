@@ -124,3 +124,23 @@ type SuperresolutionResponse struct {
 	Width   int    `json:"width"`
 	Height  int    `json:"height"`
 }
+
+/*face detection response1*/
+type FaceDetectionPred_1 struct{
+
+	Confidence fload32	'json:"confidence"`'
+	Label string 'json:"label"`'
+	Ymin int 'json:"y_min"`'
+	Xmin int 'json:"x_min"`'
+	Ymax int 'json:"y_max"`'
+	Xmax int 'json:"x_max"`'
+}
+
+/*Structure for face recognition response1*/
+
+type FaceDetectionResponse_1 struct{
+	Success bool 'json:"success"`'
+	Predictions []FaceDetectionPred_1 'json:"predictions"`'
+	Duration float64 'json:"duration"`'
+
+}
