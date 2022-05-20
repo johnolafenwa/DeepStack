@@ -26,5 +26,54 @@ jobs:
       run: sudo docker build -t deepquestai/deepstack:gpu-cu100 . -f Dockerfile.gpu --build-arg tag=gpu-cuda100-2357972848
     - name: Clean DeepStack GPU Cuda 10 Version
       run: sudo docker rm -f deepquestai/deepstack:gpu-cu100
+    - name: Test Scene
+      run: |
+        sudo docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:gpu-cu100
+        cd tests
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd scene
+        python3 -m pytest
+        sudo docker container rm -f deepstack
+
+    - name: Test Detection
+      run: |
+        sudo docker run -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:gpu-cu100
+        cd tests
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd detection
+        python3 -m pytest
+        sudo docker container rm -f deepstack
+
+    - name: Test Face
+      run: |
+        sudo docker run -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:gpu-cu100
+        cd tests
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd face
+        python3 -m pytest
+        sudo docker container rm -f deepstack
+
+    - name: Test Custom Detection
+      run: |
+        cd tests
+        modeldir=$(pwd)
+        sudo docker run -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:gpu-cu100
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80" 
+        cd custom
+        python3 -m pytest
+        sudo docker container rm -f deepstack
+    - name: Test Enhance
+      run: |
+        sudo docker run -d --name deepstack -e VISION-ENHANCE=True -p 80:5000 deepquestai/deepstack:gpu-cu100
+        cd tests
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd enhance
+        python3 -m pytest
+        sudo docker container rm -f deepstack
    
     
