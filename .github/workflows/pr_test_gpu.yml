@@ -10,7 +10,7 @@ on:
       - master
 jobs:
   docker-gpu-build:
-    runs-on: ubuntu-20.04
+    runs-on: [self-hosted, Linux, X64, gpu]
     steps:
     - name: Checkout repo
       uses: actions/checkout@master
@@ -37,16 +37,5 @@ jobs:
       run: sudo docker build -t deepquestai/deepstack:gpu-cu100 . -f Dockerfile.gpu --build-arg tag=gpu-cuda100-2357972848
     - name: Clean DeepStack GPU Cuda 10 Version
       run: sudo docker rm -f deepquestai/deepstack:gpu-cu100
-    - name: Build DeepStack GPU Cuda 10_2 Version
-      run: sudo docker build -t deepquestai/deepstack:gpu-cu102 . -f Dockerfile.gpu --build-arg tag=gpu-cuda102-2357972848
-    - name: Clean DeepStack GPU Cuda 10_2 Version
-      run: sudo docker rm -f deepquestai/deepstack:gpu-cu102
-    - name: Build DeepStack GPU Cuda 11 Version
-      run: sudo docker build -t deepquestai/deepstack:gpu-cu110 . -f Dockerfile.gpu --build-arg tag=gpu-cuda110-2357972848
-    - name: Clean DeepStack GPU Cuda 11 Version
-      run: sudo docker rm -f deepquestai/deepstack:gpu-cu110
-    - name: Build DeepStack GPU Cuda 11_6 Version
-      run: sudo docker build -t deepquestai/deepstack:gpu-cu116 . -f Dockerfile.gpu --build-arg tag=gpu-cuda116-2357972848
-    - name: Clean DeepStack GPU Cuda 11_6 Version
-      run: sudo docker rm -f deepquestai/deepstack:gpu-cu116
+   
     
