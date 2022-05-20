@@ -18,6 +18,8 @@ jobs:
       run: git lfs checkout && git lfs pull
     - name: Install Pytest
       run: pip3 install pytest
+    - name: Install Wget
+      run: pip3 install wget
     - name: Install PIL
       run: pip3 install pillow
     - name: Setup Powershell
