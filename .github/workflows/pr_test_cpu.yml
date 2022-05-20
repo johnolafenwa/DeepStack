@@ -9,7 +9,7 @@ on:
       - dev
       - master
 jobs:
-  docker-build:
+  docker-cpu-build:
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout repo

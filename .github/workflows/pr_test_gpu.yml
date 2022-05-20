@@ -1,0 +1,50 @@
+name: DevTest
+on:
+  push:
+    branches:
+      - dev
+      - master
+  pull_request:
+    branches:
+      - dev
+      - master
+jobs:
+  docker-gpu-build:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@master
+    - name: Fetch GIT LFS
+      run: git lfs checkout && git lfs pull
+    - name: Install Pytest
+      run: pip3 install pytest
+    - name: Install PIL
+      run: pip3 install pillow
+    - name: Setup Powershell
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget apt-transport-https software-properties-common
+        wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
+        sudo dpkg -i packages-microsoft-prod.deb
+        sudo apt-get update
+        sudo add-apt-repository universe
+        sudo apt-get install -y powershell
+    - name: Download Binary Dependencies
+      run: python3 download_dependencies.py
+    - name: Build DeepStack GPU Cuda 10 Version
+      run: sudo docker build -t deepquestai/deepstack:gpu-cu100 . -f Dockerfile.gpu --build-arg tag=gpu-cuda100-2357972848
+    - name: Clean DeepStack GPU Cuda 10 Version
+      run: sudo docker rm -f deepquestai/deepstack:gpu-cu100
+    - name: Build DeepStack GPU Cuda 10_2 Version
+      run: sudo docker build -t deepquestai/deepstack:gpu-cu102 . -f Dockerfile.gpu --build-arg tag=gpu-cuda102-2357972848
+    - name: Clean DeepStack GPU Cuda 10_2 Version
+      run: sudo docker rm -f deepquestai/deepstack:gpu-cu102
+    - name: Build DeepStack GPU Cuda 11 Version
+      run: sudo docker build -t deepquestai/deepstack:gpu-cu110 . -f Dockerfile.gpu --build-arg tag=gpu-cuda110-2357972848
+    - name: Clean DeepStack GPU Cuda 11 Version
+      run: sudo docker rm -f deepquestai/deepstack:gpu-cu110
+    - name: Build DeepStack GPU Cuda 11_6 Version
+      run: sudo docker build -t deepquestai/deepstack:gpu-cu116 . -f Dockerfile.gpu --build-arg tag=gpu-cuda116-2357972848
+    - name: Clean DeepStack GPU Cuda 11_6 Version
+      run: sudo docker rm -f deepquestai/deepstack:gpu-cu116
+    
