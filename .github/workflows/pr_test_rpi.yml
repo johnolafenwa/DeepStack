@@ -9,7 +9,7 @@ on:
       - dev
       - master
 jobs:
-  docker-gpu-build:
+  docker-rpi-build:
     runs-on: [self-hosted, Linux, ARM64, rpi]
     steps:
     - name: Checkout repo
