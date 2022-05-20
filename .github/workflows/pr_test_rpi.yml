@@ -1,0 +1,29 @@
+name: DevTest
+on:
+  push:
+    branches:
+      - dev
+      - master
+  pull_request:
+    branches:
+      - dev
+      - master
+jobs:
+  docker-gpu-build:
+    runs-on: [self-hosted, Linux, ARM64, rpi]
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@master
+    - name: Install Pytest 
+      run: pip3 install pytest 
+    - name: Install Wget
+      run: pip3 install wget
+    - name: Install PIL
+      run: pip3 install pillow
+    - name: Download Binary Dependencies
+      run: python3 download_dependencies.py
+    - name: Build DeepStack RPI Version
+      run: sudo docker build -t deepquestai/deepstack:rpi . -f Dockerfile.arm64-rpi
+    - name: Clean DeepStack RPI Version
+      run: sudo docker rm -f deepquestai/deepstack:rpi
+    
