@@ -1,3 +1,13 @@
+from process import YOLODetector
+from PIL import UnidentifiedImageError
+import torchvision.transforms as transforms
+import traceback
+import argparse
+from PIL import Image, UnidentifiedImageError
+import torch.nn.functional as F
+import torch
+import numpy as np
+from shared import SharedOptions
 import _thread as thread
 import ast
 import io
@@ -11,23 +21,12 @@ from multiprocessing import Process
 from threading import Thread
 from queue import Queue
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
+sys.path.insert(0, os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), "."))
 
-from shared import SharedOptions
 if SharedOptions.PROFILE == "windows_native":
-    sys.path.append(os.path.join(SharedOptions.APP_DIR,"windows_packages"))
+    sys.path.append(os.path.join(SharedOptions.APP_DIR, "windows_packages"))
 
-import numpy as np
-import torch
-import torch.nn.functional as F
-from PIL import Image, UnidentifiedImageError
-
-import argparse
-import traceback
-
-import torchvision.transforms as transforms
-from PIL import UnidentifiedImageError
-from process import YOLODetector
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", type=str, default=None)
@@ -66,6 +65,7 @@ elif MODE == "Low":
     reso = SharedOptions.SETTINGS.DETECTION_LOW
 
 detector = YOLODetector(model_path, reso, cuda=CUDA_MODE)
+
 
 def run_task(q):
     while True:
@@ -151,10 +151,10 @@ def objectdetection(delay: float):
 
                 req_data = json.JSONDecoder().decode(req_data)
 
-                q.put(req_data)   
+                q.put(req_data)
 
         time.sleep(delay)
-if __name__ == "__main__":   
-    objectdetection(SharedOptions.SLEEP_TIME)  
-    
 
+
+if __name__ == "__main__":
+    objectdetection(SharedOptions.SLEEP_TIME)

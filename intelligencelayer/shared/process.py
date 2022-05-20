@@ -20,6 +20,7 @@ from utils.general import (
 import torch.nn as nn
 from utils.activations import Hardswish
 
+
 class YOLODetector(object):
     def __init__(self, model_path: str, reso: int = 640, cuda: bool = False):
 
@@ -46,7 +47,7 @@ class YOLODetector(object):
 
     def predict(self, img_path: str, confidence: float = 0.4):
 
-        confidence = max(0.1,confidence)
+        confidence = max(0.1, confidence)
 
         img0 = Image.open(img_path).convert("RGB")
         img = np.asarray(letterbox(img0, new_shape=self.reso)[0])
@@ -69,6 +70,7 @@ class YOLODetector(object):
             pred = []
         else:
             # Rescale boxes from img_size to im0 size
-            pred[:, :4] = scale_coords(img.shape[2:], pred[:, :4], img0.shape).round()
+            pred[:, :4] = scale_coords(
+                img.shape[2:], pred[:, :4], img0.shape).round()
 
         return pred

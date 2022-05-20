@@ -4,17 +4,17 @@ Usage:
     $ export PYTHONPATH="$PWD" && python models/export.py --weights ./weights/yolov5s.pt --img 640 --batch 1
 """
 
+from utils.general import set_logging
+from utils.activations import Hardswish
+from models.experimental import attempt_load
+import torch.nn as nn
+import torch
+import models
 import argparse
 import sys
 
 sys.path.append("./")  # to run '$ python *.py' files in subdirectories
 
-import models
-import torch
-import torch.nn as nn
-from models.experimental import attempt_load
-from utils.activations import Hardswish
-from utils.general import set_logging
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -52,7 +52,8 @@ if __name__ == "__main__":
 
     # TorchScript export
     try:
-        print("\nStarting TorchScript export with torch %s..." % torch.__version__)
+        print("\nStarting TorchScript export with torch %s..." %
+              torch.__version__)
         f = opt.weights.replace(".pt", ".torchscript.pt")  # filename
         ts = torch.jit.trace(model, img)
         ts.save(f)

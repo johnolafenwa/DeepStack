@@ -187,7 +187,8 @@ def get_blocks(num_layers):
 class Backbone(Module):
     def __init__(self, num_layers, drop_ratio, mode="ir"):
         super(Backbone, self).__init__()
-        assert num_layers in [50, 100, 152], "num_layers should be 50,100, or 152"
+        assert num_layers in [
+            50, 100, 152], "num_layers should be 50,100, or 152"
         assert mode in ["ir", "ir_se"], "mode should be ir or ir_se"
         blocks = get_blocks(num_layers)
         if mode == "ir":
@@ -333,7 +334,8 @@ class Residual(Module):
 class MobileFaceNet(Module):
     def __init__(self, embedding_size):
         super(MobileFaceNet, self).__init__()
-        self.conv1 = Conv_block(3, 64, kernel=(3, 3), stride=(2, 2), padding=(1, 1))
+        self.conv1 = Conv_block(3, 64, kernel=(
+            3, 3), stride=(2, 2), padding=(1, 1))
         self.conv2_dw = Conv_block(
             64, 64, kernel=(3, 3), stride=(1, 1), padding=(1, 1), groups=64
         )

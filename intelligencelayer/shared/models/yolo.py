@@ -1,15 +1,13 @@
-import argparse
-import logging
-import math
-import sys
-from copy import deepcopy
-from pathlib import Path
-
-sys.path.append("./")  # to run '$ python *.py' files in subdirectories
-logger = logging.getLogger(__name__)
-
-import torch
-import torch.nn as nn
+from utils.torch_utils import (
+    fuse_conv_and_bn,
+    initialize_weights,
+    model_info,
+    scale_img,
+    select_device,
+    time_synchronized,
+)
+from utils.general import check_anchor_order, check_file, make_divisible
+from models.experimental import C3, CrossConv, MixConv2d
 from models.common import (
     NMS,
     SPP,
@@ -20,16 +18,17 @@ from models.common import (
     DWConv,
     Focus,
 )
-from models.experimental import C3, CrossConv, MixConv2d
-from utils.general import check_anchor_order, check_file, make_divisible
-from utils.torch_utils import (
-    fuse_conv_and_bn,
-    initialize_weights,
-    model_info,
-    scale_img,
-    select_device,
-    time_synchronized,
-)
+import torch.nn as nn
+import torch
+import argparse
+import logging
+import math
+import sys
+from copy import deepcopy
+from pathlib import Path
+
+sys.path.append("./")  # to run '$ python *.py' files in subdirectories
+logger = logging.getLogger(__name__)
 
 
 class Detect(nn.Module):
@@ -76,7 +75,8 @@ class Detect(nn.Module):
                 ) * self.stride[
                     i
                 ]  # xy
-                y[..., 2:4] = (y[..., 2:4] * 2) ** 2 * self.anchor_grid[i]  # wh
+                y[..., 2:4] = (y[..., 2:4] * 2) ** 2 * \
+                    self.anchor_grid[i]  # wh
                 z.append(y.view(bs, -1, self.no))
 
         return x if self.training else (torch.cat(z, 1), x)
@@ -103,7 +103,8 @@ class Model(nn.Module):
 
         # Define model
         if nc and nc != self.yaml["nc"]:
-            print("Overriding model.yaml nc=%g with nc=%g" % (self.yaml["nc"], nc))
+            print("Overriding model.yaml nc=%g with nc=%g" %
+                  (self.yaml["nc"], nc))
             self.yaml["nc"] = nc  # override yaml value
         self.model, self.save = parse_model(
             deepcopy(self.yaml), ch=[ch]
@@ -115,7 +116,8 @@ class Model(nn.Module):
         if isinstance(m, Detect):
             s = 128  # 2x min stride
             m.stride = torch.tensor(
-                [s / x.shape[-2] for x in self.forward(torch.zeros(1, ch, s, s))]
+                [s / x.shape[-2]
+                    for x in self.forward(torch.zeros(1, ch, s, s))]
             )  # forward
             m.anchors /= m.stride.view(-1, 1, 1)
             check_anchor_order(m)
@@ -146,7 +148,8 @@ class Model(nn.Module):
                 y.append(yi)
             return torch.cat(y, 1), None  # augmented inference, train
         else:
-            return self.forward_once(x, profile)  # single-scale inference, train
+            # single-scale inference, train
+            return self.forward_once(x, profile)
 
     def forward_once(self, x, profile=False):
         y, dt = [], []  # outputs
@@ -163,7 +166,8 @@ class Model(nn.Module):
                     import thop
 
                     o = (
-                        thop.profile(m, inputs=(x,), verbose=False)[0] / 1e9 * 2
+                        thop.profile(m, inputs=(x,), verbose=False)[
+                            0] / 1e9 * 2
                     )  # FLOPS
                 except:
                     o = 0
@@ -187,7 +191,8 @@ class Model(nn.Module):
         m = self.model[-1]  # Detect() module
         for mi, s in zip(m.m, m.stride):  # from
             b = mi.bias.view(m.na, -1)  # conv.bias(255) to (3,85)
-            b[:, 4] += math.log(8 / (640 / s) ** 2)  # obj (8 objects per 640 image)
+            # obj (8 objects per 640 image)
+            b[:, 4] += math.log(8 / (640 / s) ** 2)
             b[:, 5:] += (
                 math.log(0.6 / (m.nc - 0.99))
                 if cf is None
@@ -318,11 +323,11 @@ def parse_model(d, ch):  # model_dict, input_channels(3)
             t,
             np,
         )  # attach index, 'from' index, type, number params
-        logger.info("%3s%18s%3s%10.0f  %-40s%-30s" % (i, f, n, np, t, args))  # print
+        logger.info("%3s%18s%3s%10.0f  %-40s%-30s" %
+                    (i, f, n, np, t, args))  # print
         save.extend(
             x % i for x in ([f] if isinstance(f, int) else f) if x != -1
         )  # append to savelist
         layers.append(m_)
         ch.append(c2)
     return nn.Sequential(*layers), sorted(save)
-

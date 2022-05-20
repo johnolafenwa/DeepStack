@@ -85,7 +85,8 @@ def initialize_weights(model):
     for m in model.modules():
         t = type(m)
         if t is nn.Conv2d:
-            pass  # nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+            # nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+            pass
         elif t is nn.BatchNorm2d:
             m.eps = 1e-3
             m.momentum = 0.03
@@ -140,7 +141,8 @@ def fuse_conv_and_bn(conv, bn):
     # prepare filters
     w_conv = conv.weight.clone().view(conv.out_channels, -1)
     w_bn = torch.diag(bn.weight.div(torch.sqrt(bn.eps + bn.running_var)))
-    fusedconv.weight.copy_(torch.mm(w_bn, w_conv).view(fusedconv.weight.size()))
+    fusedconv.weight.copy_(
+        torch.mm(w_bn, w_conv).view(fusedconv.weight.size()))
 
     # prepare spatial bias
     b_conv = (
@@ -151,7 +153,8 @@ def fuse_conv_and_bn(conv, bn):
     b_bn = bn.bias - bn.weight.mul(bn.running_mean).div(
         torch.sqrt(bn.running_var + bn.eps)
     )
-    fusedconv.bias.copy_(torch.mm(w_bn, b_conv.reshape(-1, 1)).reshape(-1) + b_bn)
+    fusedconv.bias.copy_(
+        torch.mm(w_bn, b_conv.reshape(-1, 1)).reshape(-1) + b_bn)
 
     return fusedconv
 
@@ -228,7 +231,8 @@ def scale_img(img, ratio=1.0, same_shape=False):  # img(16,3,256,416), r=ratio
     else:
         h, w = img.shape[2:]
         s = (int(h * ratio), int(w * ratio))  # new size
-        img = F.interpolate(img, size=s, mode="bilinear", align_corners=False)  # resize
+        img = F.interpolate(img, size=s, mode="bilinear",
+                            align_corners=False)  # resize
         if not same_shape:  # pad/crop img
             gs = 32  # (pixels) grid size
             h, w = [math.ceil(x * ratio / gs) * gs for x in (h, w)]
