@@ -1,3 +1,11 @@
+from torchvision.models import resnet50
+import torchvision.transforms as transforms
+import traceback
+from PIL import Image, UnidentifiedImageError
+import torch.nn.functional as F
+import torch
+import numpy as np
+from shared import SharedOptions, chunks
 import _thread as thread
 import ast
 import io
@@ -11,20 +19,11 @@ from multiprocessing import Process
 from threading import Thread
 from queue import Queue
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), "."))
-from shared import SharedOptions, chunks
+sys.path.insert(0, os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), "."))
 if SharedOptions.PROFILE == "windows_native":
-    sys.path.append(os.path.join(SharedOptions.APP_DIR,"windows_packages"))
+    sys.path.append(os.path.join(SharedOptions.APP_DIR, "windows_packages"))
 
-import numpy as np
-import torch
-import torch.nn.functional as F
-from PIL import Image, UnidentifiedImageError
-
-import traceback
-
-import torchvision.transforms as transforms
-from torchvision.models import resnet50
 
 class SceneModel(object):
     def __init__(self, model_path, cuda=False):
@@ -32,8 +31,10 @@ class SceneModel(object):
         self.cuda = cuda
 
         self.model = resnet50(num_classes=365)
-        checkpoint = torch.load(model_path, map_location=lambda storage, loc: storage)
-        state_dict = {str.replace(k,'module.',''): v for k,v in checkpoint['state_dict'].items()}
+        checkpoint = torch.load(
+            model_path, map_location=lambda storage, loc: storage)
+        state_dict = {str.replace(k, 'module.', ''): v for k,
+                      v in checkpoint['state_dict'].items()}
         self.model.load_state_dict(state_dict)
         self.model.eval()
         if self.cuda:
@@ -48,6 +49,7 @@ class SceneModel(object):
         out = torch.softmax(logit, 1)
 
         return out.argmax(), out.max().item()
+
 
 classes = list()
 with open(
@@ -72,7 +74,7 @@ def run_task(q):
         img_id = req_data["imgid"]
         req_id = req_data["reqid"]
         req_type = req_data["reqtype"]
-        img_path = os.path.join(SharedOptions.TEMP_PATH,img_id)
+        img_path = os.path.join(SharedOptions.TEMP_PATH, img_id)
         try:
 
             img = Image.open(img_path).convert("RGB")
@@ -88,7 +90,7 @@ def run_task(q):
                 ]
             )
             img = trans(img).unsqueeze(0)
-            
+
             os.remove(img_path)
 
             cl, conf = classifier.predict(img)
@@ -121,6 +123,7 @@ def run_task(q):
             if os.path.exists(img_path):
                 os.remove(img_path)
 
+
 def scenerecognition(delay):
 
     q = Queue(maxsize=0)
@@ -142,6 +145,7 @@ def scenerecognition(delay):
                 q.put(req_data)
 
         time.sleep(delay)
+
 
 if __name__ == "__main__":
 

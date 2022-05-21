@@ -43,7 +43,7 @@ var sub_key = ""
 
 var state = true
 var gpu = true
-var request_timeout = 60.0
+var request_timeout = 300.0
 
 var expiring_date = time.Now()
 
@@ -938,7 +938,7 @@ func main() {
 
 	floatTimeoutVal, err := strconv.ParseFloat(os.Getenv("TIMEOUT"), 32)
 	if err != nil {
-		flag.Float64Var(&request_timeout, "TIMEOUT", 60, "request timeout in seconds")
+		flag.Float64Var(&request_timeout, "TIMEOUT", request_timeout, "request timeout in seconds")
 	} else {
 		flag.Float64Var(&request_timeout, "TIMEOUT", floatTimeoutVal, "request timeout in seconds")
 	}

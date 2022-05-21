@@ -13,7 +13,7 @@ class Config:
     MODEL.OUT_CHANNEL = 3
     MODEL.N_FEATURE = 64
     MODEL.N_BLOCK = 23
-    MODEL.GROWTH_CHANNEL= 32
+    MODEL.GROWTH_CHANNEL = 32
     MODEL.DOWN = 1
     MODEL.DEVICE = 'cuda'
 
@@ -27,4 +27,3 @@ class Config:
 
 
 config = Config()
-

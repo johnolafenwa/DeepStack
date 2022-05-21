@@ -12,7 +12,7 @@ def load_model(model, path):
     except:
         copy = dict()
         for x, y in zip(model.state_dict(), checkpoint):
-            new_name = y[y.index(x) :]
+            new_name = y[y.index(x):]
             copy[new_name] = checkpoint[y]
 
 

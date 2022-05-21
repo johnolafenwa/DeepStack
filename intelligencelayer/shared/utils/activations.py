@@ -9,6 +9,7 @@ class Swish(nn.Module):  #
     def forward(x):
         return x * torch.sigmoid(x)
 
+
 class Hardswish(nn.Module):
     r"""Applies the hardswish function, element-wise, as described in the paper:
     `Searching for MobileNetV3`_.
@@ -32,6 +33,7 @@ class Hardswish(nn.Module):
 
     def forward(self, input: torch.Tensor) -> torch.Tensor:
         return F.hardswish(input)
+
 
 class MemoryEfficientSwish(nn.Module):
     class F(torch.autograd.Function):

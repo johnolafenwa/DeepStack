@@ -110,7 +110,8 @@ class MixConv2d(nn.Module):
         groups = len(k)
         if equal_ch:  # equal c_ per group
             i = torch.linspace(0, groups - 1e-6, c2).floor()  # c2 indices
-            c_ = [(i == g).sum() for g in range(groups)]  # intermediate channels
+            c_ = [(i == g).sum()
+                  for g in range(groups)]  # intermediate channels
         else:  # equal weight.numel() per group
             b = [c2] + [0] * groups
             a = np.eye(groups + 1, groups, k=-1)
@@ -153,9 +154,10 @@ def attempt_load(weights, map_location=None):
     # Loads an ensemble of models weights=[a,b,c] or a single model weights=[a] or weights=a
     model = Ensemble()
     for w in weights if isinstance(weights, list) else [weights]:
-        
+
         model.append(
-            torch.load(w, map_location=map_location)["model"].float().fuse().eval()
+            torch.load(w, map_location=map_location)[
+                "model"].float().fuse().eval()
         )  # load FP32 model
 
     if len(model) == 1:

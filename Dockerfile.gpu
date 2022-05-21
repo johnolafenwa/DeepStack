@@ -1,4 +1,6 @@
-FROM deepquestai/deepstack-base:gpu-1647248158 as gpu
+ARG tag
+
+FROM deepquestai/deepstack-base:${tag} as gpu
 
 ENV SLEEP_TIME 0.01
 ENV TIMEOUT 60
