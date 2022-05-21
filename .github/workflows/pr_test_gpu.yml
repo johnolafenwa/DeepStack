@@ -22,13 +22,11 @@ jobs:
       run: pip3 install pillow
     - name: Download Binary Dependencies
       run: python3 download_dependencies.py
-    - name: Build DeepStack GPU Cuda 10 Version
-      run: sudo docker build -t deepquestai/deepstack:gpu-cu100 . -f Dockerfile.gpu --build-arg tag=gpu-cuda100-2357972848
-    - name: Clean DeepStack GPU Cuda 10 Version
-      run: sudo docker rm -f deepquestai/deepstack:gpu-cu100
+    - name: Build DeepStack GPU Version
+      run: sudo docker build -t deepquestai/deepstack:gpu . -f Dockerfile.gpu --build-arg tag=gpu-1647248158
     - name: Test Scene
       run: |
-        sudo docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:gpu-cu100
+        sudo docker run --gpus all -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:gpu
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
@@ -38,7 +36,7 @@ jobs:
 
     - name: Test Detection
       run: |
-        sudo docker run -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:gpu-cu100
+        sudo docker run --gpus all -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:gpu
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
@@ -48,7 +46,7 @@ jobs:
 
     - name: Test Face
       run: |
-        sudo docker run -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:gpu-cu100
+        sudo docker run --gpus all -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:gpu
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
@@ -60,7 +58,7 @@ jobs:
       run: |
         cd tests
         modeldir=$(pwd)
-        sudo docker run -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:gpu-cu100
+        sudo docker run --gpus all -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:gpu
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80" 
         cd custom
@@ -68,12 +66,14 @@ jobs:
         sudo docker container rm -f deepstack
     - name: Test Enhance
       run: |
-        sudo docker run -d --name deepstack -e VISION-ENHANCE=True -p 80:5000 deepquestai/deepstack:gpu-cu100
+        sudo docker run --gpus all -d --name deepstack -e VISION-ENHANCE=True -p 80:5000 deepquestai/deepstack:gpu
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
         cd enhance
         python3 -m pytest
         sudo docker container rm -f deepstack
+    - name: Clean DeepStack GPU Version
+      run: sudo docker image rm -f deepquestai/deepstack:gpu
    
     

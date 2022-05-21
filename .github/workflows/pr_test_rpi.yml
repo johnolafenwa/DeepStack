@@ -24,6 +24,15 @@ jobs:
       run: python3 download_dependencies.py
     - name: Build DeepStack RPI Version
       run: sudo docker build -t deepquestai/deepstack:rpi . -f Dockerfile.arm64-rpi
+    - name: Test Scene
+      run: |
+        sudo docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:cpu
+        cd tests
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd scene
+        python3 -m pytest
+        sudo docker container rm -f deepstack
     - name: Clean DeepStack RPI Version
-      run: sudo docker rm -f deepquestai/deepstack:rpi
+      run: sudo docker image rm -f deepquestai/deepstack:rpi
     
