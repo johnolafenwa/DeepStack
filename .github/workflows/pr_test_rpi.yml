@@ -26,7 +26,7 @@ jobs:
       run: sudo docker build -t deepquestai/deepstack:rpi . -f Dockerfile.arm64-rpi
     - name: Test Scene
       run: |
-        sudo docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:cpu
+        sudo docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:rpi
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
