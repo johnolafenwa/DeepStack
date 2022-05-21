@@ -22,17 +22,19 @@ jobs:
       run: pip3 install pillow
     - name: Download Binary Dependencies
       run: python3 download_dependencies.py
+    - name: Clean DeepStack Container
+      run: docker container rm -f deepstack
     - name: Build DeepStack RPI Version
-      run: sudo docker build -t deepquestai/deepstack:rpi . -f Dockerfile.arm64-rpi
+      run: docker build -t deepquestai/deepstack:rpi . -f Dockerfile.arm64-rpi
     - name: Test Scene
       run: |
-        sudo docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:rpi
+        docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:rpi
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
         cd scene
         python3 -m pytest
-        sudo docker container rm -f deepstack
+        docker container rm -f deepstack
     - name: Clean DeepStack RPI Version
-      run: sudo docker image rm -f deepquestai/deepstack:rpi
+      run: docker image rm -f deepquestai/deepstack:rpi
     

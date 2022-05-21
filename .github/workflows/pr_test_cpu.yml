@@ -24,57 +24,59 @@ jobs:
       run: pip3 install pillow
     - name: Download Binary Dependencies
       run: python3 download_dependencies.py
+    - name: Clean DeepStack Container
+      run: docker container rm -f deepstack
     - name: Build DeepStack CPU Version
-      run: sudo docker build -t deepquestai/deepstack:cpu . -f Dockerfile.cpu
+      run: docker build -t deepquestai/deepstack:cpu . -f Dockerfile.cpu
     - name: Test Scene
       run: |
-        sudo docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:cpu
+        docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:cpu
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
         cd scene
         python3 -m pytest
-        sudo docker container rm -f deepstack
+        docker container rm -f deepstack
 
     - name: Test Detection
       run: |
-        sudo docker run -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:cpu
+        docker run -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:cpu
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
         cd detection
         python3 -m pytest
-        sudo docker container rm -f deepstack
+        docker container rm -f deepstack
 
     - name: Test Face
       run: |
-        sudo docker run -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:cpu
+        docker run -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:cpu
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
         cd face
         python3 -m pytest
-        sudo docker container rm -f deepstack
+        docker container rm -f deepstack
 
     - name: Test Custom Detection
       run: |
         cd tests
         modeldir=$(pwd)
-        sudo docker run -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:cpu
+        docker run -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:cpu
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80" 
         cd custom
         python3 -m pytest
-        sudo docker container rm -f deepstack
+        docker container rm -f deepstack
     - name: Test Enhance
       run: |
-        sudo docker run -d --name deepstack -e VISION-ENHANCE=True -p 80:5000 deepquestai/deepstack:cpu
+        docker run -d --name deepstack -e VISION-ENHANCE=True -p 80:5000 deepquestai/deepstack:cpu
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
         cd enhance
         python3 -m pytest
-        sudo docker container rm -f deepstack
+        docker container rm -f deepstack
   windows-build:
     runs-on: windows-2019
     steps:
