@@ -24,6 +24,7 @@ jobs:
       run: python3 download_dependencies.py
     - name: Clean DeepStack Container
       run: docker container rm -f deepstack
+      continue-on-error: true
     - name: Build DeepStack GPU Version
       run: docker build -t deepquestai/deepstack:gpu . -f Dockerfile.gpu --build-arg tag=gpu-1647248158
     - name: Test Scene
