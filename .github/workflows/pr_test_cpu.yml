@@ -26,6 +26,7 @@ jobs:
       run: python3 download_dependencies.py
     - name: Clean DeepStack Container
       run: docker container rm -f deepstack
+      continue-on-error: true
     - name: Build DeepStack CPU Version
       run: docker build -t deepquestai/deepstack:cpu . -f Dockerfile.cpu
     - name: Test Scene

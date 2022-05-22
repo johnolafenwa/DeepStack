@@ -14,6 +14,8 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@master
+    - name: Fetch GIT LFS
+      run: git lfs checkout && git lfs pull
     - name: Install Pytest 
       run: pip3 install pytest 
     - name: Install Wget
@@ -24,6 +26,7 @@ jobs:
       run: python3 download_dependencies.py
     - name: Clean DeepStack Container
       run: docker container rm -f deepstack
+      continue-on-error: true
     - name: Build DeepStack RPI Version
       run: docker build -t deepquestai/deepstack:rpi . -f Dockerfile.arm64-rpi
     - name: Test Scene
@@ -35,6 +38,45 @@ jobs:
         cd scene
         python3 -m pytest
         docker container rm -f deepstack
+    
+    - name: Test Detection
+      run: |
+        docker run -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:rpi
+        cd tests
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd detection
+        python3 -m pytest
+        docker container rm -f deepstack
+
+    - name: Test Face
+      run: |
+        docker run -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:rpi
+        cd tests
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd face
+        python3 -m pytest
+        docker container rm -f deepstack
+
+    - name: Test Custom Detection
+      run: |
+        cd tests
+        modeldir=$(pwd)
+        docker run -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:rpi
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80" 
+        cd custom
+        python3 -m pytest
+        docker container rm -f deepstack
+    - name: Test Enhance
+      run: |
+        docker run -d --name deepstack -e VISION-ENHANCE=True -p 80:5000 deepquestai/deepstack:rpi
+        cd tests
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd enhance
+        python3 -m pytest
+        docker container rm -f deepstack
     - name: Clean DeepStack RPI Version
       run: docker image rm -f deepquestai/deepstack:rpi
-    

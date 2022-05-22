@@ -14,6 +14,8 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@master
+    - name: Fetch GIT LFS
+      run: git lfs checkout && git lfs pull
     - name: Install Pytest 
       run: pip3 install pytest 
     - name: Install Wget
@@ -24,6 +26,7 @@ jobs:
       run: python3 download_dependencies.py
     - name: Clean DeepStack Container
       run: docker container rm -f deepstack
+      continue-on-error: true
     - name: Build DeepStack GPU Version
       run: docker build -t deepquestai/deepstack:gpu . -f Dockerfile.gpu --build-arg tag=gpu-1647248158
     - name: Test Scene
