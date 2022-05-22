@@ -43,7 +43,7 @@ jobs:
     
     - name: Test Detection
       run: |
-        docker run -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:cpu
+        docker run -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:rpi
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
@@ -53,7 +53,7 @@ jobs:
 
     - name: Test Face
       run: |
-        docker run -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:cpu
+        docker run -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:rpi
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
@@ -65,7 +65,7 @@ jobs:
       run: |
         cd tests
         modeldir=$(pwd)
-        docker run -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:cpu
+        docker run -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:rpi
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80" 
         cd custom
@@ -73,7 +73,7 @@ jobs:
         docker container rm -f deepstack
     - name: Test Enhance
       run: |
-        docker run -d --name deepstack -e VISION-ENHANCE=True -p 80:5000 deepquestai/deepstack:cpu
+        docker run -d --name deepstack -e VISION-ENHANCE=True -p 80:5000 deepquestai/deepstack:rpi
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
