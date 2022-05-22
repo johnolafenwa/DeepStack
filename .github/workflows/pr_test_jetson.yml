@@ -9,8 +9,8 @@ on:
       - dev
       - master
 jobs:
-  docker-rpi-build:
-    runs-on: [self-hosted, Linux, ARM64, rpi]
+  docker-jetson-build:
+    runs-on: [self-hosted, Linux, ARM64, jetson]
     steps:
     - name: Checkout repo
       uses: actions/checkout@master
@@ -27,11 +27,11 @@ jobs:
     - name: Clean DeepStack Container
       run: docker container rm -f deepstack
       continue-on-error: true
-    - name: Build DeepStack RPI Version
-      run: docker build -t deepquestai/deepstack:rpi . -f Dockerfile.arm64-rpi
+    - name: Build DeepStack jetson Version
+      run: docker build -t deepquestai/deepstack:jetson . -f Dockerfile.gpu-jetpack
     - name: Test Scene
       run: |
-        docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:rpi
+        docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:jetson
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
@@ -41,7 +41,7 @@ jobs:
     
     - name: Test Detection
       run: |
-        docker run -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:rpi
+        docker run -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:jetson
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
@@ -51,7 +51,7 @@ jobs:
 
     - name: Test Face
       run: |
-        docker run -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:rpi
+        docker run -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:jetson
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
@@ -63,11 +63,11 @@ jobs:
       run: |
         cd tests
         modeldir=$(pwd)
-        docker run -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:rpi
+        docker run -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:jetson
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80" 
         cd custom
         python3 -m pytest
         docker container rm -f deepstack
-    - name: Clean DeepStack RPI Version
-      run: docker image rm -f deepquestai/deepstack:rpi
+    - name: Clean DeepStack jetson Version
+      run: docker image rm -f deepquestai/deepstack:jetson
