@@ -80,3 +80,5 @@ jobs:
         cd enhance
         python3 -m pytest
         docker container rm -f deepstack
+    - name: Clean DeepStack RPI Version
+      run: docker image rm -f deepquestai/deepstack:rpi
