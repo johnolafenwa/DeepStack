@@ -31,7 +31,7 @@ jobs:
       run: docker build -t deepquestai/deepstack:jetson . -f Dockerfile.gpu-jetpack
     - name: Test Scene
       run: |
-        docker run -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:jetson
+        docker run --gpus all -d --name deepstack -e VISION-SCENE=True -p 80:5000 deepquestai/deepstack:jetson
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
@@ -41,7 +41,7 @@ jobs:
     
     - name: Test Detection
       run: |
-        docker run -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:jetson
+        docker run --gpus all -d --name deepstack -e VISION-DETECTION=True -p 80:5000 deepquestai/deepstack:jetson
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
@@ -51,7 +51,7 @@ jobs:
 
     - name: Test Face
       run: |
-        docker run -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:jetson
+        docker run --gpus all -d --name deepstack -e VISION-FACE=True -p 80:5000 deepquestai/deepstack:jetson
         cd tests
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80"
@@ -63,7 +63,7 @@ jobs:
       run: |
         cd tests
         modeldir=$(pwd)
-        docker run -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:jetson
+        docker run --gpus all -d --name deepstack -v $modeldir/"test_data":/modelstore/detection -p 80:5000 deepquestai/deepstack:jetson
         export TEST_DATA_DIR=$PWD"/test_data"
         export TEST_DEEPSTACK_URL="http://localhost:80" 
         cd custom
