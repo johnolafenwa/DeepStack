@@ -124,3 +124,8 @@ type SuperresolutionResponse struct {
 	Width   int    `json:"width"`
 	Height  int    `json:"height"`
 }
+
+type FacelandmarkResponse struct{
+	Success bool   `json:"success"`
+	Base64  string `json:"base64"`
+}

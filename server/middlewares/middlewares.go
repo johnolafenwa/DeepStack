@@ -153,6 +153,32 @@ func CheckSuperresolution() gin.HandlerFunc {
 	}
 }
 
+func CheckLandmark() gin.HandlerFunc {
+
+	return func(c *gin.Context) {
+
+		activate_landmark := false
+		landmark := os.Getenv("VISION_LANDMARK")
+
+		if landmark == "True" {
+
+			activate_landmark = true
+
+		}
+		if activate_landmark == false {
+
+			response := response.ErrorResponse{Success: false, Error: "Landmark endpoint not activated"}
+			c.JSON(403, response)
+			c.Abort()
+
+		} else {
+			c.Next()
+		}
+
+	}
+
+}
+
 func CheckApiKey(sub_data *structures.ActivationData, settings *structures.Settings) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
