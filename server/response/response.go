@@ -125,7 +125,12 @@ type SuperresolutionResponse struct {
 	Height  int    `json:"height"`
 }
 
+type LandmarkDetectionPrediction struct{
+	X int `json:"x"`
+	Y int `json:"y"`
+}
 type FacelandmarkResponse struct{
 	Success bool   `json:"success"`
 	Base64  string `json:"base64"`
+	Predictions []LandmarkDetectionPrediction `json:"predictions"`
 }

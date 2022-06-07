@@ -1,5 +1,5 @@
 from intelligencelayer.shared.facelandmark.utils import landmarks_draw, transform_img
-from intelligencelayer.shared.superresolution import SHARED_APP_DIR
+
 from shared import SharedOptions
 from PIL import Image
 from io import BytesIO
@@ -84,6 +84,19 @@ def run_task(q):
                         outputs.append(landmarks_predictions.cpu(),(x,y,w,h))
                         return landmarks_draw(frame, outputs)
                 output=inference(img)
+                #getting the 68 landmark coordinates
+                
+
+                vec =np.empty((68,2), dtype=int)
+                for i in range(68):
+                    vec[i][0]=output[0][i][0]
+                    vec[i][1]=output[0][i][1]
+
+                    detection={
+                        "x": int(vec[i][0]),
+                        "y": int(vec[i][1]),
+                    }
+                    
                 output_pil=Image.fromarray(output)
                 buffered = BytesIO()
                 output_pil.save(buffered, format="JPEG")
@@ -91,6 +104,7 @@ def run_task(q):
                 output_response={
                     "Sucess":True,
                     "base64_img":base64_img.decode('utf-8'),
+                    "predictions":detection,
                 }
         except Exception as e:
             output_response={

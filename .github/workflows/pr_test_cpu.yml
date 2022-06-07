@@ -78,6 +78,16 @@ jobs:
         cd enhance
         python3 -m pytest
         docker container rm -f deepstack
+    - name: Test Landmark Detection
+      run: |
+        docker run -d --name deepstack -e VISION_LANDMARK=True -p 80:5000 deepquestai/deepstack:cpu
+        cd tests
+        export TEST_DATA_DIR=$PWD"/test_data"
+        export TEST_DEEPSTACK_URL="http://localhost:80"
+        cd landmarkdetection
+        python3 -m pytest
+        docker container rm -f deepstack
+
   windows-build:
     runs-on: windows-2019
     steps:
