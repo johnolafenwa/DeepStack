@@ -131,6 +131,5 @@ type LandmarkDetectionPrediction struct{
 }
 type FacelandmarkResponse struct{
 	Success bool   `json:"success"`
-	Base64  string `json:"base64"`
 	Predictions []LandmarkDetectionPrediction `json:"predictions"`
 }
