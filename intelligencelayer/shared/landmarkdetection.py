@@ -15,6 +15,7 @@ from queue import Queue
 import cv2
 from imutils import face_utils
 import dlib
+
 import json
 
 from facelandmark.utils import load_model
@@ -56,7 +57,8 @@ load_model(model, model_path, strict=True, cpu=use_cpu)
 
 scale=config.MODEL.SCALE
 
-detector=dlib.get_frontal_face_detector()
+detector=dlib.get_frontal_face_detector() #using the dlib face detector for face detection
+
 
 def run_task(q):
     while True:
@@ -71,39 +73,38 @@ def run_task(q):
 
 
                 img=Image.open(img_path)
-
+                
+              
+            
                 def inference(frame):
                     gray=cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                    faces=detector(gray,1)
+                    faces=detector(gray, 1)
+                    
                     outputs=[]
                     for (i,face) in enumerate(faces):
-                        (x,y,w,h)=face_utils.rect_to_bb(face)
-                        crop_img=gray[y:y+h, x:x+w]
-                        transformed_img=transform_img(crop_img)
-                        landmarks_predictions=model(transformed_img.cpu())
-                        outputs.append(landmarks_predictions.cpu(),(x,y,w,h))
+                        (x,y,w,h)=face_utils.rect_to_bb(face) #convert dlib rectangle to bounding boxes
+                       
+                        transformed_img=transform_img(gray)
+                        landmarks_predictions=model(transformed_img.to(device))
+                        outputs.append(landmarks_predictions.to(device),(x,y,w,h))
                         return landmarks_draw(frame, outputs)
-                output=inference(img)
-                #getting the 68 landmark coordinates
-                
-
-                vec =np.empty((68,2), dtype=int)
+                #
+                landmark_arr=inference(img)
+        
                 for i in range(68):
-                    vec[i][0]=output[0][i][0]
-                    vec[i][1]=output[0][i][1]
+                    x=landmark_arr[0][i][0]
+                    y=landmark_arr[0][i][1]
 
                     detection={
-                        "x": int(vec[i][0]),
-                        "y": int(vec[i][1]),
+                        "x": x,
+                        "y": y,
                     }
                     
-                output_pil=Image.fromarray(output)
-                buffered = BytesIO()
-                output_pil.save(buffered, format="JPEG")
-                base64_img = base64.b64encode(buffered.getvalue())
+                
+                
                 output_response={
                     "Sucess":True,
-                    "base64_img":base64_img.decode('utf-8'),
+                   
                     "predictions":detection,
                 }
         except Exception as e:
