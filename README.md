@@ -135,17 +135,21 @@ Visit [https://docs.deepstack.cc/getting-started](https://docs.deepstack.cc/gett
 # Integrations and Community
 The DeepStack ecosystem includes a number of popular integrations and libraries built to expand the functionalities of the AI engine to serve IoT, industrial, monitoring and research applications. A number of them are listed below
 
-- [HASS-DeepStack-Object](https://github.com/robmarkcole/HASS-Deepstack-object)
-- [HASS-DeepStack-Face](https://github.com/robmarkcole/HASS-Deepstack-face)
-- [HASS-DeepStack-Scene](https://github.com/robmarkcole/HASS-Deepstack-scene)
-- [DeepStack with Blue Iris - YouTube video](https://www.youtube.com/watch?v=fwoonl5JKgo)
-- [DeepStack with Blue Iris - Forum Discussion](https://ipcamtalk.com/threads/tool-tutorial-free-ai-person-detection-for-blue-iris.37330/)
-- [DeepStack on Home Assistant](https://community.home-assistant.io/t/face-and-person-detection-with-deepstack-local-and-free/92041)
-- [DeepStack-UI](https://github.com/robmarkcole/deepstack-ui)
-- [DeepStack-Python Helper](https://github.com/robmarkcole/deepstack-python)
-- [DeepStack-Analytics](https://github.com/robmarkcole/deepstack-analytics)
-- [DeepStackAI Trigger](https://github.com/danecreekphotography/node-deepstackai-trigger)
-
+- **[HASS-DeepStack-Object](https://github.com/robmarkcole/HASS-Deepstack-object)**: An [Home Assistant](https://www.home-assistant.io/) addon by [Robin Cole](https://github.com/robmarkcole) for detecting common and custom objects
+- **[HASS-DeepStack-Face](https://github.com/robmarkcole/HASS-Deepstack-face)**: An [Home Assistant](https://www.home-assistant.io/) addon by [Robin Cole](https://github.com/robmarkcole) for face detection, registration and recognition
+- **[HASS-DeepStack-Scene](https://github.com/robmarkcole/HASS-Deepstack-scene)**: An [Home Assistant](https://www.home-assistant.io/) addon by [Robin Cole](https://github.com/robmarkcole) for scene recognition
+- **[DeepStack with Blue Iris - YouTube video](https://www.youtube.com/watch?v=fwoonl5JKgo)**: A DeepStack + BluIris setup tutorial by [TheHookUp](https://www.youtube.com/c/TheHookUp) YouTube channel
+- **[Blue Iris + Deepstack BUILT IN! Full Walk Through](https://www.youtube.com/watch?v=nLH9GEcdb9Y)**: Another and very recent DeepStack + BluIris setup tutorial by [TheHookUp](https://www.youtube.com/c/TheHookUp) YouTube channel
+- **[DeepStack with Blue Iris - Forum Discussion](https://ipcamtalk.com/threads/tool-tutorial-free-ai-person-detection-for-blue-iris.37330/)**: A comprehensive DeepStack discussion thread on the IPCamTalk website.
+- **[DeepStack on Home Assistant](https://community.home-assistant.io/t/face-and-person-detection-with-deepstack-local-and-free/92041)**: A comprehensive DeepStack discussion thread on the Home Assistant forum website.
+- **[DeepStack-UI](https://github.com/robmarkcole/deepstack-ui)**:  A Streamlit by [Robin Cole](https://github.com/robmarkcole) for exploring DeepStack's features
+- **[DeepStack-Python Helper](https://github.com/robmarkcole/deepstack-python)**: A Python client library by [Robin Cole](https://github.com/robmarkcole) for DeepStack APIs
+- **[DeepStack-Analytics](https://github.com/robmarkcole/deepstack-analytics)**: A analytics tool by [Robin Cole](https://github.com/robmarkcole) for exploring DeepStack's APIs
+- **[DeepStackAI Trigger](https://github.com/danecreekphotography/node-deepstackai-trigger)**: A DeepStack automation system integration with MQTT and Telegram support by [Neil Enns](https://github.com/neilenns)
+- **[node-red-contrib-deepstack](https://github.com/iceglow/node-red-contrib-deepstack)**: A [NodeRED](https://github.com/node-red/node-red) integration for all DeepStack APIs by [Joakim Lundin](https://github.com/iceglow)
+- **[DeepStack_USPS](https://github.com/sstratoti/DeepStack_USPS)**: A custom DeepStack model for detecting USPS logo by [Stephen Stratoti](https://github.com/sstratoti)
+- **[AgenDVR](https://www.ispyconnect.com/userguide-agent-deepstack-ai.aspx)**: A DVR platform with DeepStack integrations built by [Sean Tearney](https://github.com/ispysoftware)
+- **[On-Guard](https://github.com/Ken98045/On-Guard)**: A security camera application for HTTP, ONVIF and FTP with DeepStack integrations by [Ken](https://github.com/Ken98045)
 
 # Contributors Guide
 (coming soon)
