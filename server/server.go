@@ -93,7 +93,7 @@ func scene(c *gin.Context) {
 				return
 
 			}
-			break
+			
 
 		} else if duration > request_timeout {
 
@@ -105,6 +105,53 @@ func scene(c *gin.Context) {
 
 		time.Sleep(5 * time.Millisecond)
 	}
+}
+
+
+
+
+
+/// Landmark detection func 
+
+
+
+func landmarkdetection(c *gin.Context, queue_name string) {
+	img_id := uuid.NewV4().String()
+	req_id := uuid.NewV4().String()
+
+	landmark_req:=requests.FacelandmarkRequest{Imgid: img_id, Reqtype: "landmark", Reqid: req_id}
+	landmark_req_string,_:=json.Marshal(landmark_req)
+	file,_:= c.FormFile("image")
+	c.SaveUploadedFile(file, filepath.Join(temp_path, img_id))
+	redis_client.RPush(queue_name, landmark_req_string)
+	t1:= time.Now()
+	for true{
+		output,_:=redis_client.Get(req_id).Result()
+		duration:=time.Since(t1).Seconds()
+
+		if output != ""{
+			var res response.FacelandmarkResponse
+			json.Unmarshal([]byte(output),&res)
+			if res.Success == false{
+				var error_response  response.ErrorResponseInternal
+				json.Unmarshal([]byte(output),&error_response)
+				final_response := response.ErrorResponse{Success: false, Error: error_response.Error}
+				c.JSON(error_response.Code,final_response)
+				return
+
+			} else {
+				c.JSON(200, res)
+				return
+			}
+		}else if duration > request_timeout{
+			final_reponse:=response.ErrorResponse{ Success: false, Error: "Failed to process request before timeout"}
+			c.JSON(500, final_reponse)
+			return
+		}
+		time.Sleep(1* time.Millisecond)
+	}
+
+
 }
 
 func detection(c *gin.Context, queue_name string) {
@@ -160,7 +207,7 @@ func detection(c *gin.Context, queue_name string) {
 				return
 			}
 
-			break
+			
 		} else if duration > request_timeout {
 
 			final_res := response.ErrorResponse{Success: false, Error: "failed to process request before timeout"}
@@ -285,7 +332,7 @@ func facerecognition(c *gin.Context) {
 				return
 			}
 
-			break
+			
 		} else if duration > request_timeout {
 
 			final_res := response.ErrorResponse{Success: false, Error: "failed to process request before timeout"}
@@ -307,7 +354,7 @@ func faceregister(c *gin.Context) {
 	user_images := []string{}
 
 	if form != nil {
-		for filename, _ := range form.File {
+		for filename := range form.File {
 			file, _ := c.FormFile(filename)
 			img_id := uuid.NewV4().String()
 			c.SaveUploadedFile(file, filepath.Join(temp_path, img_id))
@@ -350,7 +397,7 @@ func faceregister(c *gin.Context) {
 				return
 			}
 
-			break
+			
 		} else if duration > request_timeout {
 
 			final_res := response.ErrorResponse{Success: false, Error: "failed to process request before timeout"}
@@ -370,7 +417,7 @@ func facematch(c *gin.Context) {
 	user_images := []string{}
 
 	if form != nil {
-		for filename, _ := range form.File {
+		for filename := range form.File {
 			file, _ := c.FormFile(filename)
 			img_id := uuid.NewV4().String()
 			c.SaveUploadedFile(file, filepath.Join(temp_path, img_id))
@@ -413,7 +460,7 @@ func facematch(c *gin.Context) {
 				return
 			}
 
-			break
+			
 		} else if duration > request_timeout {
 
 			final_res := response.ErrorResponse{Success: false, Error: "failed to process request before timeout"}
@@ -599,7 +646,7 @@ func single_request_loop(c *gin.Context, queue_name string) {
 
 			}
 
-			break
+			
 		}
 
 		time.Sleep(1 * time.Millisecond)
@@ -750,7 +797,7 @@ func superresolution(c *gin.Context, queue_name string) {
 				return
 			}
 
-			break
+			
 		} else if duration > request_timeout {
 
 			final_res := response.ErrorResponse{Success: false, Error: "failed to process request before timeout"}
@@ -861,6 +908,7 @@ func initActivation() {
 	enhance := os.Getenv("VISION_ENHANCE")
 	api_key := os.Getenv("API_KEY")
 	send_logs := os.Getenv("SEND_LOGS")
+	landmark:= os.Getenv("VISION_LANDMARK")
 
 	if os.Getenv("VISION-FACE") == "" {
 		os.Setenv("VISION-FACE", face)
@@ -873,6 +921,10 @@ func initActivation() {
 	}
 	if os.Getenv("VISION-ENHANCE") == "" {
 		os.Setenv("VISION-ENHANCE", enhance)
+	}
+	if os.Getenv("VISION_LANDMARK") == "" {
+		os.Setenv("VISION_LANDMARK", landmark)
+	
 	}
 	if os.Getenv("API-KEY") == "" {
 		os.Setenv("API-KEY", api_key)
@@ -902,6 +954,7 @@ func main() {
 	var certPath string
 	var sendLogs string
 	var threadcount int
+	var LandmarkDetection string
 
 	if os.Getenv("PROFILE") == "" {
 		os.Chdir("C://DeepStack//server")
@@ -935,6 +988,7 @@ func main() {
 	flag.StringVar(&adminKey, "ADMIN-KEY", os.Getenv("ADMIN-KEY"), "admin key to secure admin endpoints")
 	flag.StringVar(&modelStoreDetection, "MODELSTORE-DETECTION", "/modelstore/detection/", "path to custom detection models")
 	flag.StringVar(&certPath, "CERT-PATH", "/cert", "path to ssl certificate files")
+	flag.StringVar(&LandmarkDetection, "VISION_LANDMARK", os.Getenv("VISION_LANDMARK"), "enable landmark detection")
 
 	floatTimeoutVal, err := strconv.ParseFloat(os.Getenv("TIMEOUT"), 32)
 	if err != nil {
@@ -1007,6 +1061,7 @@ func main() {
 		os.Setenv("APPDIR", APPDIR)
 		os.Setenv("MODE", mode)
 		os.Setenv("THREADCOUNT", strconv.Itoa(threadcount))
+		os.Setenv("VISION_LANDMARK", LandmarkDetection)
 	}
 
 	if DATA_DIR == "" {
@@ -1064,6 +1119,7 @@ func main() {
 	faceScript := filepath.Join(APPDIR, "intelligencelayer/shared/face.py")
 	sceneScript := filepath.Join(APPDIR, "intelligencelayer/shared/scene.py")
 	enhanceScript := filepath.Join(APPDIR, "intelligencelayer/shared/superresolution.py")
+	landmarkScript := filepath.Join(APPDIR, "intelligencelayer/shared/landmarkdetection.py")
 
 	initcmd := exec.CommandContext(ctx, "bash", "-c", interpreter+" "+initScript)
 	if PROFILE == "windows_native" {
@@ -1116,6 +1172,26 @@ func main() {
 
 		// go utils.KeepProcess(detectioncmd, redis_client, "detection", PROFILE, interpreter, detectionScript, APPDIR, stdout, stderr, &ctx, startedProcesses)
 
+	}
+
+
+	if LandmarkDetection == "True" {
+		landmarkcmd:= exec.CommandContext(ctx, "bash", "-c", interpreter+" "+landmarkScript)
+		if PROFILE == "windows_native" {
+		landmarkcmd = exec.CommandContext(ctx, interpreter, landmarkScript)
+		}
+		startedProcesses =append(startedProcesses, landmarkcmd)
+		landmarkcmd.Dir= filepath.Join(APPDIR, "intelligencelayer/shared")
+		landmarkcmd.Stdout = stdout
+		landmarkcmd.Stderr = stderr
+		landmarkcmd.Env = os.Environ()
+
+		err = landmarkcmd.Start()
+		if err != nil {
+			stderr.WriteString("Landmark detection process failed to start" + err.Error())
+		}
+	
+	
 	}
 
 	if visionFace == "True" {
@@ -1225,6 +1301,12 @@ func main() {
 		vision.POST("/enhance", middlewares.CheckSuperresolution(), middlewares.CheckImage(), func(c *gin.Context) {
 
 			superresolution(c, "superresolution_queue")
+
+		})
+		/// adding landmark detection endpoint
+		vision.POST("/landmark", middlewares.CheckLandmark(), middlewares.CheckImage(), func (c*gin.Context){
+			
+			landmarkdetection(c, "landmark_queue")
 
 		})
 

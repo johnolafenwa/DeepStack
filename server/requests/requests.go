@@ -50,3 +50,8 @@ type SuperresolutionRequest struct {
 	Reqtype string `json:"reqtype"`
 	Reqid   string `json:"reqid"`
 }
+
+type FacelandmarkRequest struct {
+	Imgid   string `json:"imgid"`
+	Reqtype string `json:"reqtype"`
+	Reqid   string `json:"reqid"`}
