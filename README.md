@@ -7,7 +7,7 @@ The World's Leading Cross Platform AI Engine for Edge Devices, with over `10 mil
 
 ![DevTest](https://github.com/johnolafenwa/DeepStack/workflows/DevTest/badge.svg)
 
-**Website**: [https://deepstack.cc](https://deepstack.cc)
+**Website**: [https://deepstack.readthedocs.io/](https://deepstack.readthedocs.io/)
 
 **Documentation**: [https://docs.deepstack.cc](https://docs.deepstack.cc)
 
