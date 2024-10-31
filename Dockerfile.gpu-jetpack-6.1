@@ -1,0 +1,82 @@
+FROM nvcr.io/nvidia/l4t-jetpack:r36.4.0
+
+RUN apt update -y
+RUN apt install software-properties-common -y
+
+# Install redis
+RUN apt install redis-server -y
+
+# Install graphic libraries
+RUN apt install ffmpeg libjpeg-dev libpng-dev -y
+
+# Install system packages required by PyTorch:
+RUN apt install git python3-pip libpython3-dev zlib1g-dev libopenblas-dev libavcodec-dev libavformat-dev libswscale-dev libopenmpi-dev libomp-dev -y
+
+# Install PyTorch for python 3.10.12
+RUN wget https://nvidia.box.com/shared/static/0h6tk4msrl9xz3evft9t0mpwwwkw7a32.whl -O torch-2.1.0-cp310-cp310-linux_aarch64.whl
+RUN pip3 install torch-2.1.0-cp310-cp310-linux_aarch64.whl
+ENV LD_LIBRARY_PATH /usr/lib/llvm-14/lib:$LD_LIBRARY_PATH
+
+# Install torchvision for python 3.10.12
+RUN git clone --branch v0.16.0 https://github.com/pytorch/vision torchvision
+RUN cd torchvision && export BUILD_VERSION=0.16.0 && export TORCH_CUDA_ARCH_LIST="5.0;5.2;5.3;6.0;6.1;6.2;7.0;7.2;7.5;8.0;8.6;8.7;8.9;9.0+PTX" && export FORCE_CUDA=1 && python3 setup.py install --user
+RUN rm -rf torchvision
+
+ENV SLEEP_TIME 0.01
+ENV TIMEOUT 60
+ENV SEND_LOGS True
+ENV CUDA_MODE True
+ENV APPDIR /app
+
+RUN mkdir /deeptemp
+RUN mkdir /datastore
+
+ENV DATA_DIR /datastore
+ENV TEMP_PATH /deeptemp/
+ENV PROFILE jetson
+
+WORKDIR /app
+
+RUN wget https://go.dev/dl/go1.20.4.linux-arm64.tar.gz
+RUN rm -rf /usr/local/go && tar -C /usr/local -xzf go1.20.4.linux-arm64.tar.gz
+ENV PATH $PATH:/usr/local/go/bin
+RUN rm go1.20.4.linux-arm64.tar.gz
+
+RUN pip3 install redis
+RUN pip3 install Cython
+RUN pip3 install pillow==9.5.0
+RUN pip3 install scipy
+RUN pip3 install tqdm
+RUN pip3 install PyYAML
+RUN pip3 install easydict
+RUN pip3 install future
+RUN pip3 install numpy==1.26.4
+
+# Install ONNX Runtime for python 3.10.12
+RUN wget https://nvidia.box.com/shared/static/i7n40ki3pl2x57vyn4u7e9asyiqlnl7n.whl -O onnxruntime_gpu-1.17.0-cp310-cp310-linux_aarch64.whl
+RUN pip3 install onnxruntime_gpu-1.17.0-cp310-cp310-linux_aarch64.whl
+
+RUN mkdir /app/sharedfiles
+COPY ./sharedfiles/yolov5s.pt /app/sharedfiles/yolov5s.pt
+COPY ./sharedfiles/face_lite.pt /app/sharedfiles/face_lite.pt
+COPY ./sharedfiles/facerec-high.model /app/sharedfiles/facerec-high.model
+COPY ./sharedfiles/scene.pt /app/sharedfiles/scene.pt
+COPY ./sharedfiles/categories_places365.txt /app/sharedfiles/categories_places365.txt
+COPY ./sharedfiles/bebygan_x4.pth /app/sharedfiles/bebygan_x4.pth
+
+RUN mkdir /app/server
+COPY ./server /app/server
+WORKDIR /app/server
+RUN go build
+WORKDIR /app
+
+RUN mkdir /app/intelligencelayer
+COPY ./intelligencelayer /app/intelligencelayer
+
+COPY ./init.py /app
+
+EXPOSE 5000
+
+WORKDIR /app/server
+
+CMD ["/app/server/server"]
